@@ -1,0 +1,904 @@
+{
+    "entries": [
+        {
+            "full_name": "Salento, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Salento",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 642
+        },
+        {
+            "full_name": "Boquía, Salento, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Salento",
+            "district": "Boquía",
+            "native_currency": "COP",
+            "active_listings_count": 118
+        },
+        {
+            "full_name": "Boquía, Salento, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Salento",
+            "district": "Boquía",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 589
+        },
+        {
+            "full_name": "Montenegro, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Montenegro",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 367
+        },
+        {
+            "full_name": "Filandia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Filandia",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 278
+        },
+        {
+            "full_name": "Salento, Bello, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Bello",
+            "district": "Salento",
+            "native_currency": "COP",
+            "active_listings_count": 13
+        },
+        {
+            "full_name": "Quimbaya, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Quimbaya",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 253
+        },
+        {
+            "full_name": "Calarcá, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Calarcá",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 148
+        },
+        {
+            "full_name": "Norte, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Norte",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 137
+        },
+        {
+            "full_name": "La Tebaida, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "La Tebaida",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 272
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 655
+        },
+        {
+            "full_name": "Circasia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Circasia",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Pijao, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Pijao",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "Horizontes, Filandia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Filandia",
+            "district": "Horizontes",
+            "native_currency": "COP",
+            "active_listings_count": 86
+        },
+        {
+            "full_name": "Barcelona, Calarcá, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Calarcá",
+            "district": "Barcelona",
+            "native_currency": "COP",
+            "active_listings_count": 17
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Perímetro Urbano Armenia",
+            "native_currency": "COP",
+            "active_listings_count": 204
+        },
+        {
+            "full_name": "Pueblo Tapao, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Pueblo Tapao",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 424
+        },
+        {
+            "full_name": "Pueblo Tapao, Montenegro, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Montenegro",
+            "district": "Pueblo Tapao",
+            "native_currency": "COP",
+            "active_listings_count": 35
+        },
+        {
+            "full_name": "El Caimo, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "El Caimo",
+            "native_currency": "COP",
+            "active_listings_count": 25
+        },
+        {
+            "full_name": "La Graciela, Montenegro, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Montenegro",
+            "district": "La Graciela",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Milciades Segura, Calarcá, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Calarcá",
+            "district": "Milciades Segura",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Santa Helena, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Santa Helena",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Orlando Martínez Callejas, Quimbaya, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Quimbaya",
+            "district": "Orlando Martínez Callejas",
+            "native_currency": "COP",
+            "active_listings_count": 19
+        },
+        {
+            "full_name": "Urbanización San Jorge, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Urbanización San Jorge",
+            "native_currency": "COP",
+            "active_listings_count": 16
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Perímetro Urbano Armenia",
+            "native_currency": "COP",
+            "active_listings_count": 139
+        },
+        {
+            "full_name": "Urbanización Aldea Suiza, Montenegro, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Montenegro",
+            "district": "Urbanización Aldea Suiza",
+            "native_currency": "COP",
+            "active_listings_count": 14
+        },
+        {
+            "full_name": "Comuna Fundadores, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Fundadores",
+            "native_currency": "COP",
+            "active_listings_count": 36
+        },
+        {
+            "full_name": "Comuna El Cafetero, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna El Cafetero",
+            "native_currency": "COP",
+            "active_listings_count": 55
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 45
+        },
+        {
+            "full_name": "Comuna Centenario, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Centenario",
+            "native_currency": "COP",
+            "active_listings_count": 16
+        },
+        {
+            "full_name": "Comuna Fundadores, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Fundadores",
+            "native_currency": "COP",
+            "active_listings_count": 33
+        },
+        {
+            "full_name": "Comuna Libertadores, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Libertadores",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Urbanización La Esperanza, La Tebaida, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "La Tebaida",
+            "district": "Urbanización La Esperanza",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Urbanización Los Alpes, La Tebaida, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "La Tebaida",
+            "district": "Urbanización Los Alpes",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 28
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 26
+        },
+        {
+            "full_name": "Comuna San José, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna San José",
+            "native_currency": "COP",
+            "active_listings_count": 24
+        },
+        {
+            "full_name": "Comuna El Bosque, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna El Bosque",
+            "native_currency": "COP",
+            "active_listings_count": 23
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 22
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 47
+        },
+        {
+            "full_name": "Comuna Rufino J. Cuervo, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Rufino J. Cuervo",
+            "native_currency": "COP",
+            "active_listings_count": 40
+        },
+        {
+            "full_name": "Comuna Centenario, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Centenario",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "El Caimo, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "El Caimo",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Comuna Alfonso López, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Alfonso López",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Comuna Libertadores, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Libertadores",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 25
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 23
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Perímetro Urbano Armenia",
+            "native_currency": "COP",
+            "active_listings_count": 16
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 13
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Perímetro Urbano Armenia",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Comuna Quimbaya, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Quimbaya",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna El Bosque, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna El Bosque",
+            "native_currency": "COP",
+            "active_listings_count": 22
+        },
+        {
+            "full_name": "Comuna San José, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna San José",
+            "native_currency": "COP",
+            "active_listings_count": 20
+        },
+        {
+            "full_name": "Comuna Francisco de Paula Santander, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Francisco de Paula Santander",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "Comuna Alfonso López, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Alfonso López",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Comuna Rufino J. Cuervo, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Rufino J. Cuervo",
+            "native_currency": "COP",
+            "active_listings_count": 35
+        },
+        {
+            "full_name": "Perímetro Urbano Armenia, Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Armenia",
+            "district": "Perímetro Urbano Armenia",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna Francisco de Paula Santander, Perímetro Urbano Armenia, Quindío, Colombia",
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Perímetro Urbano Armenia",
+            "district": "Comuna Francisco de Paula Santander",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "Medellín, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Medellín",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 15136
+        },
+        {
+            "full_name": "Cartagena, Bolívar, Colombia",
+            "country": "Colombia",
+            "region": "Bolívar",
+            "locality": "Cartagena",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 9383
+        },
+        {
+            "full_name": "Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 8241
+        },
+        {
+            "full_name": "Bogota, Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 8236
+        },
+        {
+            "full_name": "Santa Marta, Magdalena, Colombia",
+            "country": "Colombia",
+            "region": "Magdalena",
+            "locality": "Santa Marta",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 5419
+        },
+        {
+            "full_name": "Comuna 14 - El Poblado, Medellín, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Medellín",
+            "district": "Comuna 14 - El Poblado",
+            "native_currency": "COP",
+            "active_listings_count": 5202
+        },
+        {
+            "full_name": "Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 4690
+        },
+        {
+            "full_name": "Bogota, Capital District, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota, Capital District",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 4211
+        },
+        {
+            "full_name": "Bogota, Bogota, Capital District, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota, Capital District",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 4195
+        },
+        {
+            "full_name": "Comuna 11 - Laureles-Estadio, Medellín, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Medellín",
+            "district": "Comuna 11 - Laureles-Estadio",
+            "native_currency": "COP",
+            "active_listings_count": 3502
+        },
+        {
+            "full_name": "Localidad 3 Turística - Perla del Caribe, Santa Marta, Magdalena, Colombia",
+            "country": "Colombia",
+            "region": "Magdalena",
+            "locality": "Santa Marta",
+            "district": "Localidad 3 Turística - Perla del Caribe",
+            "native_currency": "COP",
+            "active_listings_count": 3491
+        },
+        {
+            "full_name": "Bogota, Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 2265
+        },
+        {
+            "full_name": "Bogotá, Bogota, Colombia",
+            "country": "Colombia",
+            "region": "Bogota",
+            "locality": "Bogotá",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1917
+        },
+        {
+            "full_name": "Perímetro Urbano Barranquilla, Atlántico, Colombia",
+            "country": "Colombia",
+            "region": "Atlántico",
+            "locality": "Perímetro Urbano Barranquilla",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1660
+        },
+        {
+            "full_name": "San Andrés, San Andrés and Providencia, Colombia",
+            "country": "Colombia",
+            "region": "San Andrés and Providencia",
+            "locality": "San Andrés",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1550
+        },
+        {
+            "full_name": "Bogota, Bogota, Capital District, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota, Capital District",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 1446
+        },
+        {
+            "full_name": "Bogota, Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 1434
+        },
+        {
+            "full_name": "AMCO, Area Metropolitana Centro Occidente, Risaralda, Colombia",
+            "country": "Colombia",
+            "region": "Risaralda",
+            "locality": "AMCO, Area Metropolitana Centro Occidente",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1407
+        },
+        {
+            "full_name": "Villa de Leyva, Boyacá, Colombia",
+            "country": "Colombia",
+            "region": "Boyacá",
+            "locality": "Villa de Leyva",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1385
+        },
+        {
+            "full_name": "Comuna 16 - Belén, Medellín, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Medellín",
+            "district": "Comuna 16 - Belén",
+            "native_currency": "COP",
+            "active_listings_count": 1334
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 1231
+        },
+        {
+            "full_name": "Bocagrande, Cartagena, Bolívar, Colombia",
+            "country": "Colombia",
+            "region": "Bolívar",
+            "locality": "Cartagena",
+            "district": "Bocagrande",
+            "native_currency": "COP",
+            "active_listings_count": 1205
+        },
+        {
+            "full_name": "Bogota, Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 1181
+        },
+        {
+            "full_name": "Envigado, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Envigado",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 1129
+        },
+        {
+            "full_name": "Localidad Norte - Centro Histórico, Perímetro Urbano Barranquilla, Atlántico, Colombia",
+            "country": "Colombia",
+            "region": "Atlántico",
+            "locality": "Perímetro Urbano Barranquilla",
+            "district": "Localidad Norte - Centro Histórico",
+            "native_currency": "COP",
+            "active_listings_count": 1092
+        },
+        {
+            "full_name": "Ricaurte, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Ricaurte",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 999
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 943
+        },
+        {
+            "full_name": "El Laguito, Cartagena, Bolívar, Colombia",
+            "country": "Colombia",
+            "region": "Bolívar",
+            "locality": "Cartagena",
+            "district": "El Laguito",
+            "native_currency": "COP",
+            "active_listings_count": 916
+        },
+        {
+            "full_name": "Ibagué, Tolima, Colombia",
+            "country": "Colombia",
+            "region": "Tolima",
+            "locality": "Ibagué",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 886
+        },
+        {
+            "full_name": "Bogota, Bogota Capital District - Municipality, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 882
+        },
+        {
+            "full_name": "Bogota, Bogota, Capital District, RAP (Especial) Central, Colombia",
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota, Capital District",
+            "district": "Bogota",
+            "native_currency": "COP",
+            "active_listings_count": 877
+        },
+        {
+            "full_name": "Localidad 2 Histórica - Rodrigo de Bastidas, Santa Marta, Magdalena, Colombia",
+            "country": "Colombia",
+            "region": "Magdalena",
+            "locality": "Santa Marta",
+            "district": "Localidad 2 Histórica - Rodrigo de Bastidas",
+            "native_currency": "COP",
+            "active_listings_count": 871
+        },
+        {
+            "full_name": "Manizales, Caldas, Colombia",
+            "country": "Colombia",
+            "region": "Caldas",
+            "locality": "Manizales",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 861
+        },
+        {
+            "full_name": "Localidad 3 Turística - Perla del Caribe, Santa Marta, Magdalena, Colombia",
+            "country": "Colombia",
+            "region": "Magdalena",
+            "locality": "Santa Marta",
+            "district": "Localidad 3 Turística - Perla del Caribe",
+            "native_currency": "COP",
+            "active_listings_count": 837
+        },
+        {
+            "full_name": "Sabaneta, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Sabaneta",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 793
+        },
+        {
+            "full_name": "Bucaramanga, Santander, Colombia",
+            "country": "Colombia",
+            "region": "Santander",
+            "locality": "Bucaramanga",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 785
+        },
+        {
+            "full_name": "Comuna 10 - La Candelaria, Medellín, Antioquia, Colombia",
+            "country": "Colombia",
+            "region": "Antioquia",
+            "locality": "Medellín",
+            "district": "Comuna 10 - La Candelaria",
+            "native_currency": "COP",
+            "active_listings_count": 704
+        }
+    ]
+}

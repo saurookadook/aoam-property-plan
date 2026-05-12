@@ -1,0 +1,904 @@
+{
+    "entries": [
+        {
+            "full_name": "Pance, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Pance",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 36
+        },
+        {
+            "full_name": "Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 4690
+        },
+        {
+            "full_name": "Calima, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Calima",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 251
+        },
+        {
+            "full_name": "Palmira, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Palmira",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 244
+        },
+        {
+            "full_name": "Buga, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Buga",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 185
+        },
+        {
+            "full_name": "Roldanillo, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Roldanillo",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 123
+        },
+        {
+            "full_name": "Jamundí, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Jamundí",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 86
+        },
+        {
+            "full_name": "Yumbo, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Yumbo",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 83
+        },
+        {
+            "full_name": "Tuluá, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Tuluá",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 77
+        },
+        {
+            "full_name": "Buenaventura, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Buenaventura",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 63
+        },
+        {
+            "full_name": "Alcalá, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Alcalá",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 38
+        },
+        {
+            "full_name": "Dagua, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Dagua",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 38
+        },
+        {
+            "full_name": "Sevilla, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Sevilla",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 34
+        },
+        {
+            "full_name": "Navarro, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Navarro",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 29
+        },
+        {
+            "full_name": "Restrepo, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Restrepo",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Ginebra, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Ginebra",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Cartago, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cartago",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 19
+        },
+        {
+            "full_name": "Cachipay, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cachipay",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "Comuna 22, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 22",
+            "native_currency": "COP",
+            "active_listings_count": 40
+        },
+        {
+            "full_name": "El Hormiguero, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Hormiguero",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 156
+        },
+        {
+            "full_name": "El Cerrito, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Cerrito",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 61
+        },
+        {
+            "full_name": "La Cumbre, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "La Cumbre",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 44
+        },
+        {
+            "full_name": "Calima Lake, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Calima Lake",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Navarro, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Navarro",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Borrero Ayerbe, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Borrero Ayerbe",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Rozo, Palmira, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Palmira",
+            "district": "Rozo",
+            "native_currency": "COP",
+            "active_listings_count": 20
+        },
+        {
+            "full_name": "Celeste, Jamundí, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Jamundí",
+            "district": "Celeste",
+            "native_currency": "COP",
+            "active_listings_count": 20
+        },
+        {
+            "full_name": "La Buitrera, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "La Buitrera",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 20
+        },
+        {
+            "full_name": "Los Andes, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Los Andes",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 19
+        },
+        {
+            "full_name": "Golondrinas, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Golondrinas",
+            "native_currency": "COP",
+            "active_listings_count": 19
+        },
+        {
+            "full_name": "Kachipay, Cachipay, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cachipay",
+            "district": "Kachipay",
+            "native_currency": "COP",
+            "active_listings_count": 13
+        },
+        {
+            "full_name": "El Saladito, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Saladito",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "El Queremal, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Queremal",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "La Unión, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "La Unión",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Ipira, Roldanillo, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Roldanillo",
+            "district": "Ipira",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "La Elvira, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "La Elvira",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Dapa, Yumbo, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Yumbo",
+            "district": "Dapa",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 1231
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 943
+        },
+        {
+            "full_name": "Comuna 17, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 17",
+            "native_currency": "COP",
+            "active_listings_count": 600
+        },
+        {
+            "full_name": "Comuna 3, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 3",
+            "native_currency": "COP",
+            "active_listings_count": 527
+        },
+        {
+            "full_name": "Comuna 22, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 22",
+            "native_currency": "COP",
+            "active_listings_count": 148
+        },
+        {
+            "full_name": "Comuna 10, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 10",
+            "native_currency": "COP",
+            "active_listings_count": 104
+        },
+        {
+            "full_name": "Cabecera Municipal Cartago, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cabecera Municipal Cartago",
+            "district": "",
+            "native_currency": "COP",
+            "active_listings_count": 86
+        },
+        {
+            "full_name": "Comuna 9, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 9",
+            "native_currency": "COP",
+            "active_listings_count": 55
+        },
+        {
+            "full_name": "El Hormiguero, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "El Hormiguero",
+            "native_currency": "COP",
+            "active_listings_count": 51
+        },
+        {
+            "full_name": "Barrio Aures, Buga, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Buga",
+            "district": "Barrio Aures",
+            "native_currency": "COP",
+            "active_listings_count": 36
+        },
+        {
+            "full_name": "Comuna 4, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 4",
+            "native_currency": "COP",
+            "active_listings_count": 35
+        },
+        {
+            "full_name": "Comuna 16, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 16",
+            "native_currency": "COP",
+            "active_listings_count": 34
+        },
+        {
+            "full_name": "Comuna 5, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 5",
+            "native_currency": "COP",
+            "active_listings_count": 31
+        },
+        {
+            "full_name": "Comuna 18, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 18",
+            "native_currency": "COP",
+            "active_listings_count": 31
+        },
+        {
+            "full_name": "Comuna 8, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 8",
+            "native_currency": "COP",
+            "active_listings_count": 21
+        },
+        {
+            "full_name": "Comuna 6, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 6",
+            "native_currency": "COP",
+            "active_listings_count": 18
+        },
+        {
+            "full_name": "Comuna 12, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 12",
+            "native_currency": "COP",
+            "active_listings_count": 13
+        },
+        {
+            "full_name": "La Buitrera, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "La Buitrera",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Comuna 11, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 11",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna 17, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 17",
+            "native_currency": "COP",
+            "active_listings_count": 203
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 157
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 150
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 62
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 56
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 53
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 51
+        },
+        {
+            "full_name": "Comuna 17, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 17",
+            "native_currency": "COP",
+            "active_listings_count": 51
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 51
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 47
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 37
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 34
+        },
+        {
+            "full_name": "Comuna 10, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 10",
+            "native_currency": "COP",
+            "active_listings_count": 29
+        },
+        {
+            "full_name": "Comuna 9, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 9",
+            "native_currency": "COP",
+            "active_listings_count": 26
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 26
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 25
+        },
+        {
+            "full_name": "Comuna 9, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 9",
+            "native_currency": "COP",
+            "active_listings_count": 20
+        },
+        {
+            "full_name": "Golondrinas, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Golondrinas",
+            "native_currency": "COP",
+            "active_listings_count": 19
+        },
+        {
+            "full_name": "Ciudad Pacífica, El Hormiguero, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Hormiguero",
+            "district": "Ciudad Pacífica",
+            "native_currency": "COP",
+            "active_listings_count": 15
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 14
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 14
+        },
+        {
+            "full_name": "Comuna 10, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 10",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Navarro, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Navarro",
+            "native_currency": "COP",
+            "active_listings_count": 12
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 11
+        },
+        {
+            "full_name": "Santa Elena, El Cerrito, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "El Cerrito",
+            "district": "Santa Elena",
+            "native_currency": "COP",
+            "active_listings_count": 10
+        },
+        {
+            "full_name": "Comuna 3, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 3",
+            "native_currency": "COP",
+            "active_listings_count": 176
+        },
+        {
+            "full_name": "Comuna 17, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 17",
+            "native_currency": "COP",
+            "active_listings_count": 125
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 116
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 91
+        },
+        {
+            "full_name": "Comuna 3, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 3",
+            "native_currency": "COP",
+            "active_listings_count": 84
+        },
+        {
+            "full_name": "Comuna 3, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 3",
+            "native_currency": "COP",
+            "active_listings_count": 77
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 62
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 61
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 57
+        },
+        {
+            "full_name": "Comuna 3, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 3",
+            "native_currency": "COP",
+            "active_listings_count": 53
+        },
+        {
+            "full_name": "Comuna 22, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 22",
+            "native_currency": "COP",
+            "active_listings_count": 50
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 48
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 66
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 43
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 42
+        },
+        {
+            "full_name": "Comuna 19, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 19",
+            "native_currency": "COP",
+            "active_listings_count": 39
+        },
+        {
+            "full_name": "Comuna 6, Cabecera Municipal Cartago, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cabecera Municipal Cartago",
+            "district": "Comuna 6",
+            "native_currency": "COP",
+            "active_listings_count": 26
+        },
+        {
+            "full_name": "Comuna 5, Cabecera Municipal Cartago, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cabecera Municipal Cartago",
+            "district": "Comuna 5",
+            "native_currency": "COP",
+            "active_listings_count": 25
+        },
+        {
+            "full_name": "Comuna 2, Cali, Valle del Cauca, Colombia",
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Cali",
+            "district": "Comuna 2",
+            "native_currency": "COP",
+            "active_listings_count": 25
+        }
+    ]
+}
