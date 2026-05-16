@@ -21,7 +21,7 @@
         "--per-file-ignores='__init__.py: F401'"
     ],
     "python.analysis.extraPaths": [
-        "server/.venv/bin",
+        "backend/.venv/lib/python3.12/site-packages",
     ],
     "path-autocomplete.pathMappings": {
         // "__mocks__": "app/src/__mocks__",
