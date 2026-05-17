@@ -1,5 +1,15 @@
 # AOAM Property Plan
 
+## Installation/Setup
+
+### First Time Setup
+
+```sh
+chmod +x scripts/admin.sh
+./scripts/admin.sh db create
+./scripts/admin.sh db create-test
+```
+
 ## Data Sources
 
 - [airroi][airroi]

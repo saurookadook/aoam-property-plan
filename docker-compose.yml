@@ -48,13 +48,13 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./db:/opt/db/scripts
+      - ./scripts/db:/opt/scripts/db
       - db_volume:/var/lib/postgresql/data
 
   backend:
     depends_on:
       - pg_database
-      - memcached
+      # - memcached
     env_file: .env
     environment:
       COLUMNS: ${COLUMNS}
@@ -62,8 +62,8 @@ services:
       PORT: ${PORT}
       WORKERS: 1
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: backend
+      dockerfile: ./Dockerfile
       target: backend-dev
     networks:
       - main_app
@@ -88,7 +88,7 @@ services:
     build:
       target: backend-test
     environment:
-      DATABASE_NAME: test_the_money_maker
+      DATABASE_NAME: test_aoam_property_plan
       ENV: test
     extends: backend
 
@@ -167,8 +167,8 @@ services:
 networks:
   main_app:
     driver: bridge
-  # scraper:
-  #   driver: bridge
+  scraper:
+    driver: bridge
 
 volumes:
   db_volume:
