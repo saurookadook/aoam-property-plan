@@ -37,7 +37,10 @@ services:
       # - ./frontend/dist/:/etc/nginx/html/
 
   pg_database:
-    image: postgres:16.2-bullseye # higher than this?
+    # image: postgres:16.2-bullseye # higher than this?
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
     env_file: .env
     environment:
       POSTGRES_PASSWORD: example
@@ -71,7 +74,14 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend:/opt/aoam-property-plan/backend
+      - ./backend/api:/opt/aoam-property-plan/backend/api
+      - ./backend/config:/opt/aoam-property-plan/backend/config
+      - ./backend/constants:/opt/aoam-property-plan/backend/constants
+      - ./backend/db:/opt/aoam-property-plan/backend/db
+      - ./backend/logging:/opt/aoam-property-plan/backend/logging
+      - ./backend/models:/opt/aoam-property-plan/backend/models
+      - ./backend/scripts:/opt/aoam-property-plan/backend/scripts
+      - ./backend/utils:/opt/aoam-property-plan/backend/utils
       # - ~/.aws:/home/nlpstocksaapp/.aws:ro
 
   backend-migrations:
