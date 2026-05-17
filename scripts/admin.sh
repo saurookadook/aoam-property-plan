@@ -6,19 +6,23 @@
 # like `click` in Python or `commander` in Node.js.
 # -----------------------------------------------------------------------------
 
-getDatabaseContainerID() {
-    docker ps -qf name=pg_database
-}
-
-getDatabaseHost() {
-    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(getDatabaseContainerID)
-}
-
+DATABASE_CONTAINER_NAME="pg_database"
+# DATABASE_HOST="0.0.0.0"
+DATABASE_HOST="pg_database"
 DATABASE_NAME="aoam_property_plan"
 TEST_DATABASE_NAME="test_aoam_property_plan"
 # https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS
 PSQL_CONNECTION="postgresql://postgres:example@pg_database:5432"
 LAST_RETURN_STATUS_CODE=$?
+
+
+getDatabaseContainerID() {
+    docker ps -qf name=$DATABASE_CONTAINER_NAME
+}
+
+getDatabaseHost() {
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(getDatabaseContainerID)
+}
 
 
 # If you do not want that output, use...
@@ -27,7 +31,7 @@ LAST_RETURN_STATUS_CODE=$?
 # -- `&>/dev/null` to suppress both
 
 dbIsNotReady() {
-    pg_isready -h pg_database > /dev/null 2>&1;
+    pg_isready -h $DATABASE_HOST > /dev/null 2>&1;
     return $(( $? == 0 ? 1 : 0 ));  # Flip the exit code: return 1 if ready, 0 if not ready
 }
 
@@ -85,7 +89,7 @@ createDatabase() {
         psql $PSQL_CONNECTION \
         -f "/opt/scripts/db/init_db.sql"
 
-    docker compose run --rm backend-scripts backend/scripts/db/initialize.py
+    docker compose run --rm backend-scripts scripts/db/initialize.py
 }
 
 createTestDatabase() {
@@ -100,7 +104,7 @@ createTestDatabase() {
     docker compose run \
         -e DATABASE_NAME=$TEST_DATABASE_NAME \
         -e ENV=test \
-        --rm backend-scripts backend/scripts/db/initialize.py
+        --rm backend-scripts scripts/db/initialize.py
 }
 
 initDatabase() {
@@ -169,11 +173,11 @@ scriptController() {
         elif [ "$2" == "drop-test" ]; then
             dropTestDatabase
         # elif [ "$2" == "sandbox" ]; then
-        #     docker compose run --rm backend-scripts backend/scripts/db/sandbox.py
+        #     docker compose run --rm backend-scripts scripts/db/sandbox.py
         # elif [ "$2" == "stash" ]; then
-        #     docker compose run --rm backend-scripts backend/scripts/db/stash_db.py
+        #     docker compose run --rm backend-scripts scripts/db/stash_db.py
         # elif [ "$2" == "pop" ]; then
-        #     docker compose run --rm backend-scripts backend/scripts/db/pop_db.py
+        #     docker compose run --rm backend-scripts scripts/db/pop_db.py
         elif [ "$2" == "up-head" ]; then
             docker compose run --rm backend-migrations upgrade head
         elif [ "$2" == "down-1" ]; then
