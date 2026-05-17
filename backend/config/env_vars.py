@@ -5,13 +5,15 @@ from typing_extensions import Self
 
 from pydantic import Field, model_validator
 
-from backend.utils.pydantic_helpers import BaseModel
+from utils.pydantic_helpers import BaseModel
 
 
 class EnvVars(BaseModel):
     base_domain: str = Field(
         default_factory=lambda: os.getenv("BASE_DOMAIN", default="aoam.dev")
     )
+    base_api_url: str = Field(default="UNSET")
+    base_app_url: str = Field(default="UNSET")
 
     csrf_secret: str = Field(default_factory=lambda: os.getenv("CSRF_SECRET", "TMP"))
     database_user: str = Field(
@@ -21,13 +23,13 @@ class EnvVars(BaseModel):
         default_factory=lambda: os.getenv("DATABASE_PASSWORD", "example")
     )
     database_host: str = Field(
-        default_factory=lambda: os.getenv("DATABASE_HOST", "database")
+        default_factory=lambda: os.getenv("DATABASE_HOST", "pg_database")
     )
     database_port: int = Field(
         default_factory=lambda: int(os.getenv("DATABASE_PORT", "5432"))
     )
     database_name: str = Field(
-        default_factory=lambda: os.getenv("DATABASE_NAME", "the_money_maker")
+        default_factory=lambda: os.getenv("DATABASE_NAME", "aoam_property_plan")
     )
     env: str = Field(default_factory=lambda: os.getenv("ENV", "dev"))
     log_level: str = Field(default_factory=lambda: os.getenv("LOG_LEVEL", "DEBUG"))
@@ -66,7 +68,7 @@ class EnvVars(BaseModel):
 
     @model_validator(mode="after")
     def post_init_hook(self) -> Self:
-        # TODO: properly validate BASE_DOMAIN
-        setattr(self, "BASE_API_URL", f"https://{self.BASE_DOMAIN}/api")
-        setattr(self, "BASE_APP_URL", f"https://{self.BASE_DOMAIN}/app")
+        # TODO: properly validate ``base_domain``
+        setattr(self, "base_api_url", f"https://{self.base_domain}/api")
+        setattr(self, "base_app_url", f"https://{self.base_domain}/app")
         return self

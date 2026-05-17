@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from alembic import command, config
 
-from backend.db.base_db import BaseDB
-from backend.db.db_session_manager import DBSessionManager
-from backend.models.market.db import MarketDB
-from backend.utils.filesystem import get_module_root
+from db.base_db import BaseDB
+from db.db_session_manager import DBSessionManager
+from models.market.db import MarketDB
+from utils.filesystem import get_module_root
 
 
 def initialize_database():

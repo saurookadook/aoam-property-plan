@@ -5,8 +5,8 @@ from typing import Any
 
 from rich import pretty
 
-from backend.constants import raw_window_width, window_width
-from backend.logging.log_level import LogLevel
+from constants import raw_window_width, window_width
+from utils.logging.log_level import LogLevel
 
 BaseLoggerClass = logging.getLoggerClass()
 

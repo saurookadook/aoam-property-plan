@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from backend.config import env_vars
-from backend.constants import window_width
-from backend.logging.extended_logger import ExtendedLogger
+from config import env_vars
+from constants import window_width
+from utils.logging.extended_logger import ExtendedLogger
 
 logging.setLoggerClass(ExtendedLogger)
 

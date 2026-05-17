@@ -5,8 +5,8 @@ from uuid import UUID
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.db.base_db import BaseDB
-from backend.models.mixins import TimestampsDB
+from db.base_db import BaseDB
+from models.mixins import TimestampsDB
 
 
 class MarketDB(BaseDB, TimestampsDB):
