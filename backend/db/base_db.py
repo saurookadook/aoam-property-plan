@@ -23,11 +23,11 @@ class BaseDB:
 
     __table_args__ = {"extend_existing": True}
 
-    @declared_attr
+    @declared_attr  # type: ignore
     def __tablename__(cls) -> str:
         # TODO: probably have to trim off the `_db` too...?
         db_suffix = re.compile(r"_db$", flags=re.IGNORECASE | re.MULTILINE)
-        snakified_name = alias_generators.to_snake(cls.__class__.__name__)
+        snakified_name = alias_generators.to_snake(cls.__name__)  # type: ignore
         return re.sub(db_suffix, "", snakified_name)
 
     id: Mapped[UUID] = mapped_column(

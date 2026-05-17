@@ -10,9 +10,9 @@ from models.mixins import TimestampsDB
 
 
 class MarketDB(BaseDB, TimestampsDB):
-    id: Mapped[UUID] = mapped_column(
-        postgresql.UUID(as_uuid=True), primary_key=True, nullable=False
-    )
+    # id: Mapped[UUID] = mapped_column(
+    #     postgresql.UUID(as_uuid=True), primary_key=True, nullable=False
+    # )
     city: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     neighborhood: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     country: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)

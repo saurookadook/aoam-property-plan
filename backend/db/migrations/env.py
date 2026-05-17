@@ -5,6 +5,7 @@ from sqlalchemy import engine_from_config, pool
 
 from db.base_db import BaseDB
 from db.db_session_manager import DBSessionManager
+from models.market.db import MarketDB
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
