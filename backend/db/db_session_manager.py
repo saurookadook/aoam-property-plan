@@ -13,18 +13,18 @@ from sqlalchemy.orm import (
     scoped_session,
 )
 
-from backend.config.env_var_manager import EnvVarManager
+from config.env_var_manager import EnvVarManager
 
 env_vars = EnvVarManager().env_vars
 
-engine = create_engine(
-    f"postgresql+psycopg2://{env_vars.database_user}:{env_vars.database_password}"
-    f"@{env_vars.database_host}:{env_vars.database_port}/{env_vars.database_name}",
-    echo=env_vars.log_sql,
-    max_overflow=30,
-    connect_args={"options": "-c timezone=utc"},
-    future=True,
-)
+# engine = create_engine(
+#     f"postgresql+psycopg2://{env_vars.database_user}:{env_vars.database_password}"
+#     f"@{env_vars.database_host}:{env_vars.database_port}/{env_vars.database_name}",
+#     echo=env_vars.log_sql,
+#     max_overflow=30,
+#     connect_args={"options": "-c timezone=utc"},
+#     future=True,
+# )
 
 
 class DBSessionManager:
@@ -46,21 +46,27 @@ class DBSessionManager:
         self.ScopedSession = scoped_session(self.SessionFactory)
 
     @classmethod
-    def create_psql_engine(cls, **kwargs) -> Engine:
+    def build_psql_url(cls, **kwargs) -> str:
         env_vars = EnvVarManager().env_vars
         database = (
             kwargs["database"] if "database" in kwargs else env_vars.database_name
         )
         host = kwargs["host"] if "host" in kwargs else env_vars.database_host
-        log_sql = kwargs["log_sql"] if "log_sql" in kwargs else env_vars.log_sql
         password = (
             kwargs["password"] if "password" in kwargs else env_vars.database_password
         )
         port = kwargs["port"] if "port" in kwargs else env_vars.database_port
         user = kwargs["user"] if "user" in kwargs else env_vars.database_user
 
+        return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
+
+    @classmethod
+    def create_psql_engine(cls, **kwargs) -> Engine:
+        env_vars = EnvVarManager().env_vars
+        log_sql = kwargs["log_sql"] if "log_sql" in kwargs else env_vars.log_sql
+
         return create_engine(
-            f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}",
+            cls.build_psql_url(**kwargs),
             echo=log_sql,
             max_overflow=30,
             connect_args={"options": "-c timezone=utc"},

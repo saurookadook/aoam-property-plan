@@ -78,7 +78,6 @@ services:
       - ./backend/config:/opt/aoam-property-plan/backend/config
       - ./backend/constants:/opt/aoam-property-plan/backend/constants
       - ./backend/db:/opt/aoam-property-plan/backend/db
-      - ./backend/logging:/opt/aoam-property-plan/backend/logging
       - ./backend/models:/opt/aoam-property-plan/backend/models
       - ./backend/scripts:/opt/aoam-property-plan/backend/scripts
       - ./backend/utils:/opt/aoam-property-plan/backend/utils
