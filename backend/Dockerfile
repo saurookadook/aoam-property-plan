@@ -1,4 +1,4 @@
-# ARG venv=/opt/.venv
+ARG venv=/opt/.venv
 
 FROM python:3.12-bullseye AS install-base
 # RUN apt-get update
@@ -7,15 +7,20 @@ COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
 
 
 FROM install-base AS install-dev
+WORKDIR /opt/aoam-property-plan/backend
 COPY ./pytest.ini ./pyproject.toml ./uv.lock ./
+# RUN uv venv --python 3.12 $venv
+RUN uv venv --python 3.12
 RUN uv sync --locked
 RUN useradd --uid 2000 aoam_app
-RUN chown -R aoam_app:aoam_app /opt/.venv
+# RUN chown -R aoam_app:aoam_app /opt/.venv
+RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
 
 
 FROM install-base AS dev-base
 WORKDIR /opt/aoam-property-plan/backend
-# ENV VIRTUAL_ENV=$venv
+ARG venv=/opt/.venv
+ENV VIRTUAL_ENV=$venv
 ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 RUN mkdir -p /var/log/aoam-property-plan
@@ -27,10 +32,10 @@ ARG venv
 WORKDIR /opt/aoam-property-plan/backend
 ENV PATH="$venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend/api/:$PYTHONPATH"
-COPY --from=install-dev /opt/.venv /opt/.venv
+COPY --from=install-dev /opt/aoam-property-plan/backend/.venv /opt/aoam-property-plan/backend/.venv
 
 
-FROM dev-base AS server-dev
+FROM dev-base AS backend-dev
 ARG HOST
 ARG PORT
 ENV PYTHONUNBUFFERED=1
@@ -41,7 +46,7 @@ ENTRYPOINT [ "uvicorn", "backend.api.app:app" ]
 CMD [ "--host", "0.0.0.0", "--port", "3000", "--reload" ]
 
 
-FROM dev-base AS server-migrations
+FROM dev-base AS backend-migrations
 ARG HOST
 ARG PORT
 ENV PYTHONUNBUFFERED=1
@@ -49,7 +54,7 @@ ENV FORCE_COLOR=1
 ENTRYPOINT [ "alembic" ]
 
 
-FROM dev-base AS server-scripts
+FROM dev-base AS backend-scripts
 ARG HOST
 ARG PORT
 ENV PYTHONUNBUFFERED=1
@@ -57,7 +62,7 @@ ENV FORCE_COLOR=1
 ENTRYPOINT [ "python" ]
 
 
-FROM dev-base AS server-test
+FROM dev-base AS backend-test
 ARG HOST
 ARG PORT
 ENV PYTHONUNBUFFERED=1
@@ -75,10 +80,12 @@ ENTRYPOINT [ "python3", "nlp_ssa/scraper/main.py" ]
 
 
 FROM install-base AS install-release
+WORKDIR /opt/aoam-property-plan/backend
 COPY ./pyproject.toml ./uv.lock ./
+RUN uv venv --python 3.12
 RUN uv sync --locked
 RUN useradd --uid 2000 aoam_app
-RUN chown -R aoam_app:aoam_app /opt/.venv
+RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
 
 
 FROM python:3.12-bullseye AS release-base
@@ -97,8 +104,8 @@ COPY --from=install-release /opt/aoam-property-plan/backend/ ./
 COPY backend/scraper ./backend/scraper
 COPY backend/alembic.ini ./
 
-# Maybe server-api? api-server?
-FROM release-base AS server
+# Maybe backend-api? api-server?
+FROM release-base AS backend
 ARG HOST
 ARG PORT
 ENTRYPOINT [ "uvicorn", "api.app:app" ]
