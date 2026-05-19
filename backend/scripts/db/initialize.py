@@ -4,6 +4,7 @@ from alembic import command, config
 
 from db.base_db import BaseDB
 from db.db_session_manager import DBSessionManager
+from models.listing.db import ListingDB
 from models.market.db import MarketDB
 from utils.filesystem import get_module_root
 

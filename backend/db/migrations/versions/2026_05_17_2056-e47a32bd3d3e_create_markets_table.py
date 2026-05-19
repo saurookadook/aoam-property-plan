@@ -22,7 +22,7 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     """Upgrade schema."""
     op.create_table(
-        "market",
+        "markets",
         sa.Column("city", sa.TEXT(), nullable=False),
         sa.Column("neighborhood", sa.TEXT(), nullable=False),
         sa.Column("country", sa.TEXT(), nullable=False),
@@ -51,4 +51,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_table("market")
+    op.drop_table("markets")

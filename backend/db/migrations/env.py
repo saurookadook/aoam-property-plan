@@ -5,6 +5,7 @@ from sqlalchemy import engine_from_config, pool
 
 from db.base_db import BaseDB
 from db.db_session_manager import DBSessionManager
+from models.listing.db import ListingDB
 from models.market.db import MarketDB
 
 # this is the Alembic Config object, which provides

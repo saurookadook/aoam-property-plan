@@ -17,6 +17,15 @@ from sqlalchemy.orm import (
 from sqlalchemy.types import TypeDecorator
 
 
+def simple_pluralize(word: str) -> str:
+    if word.endswith(("s", "x", "z", "ch", "sh")):
+        return word + "es"
+    elif word.endswith("y") and word[-2] not in "aeiou":
+        return word[:-1] + "ies"
+    else:
+        return word + "s"
+
+
 @as_declarative()
 class BaseDB:
     metadata: MetaData
@@ -27,8 +36,9 @@ class BaseDB:
     def __tablename__(cls) -> str:
         # TODO: probably have to trim off the `_db` too...?
         db_suffix = re.compile(r"_db$", flags=re.IGNORECASE | re.MULTILINE)
-        snakified_name = alias_generators.to_snake(cls.__name__)  # type: ignore
-        return re.sub(db_suffix, "", snakified_name)
+        snakeified_db_name = alias_generators.to_snake(cls.__name__)  # type: ignore
+        snakeified_name = re.sub(db_suffix, "", snakeified_db_name)
+        return simple_pluralize(snakeified_name)
 
     id: Mapped[UUID] = mapped_column(
         postgresql.UUID(as_uuid=True), primary_key=True, default=uuid4
