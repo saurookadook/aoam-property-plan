@@ -9,18 +9,6 @@ WHERE
             datname = 'aoam_property_plan') \gexec
 
 
-CREATE EXTENSION postgis;
--- NOTE: Maybe needed?
--- CREATE EXTENSION postgis_raster;
--- CREATE EXTENSION postgis_sfcgal;
--- CREATE EXTENSION fuzzystrmatch; --needed for postgis_tiger_geocoder
--- --optional used by postgis_tiger_geocoder, or can be used standalone
--- CREATE EXTENSION address_standardizer;
--- CREATE EXTENSION address_standardizer_data_us;
--- CREATE EXTENSION postgis_tiger_geocoder;
--- CREATE EXTENSION postgis_topology;
-
-
 DO $body$
 BEGIN
     IF NOT EXISTS (
@@ -72,3 +60,16 @@ ALTER DEFAULT PRIVILEGES
 FOR ROLE migrations GRANT INSERT, UPDATE, DELETE,
 REFERENCES ON TABLES TO app;
 
+
+\connect aoam_property_plan;
+
+CREATE EXTENSION IF NOT EXISTS postgis;
+-- NOTE: Maybe needed?
+-- CREATE EXTENSION postgis_raster;
+-- CREATE EXTENSION postgis_sfcgal;
+-- CREATE EXTENSION fuzzystrmatch; --needed for postgis_tiger_geocoder
+-- --optional used by postgis_tiger_geocoder, or can be used standalone
+-- CREATE EXTENSION address_standardizer;
+-- CREATE EXTENSION address_standardizer_data_us;
+-- CREATE EXTENSION postgis_tiger_geocoder;
+-- CREATE EXTENSION postgis_topology;
