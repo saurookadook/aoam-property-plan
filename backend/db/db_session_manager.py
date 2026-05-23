@@ -2,30 +2,14 @@ from __future__ import annotations
 
 from typing import Optional
 
-from sqlalchemy import Dialect, Engine, create_engine, TIMESTAMP
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm import (
-    Mapped,
-    as_declarative,
-    declared_attr,
-    mapped_column,
-    sessionmaker,
-    scoped_session,
-)
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 from config.env_var_manager import EnvVarManager
 from utils.singleton_meta import SingletonMeta
 
 env_vars = EnvVarManager().env_vars
-
-# engine = create_engine(
-#     f"postgresql+psycopg2://{env_vars.database_user}:{env_vars.database_password}"
-#     f"@{env_vars.database_host}:{env_vars.database_port}/{env_vars.database_name}",
-#     echo=env_vars.log_sql,
-#     max_overflow=30,
-#     connect_args={"options": "-c timezone=utc"},
-#     future=True,
-# )
 
 
 class DBSessionManager(metaclass=SingletonMeta):
@@ -72,8 +56,9 @@ class DBSessionManager(metaclass=SingletonMeta):
 
         return create_engine(
             cls.build_psql_url(**kwargs),
-            echo=log_sql,
-            max_overflow=30,
             connect_args={"options": "-c timezone=utc"},
+            echo=log_sql,
             future=True,
+            max_overflow=30,
+            plugins=["geoalchemy2"],
         )
