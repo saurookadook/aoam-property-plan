@@ -25,9 +25,8 @@ _test_engine = db_session_manager.engine
 _test_db_session = db_session_manager.ScopedSession
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(autouse=True)
 def test_db_session():
-    # db_connection = engine.connect()
     with _test_engine.connect() as db_connection:
         transaction = db_connection.begin()
         try:
