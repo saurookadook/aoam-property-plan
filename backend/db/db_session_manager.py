@@ -14,6 +14,7 @@ from sqlalchemy.orm import (
 )
 
 from config.env_var_manager import EnvVarManager
+from utils.singleton_meta import SingletonMeta
 
 env_vars = EnvVarManager().env_vars
 
@@ -27,23 +28,27 @@ env_vars = EnvVarManager().env_vars
 # )
 
 
-class DBSessionManager:
+class DBSessionManager(metaclass=SingletonMeta):
     def __init__(self, engine: Optional[Engine] = None):
-        self.engine = (
-            engine
-            if engine is not None
-            else DBSessionManager.create_psql_engine(
-                database=env_vars.database_name,
-                host=env_vars.database_host,
-                password=env_vars.database_password,
-                port=env_vars.database_port,
-                user=env_vars.database_user,
+        if engine is not None or not hasattr(self, "engine"):
+            self.engine = (
+                engine
+                if engine is not None
+                else DBSessionManager.create_psql_engine(
+                    database=env_vars.database_name,
+                    host=env_vars.database_host,
+                    password=env_vars.database_password,
+                    port=env_vars.database_port,
+                    user=env_vars.database_user,
+                )
             )
-        )
-        self.SessionFactory = sessionmaker(
-            autocommit=False, autoflush=False, bind=self.engine, future=True
-        )
-        self.ScopedSession = scoped_session(self.SessionFactory)
+
+        if not hasattr(self, "SessionFactory"):
+            self.SessionFactory = sessionmaker(
+                autocommit=False, autoflush=False, bind=self.engine, future=True
+            )
+        if not hasattr(self, "ScopedSession"):
+            self.ScopedSession = scoped_session(self.SessionFactory)
 
     @classmethod
     def build_psql_url(cls, **kwargs) -> str:

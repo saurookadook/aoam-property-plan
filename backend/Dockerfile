@@ -1,5 +1,3 @@
-ARG venv=/opt/.venv
-
 FROM python:3.12-bullseye AS install-base
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y libssl-dev build-essential vim nano
@@ -23,7 +21,6 @@ COPY ./api \
     ./uv.lock \
     ./
 # COPY ./.python-version ./alembic.ini ./gunicorn_config.py ./pyproject.toml ./pytest.ini ./uv.lock ./
-# RUN uv venv --python 3.12 $venv
 RUN uv venv --python 3.12
 RUN uv sync --locked
 # RUN useradd --uid 2000 aoam_app
@@ -33,21 +30,16 @@ RUN uv sync --locked
 
 FROM install-dev AS dev-base
 WORKDIR /opt/aoam-property-plan/backend
-# ARG venv=/opt/.venv
-# ENV VIRTUAL_ENV=$venv
 ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 RUN mkdir -p /var/log/aoam-property-plan
-
 # RUN useradd --uid 2000 aoam_app
 # RUN mkdir -p /opt/.venv
 # RUN chown -R aoam_app:aoam_app /opt/.venv
 # USER aoam_app
 WORKDIR /opt/aoam-property-plan/backend
-# ENV PATH="$venv/bin:$PATH"
+ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
-# COPY --from=install-dev /opt/aoam-property-plan/backend/.venv /opt/aoam-property-plan/backend/.venv
-# COPY --from=install-dev /home/aoam_app/.cache/uv /home/aoam_app/.cache/uv
 
 
 
@@ -58,7 +50,7 @@ ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 # TODO: figure out why $HOST and $PORT aren't getting interpolated correctly
 EXPOSE 3000
-ENTRYPOINT [ "uvicorn", "backend.api.app:app" ]
+ENTRYPOINT [ "uvicorn", "api.app:app" ]
 CMD [ "--host", "0.0.0.0", "--port", "3000", "--reload" ]
 
 
@@ -97,7 +89,7 @@ CMD [ "-s", "--import-mode=append" ]
 
 
 FROM dev-base AS scraper-dev
-ENV PATH="$venv/bin:$PATH"
+ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
 USER root
 WORKDIR /opt/aoam-property-plan/backend
@@ -122,7 +114,7 @@ RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
 USER aoam_app
 ARG venv
 WORKDIR /opt/aoam-property-plan/backend
-ENV PATH="$venv/bin:$PATH"
+ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
 COPY --from=install-release /opt/.venv /opt/.venv
 COPY --from=install-release /opt/aoam-property-plan/backend/ ./
