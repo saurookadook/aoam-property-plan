@@ -37,7 +37,6 @@ def expected_property_dict(mock_utcnow):
 
 def test_property_db(expected_property_dict, mock_utcnow, test_db_session):
     property_record = PropertyDBFactory(**expected_property_dict)
-
     test_db_session.commit()
 
     result = test_db_session.execute(

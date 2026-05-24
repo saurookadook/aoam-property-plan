@@ -1,6 +1,7 @@
 # pyright: reportIncompatibleVariableOverride=false
 from __future__ import annotations
 
+from datetime import timedelta, timezone
 from uuid import uuid4
 
 import factory
@@ -32,6 +33,9 @@ class PropertyDBFactory(
     )
     purchase_price_usd = factory.Faker(
         "pyfloat", positive=True, min_value=100000, max_value=1000000
+    )
+    source_created_at = factory.LazyAttribute(
+        lambda o: (o.created_at - timedelta(days=5)).replace(tzinfo=timezone.utc)
     )
     source_url = factory.Faker("url")
     state = factory.Faker("state")
