@@ -3,7 +3,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from geoalchemy2 import Geography, WKBElement
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Index
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -27,3 +27,11 @@ class ListingDB(BaseDB, TimestampsDB):
     occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     property_type: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     source_url: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
+
+    __table_args__ = (
+        Index(
+            "ix_listings_location",
+            "location",
+            postgresql_using="gist",
+        ),
+    )
