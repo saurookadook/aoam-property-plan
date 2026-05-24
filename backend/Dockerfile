@@ -50,7 +50,7 @@ ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 # TODO: figure out why $HOST and $PORT aren't getting interpolated correctly
 EXPOSE 3000
-ENTRYPOINT [ "uvicorn", "api.app:app" ]
+ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
 CMD [ "--host", "0.0.0.0", "--port", "3000", "--reload" ]
 
 
@@ -125,6 +125,6 @@ COPY backend/alembic.ini ./
 FROM release-base AS backend
 ARG HOST
 ARG PORT
-ENTRYPOINT [ "uvicorn", "api.app:app" ]
+ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
 CMD [ "--host", "$HOST", "--port", "$PORT"]
 # ^ may need to change this command

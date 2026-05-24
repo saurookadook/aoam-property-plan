@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from config import env_vars
+from config.env_var_manager import EnvVarManager
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
 
@@ -10,9 +10,11 @@ logging.setLoggerClass(ExtendedLogger)
 
 root_logger = logging.getLogger()
 
+env_vars = EnvVarManager().env_vars
+
 
 def is_prod():
-    return env_vars.ENV.lower() == "prod"
+    return env_vars.env.lower() == "prod"
 
 
 def init_logging(app_name: str):
@@ -25,7 +27,7 @@ def init_logging(app_name: str):
             show_time=False, rich_tracebacks=True, tracebacks_theme="emacs"
         )
 
-    root_logger.setLevel(getattr(logging, env_vars.LOG_LEVEL.upper()))
+    root_logger.setLevel(getattr(logging, env_vars.log_level.upper()))
 
     format_str = (
         # "{asctime} [{name}: {lineno}] [{levelname:<10s}]: {message:<"
