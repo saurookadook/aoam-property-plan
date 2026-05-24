@@ -12,6 +12,7 @@ from models.mixins import TimestampsDB
 
 class PropertyDB(BaseDB, TimestampsDB):
     address: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
+    bedrooms: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
     city: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     country: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     latitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
