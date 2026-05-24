@@ -8,6 +8,7 @@ from db.base_db import BaseDB
 from db.db_session_manager import DBSessionManager
 from models.listing.db import ListingDB
 from models.market.db import MarketDB
+from models.property.db import PropertyDB
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
