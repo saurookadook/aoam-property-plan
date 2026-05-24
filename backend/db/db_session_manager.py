@@ -27,12 +27,12 @@ class DBSessionManager(metaclass=SingletonMeta):
                 )
             )
 
-        if not hasattr(self, "SessionFactory"):
-            self.SessionFactory = sessionmaker(
+        if not hasattr(self, "session_factory"):
+            self.session_factory = lambda: sessionmaker(
                 autocommit=False, autoflush=False, bind=self.engine, future=True
             )
-        if not hasattr(self, "ScopedSession"):
-            self.ScopedSession = scoped_session(self.SessionFactory)
+        if not hasattr(self, "scoped_session"):
+            self.scoped_session = scoped_session(self.session_factory())
 
     @classmethod
     def build_psql_url(cls, **kwargs) -> str:

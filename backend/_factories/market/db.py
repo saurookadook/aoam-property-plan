@@ -14,7 +14,7 @@ from models.market.db import MarketDB
 class MarketDBFactory(TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = MarketDB
-        sqlalchemy_session = DBSessionManager().ScopedSession
+        sqlalchemy_session = DBSessionManager().scoped_session
 
     id = factory.LazyFunction(uuid4)
     adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)

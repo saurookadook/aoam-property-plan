@@ -16,7 +16,7 @@ class ListingDBFactory(
 ):
     class Meta:
         model = ListingDB
-        sqlalchemy_session = DBSessionManager().ScopedSession
+        sqlalchemy_session = DBSessionManager().scoped_session
 
     id = factory.LazyFunction(uuid4)
     adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)

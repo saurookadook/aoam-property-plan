@@ -22,7 +22,7 @@ def pytest_sessionstart(session):
 
 db_session_manager = DBSessionManager()
 _test_engine = db_session_manager.engine
-_test_db_session = db_session_manager.ScopedSession
+_test_db_session = db_session_manager.scoped_session
 
 
 @pytest.fixture(autouse=True)
