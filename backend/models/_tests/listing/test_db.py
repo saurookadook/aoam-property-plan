@@ -8,10 +8,10 @@ from geoalchemy2.elements import WKBElement, WKTElement
 from geoalchemy2.functions import ST_GeogFromWKB
 from sqlalchemy import select, and_
 
-from models.listing.db import ListingDB
-from models.market.db import MarketDB
 from _factories.listing.db import ListingDBFactory
 from _factories.market.db import MarketDBFactory
+from models.listing.db import ListingDB
+from models.market.db import MarketDB
 
 
 @pytest.fixture

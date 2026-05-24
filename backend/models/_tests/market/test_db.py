@@ -7,8 +7,8 @@ import factory
 import pytest
 from sqlalchemy import select, and_
 
-from models.market.db import MarketDB
 from _factories.market.db import MarketDBFactory
+from models.market.db import MarketDB
 
 
 @pytest.fixture
