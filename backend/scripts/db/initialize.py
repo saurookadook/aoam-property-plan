@@ -1,3 +1,4 @@
+# noqa: F401
 from __future__ import annotations
 
 from alembic import command, config

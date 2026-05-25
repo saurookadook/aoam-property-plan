@@ -5,7 +5,7 @@
 services:
   all:
     image: alpine
-    command: sh -C "echo start"
+    command: sh -c "echo start"
     platform: linux/amd64
     depends_on:
       - backend
@@ -30,7 +30,8 @@ services:
       - "443:443"
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # TODO: revisit whether this is necessary once the frontend and backend have been established
+      # - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx-reverse-proxy/conf/:/etc/nginx/conf.d/:ro
       - ./nginx-reverse-proxy/certs/:/etc/nginx/ssl/:ro
       # Assets to be served by NGINX

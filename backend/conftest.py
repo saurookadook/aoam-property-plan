@@ -20,13 +20,12 @@ def pytest_sessionstart(session):
     command.upgrade(alembic_config, "head")
 
 
-db_session_manager = DBSessionManager()
-_test_engine = db_session_manager.engine
-_test_db_session = db_session_manager.scoped_session
-
-
 @pytest.fixture(autouse=True)
 def test_db_session():
+    db_session_manager = DBSessionManager()
+    _test_engine = db_session_manager.engine
+    _test_db_session = db_session_manager.scoped_session
+
     with _test_engine.connect() as db_connection:
         transaction = db_connection.begin()
         try:

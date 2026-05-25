@@ -45,7 +45,7 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id", name=op.f("market_pkey")),
+        sa.PrimaryKeyConstraint("id"),
     )
 
 

@@ -33,6 +33,13 @@ class PropertyFinancialReportDB(BaseDB, TimestampsDB):
     """
 
     interest_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
-    loan_term_years: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
+    loan_term_years: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    """
+    NOTE: Mapped as a ``float`` to leave room for partial years.
+    """
+
     monthly_expenses_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     payback_years: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
+    """
+    NOTE: Mapped as a ``float`` to leave room for partial years.
+    """

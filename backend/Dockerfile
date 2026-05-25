@@ -29,7 +29,6 @@ RUN uv sync --locked
 
 
 FROM install-dev AS dev-base
-WORKDIR /opt/aoam-property-plan/backend
 ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 RUN mkdir -p /var/log/aoam-property-plan
@@ -105,21 +104,16 @@ RUN useradd --uid 2000 aoam_app
 RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
 
 
-FROM python:3.12-bullseye AS release-base
-RUN apt-get update
-RUN apt-get install --no-install-recommends -y libssl-dev vim nano
-RUN useradd --uid 2000 aoam_app
+FROM install-release AS release-base
 RUN mkdir -p /var/log/aoam-property-plan/backend
-RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
-USER aoam_app
-ARG venv
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
+# USER aoam_app
+# ARG venv
 WORKDIR /opt/aoam-property-plan/backend
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
-COPY --from=install-release /opt/.venv /opt/.venv
-COPY --from=install-release /opt/aoam-property-plan/backend/ ./
-COPY backend/scraper ./backend/scraper
-COPY backend/alembic.ini ./
+
 
 # Maybe backend-api? api-server?
 FROM release-base AS backend

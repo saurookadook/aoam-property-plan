@@ -34,6 +34,9 @@ END
 $body$;
 
 
+\connect aoam_property_plan;
+
+
 ALTER DEFAULT PRIVILEGES GRANT USAGE ON SCHEMAS TO PUBLIC;
 
 
@@ -60,8 +63,6 @@ ALTER DEFAULT PRIVILEGES
 FOR ROLE migrations GRANT INSERT, UPDATE, DELETE,
 REFERENCES ON TABLES TO app;
 
-
-\connect aoam_property_plan;
 
 CREATE EXTENSION IF NOT EXISTS postgis;
 -- NOTE: Maybe needed?

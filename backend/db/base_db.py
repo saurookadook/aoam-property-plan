@@ -11,10 +11,7 @@ from sqlalchemy.orm import (
     as_declarative,
     declared_attr,
     mapped_column,
-    sessionmaker,
-    scoped_session,
 )
-from sqlalchemy.types import TypeDecorator
 
 
 def simple_pluralize(word: str) -> str:

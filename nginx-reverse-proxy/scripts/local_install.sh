@@ -19,7 +19,10 @@ else
 fi
 
 # Define the line we want to check/append
-LINE='127.0.0.1 aoam.dev *.aoam.dev pg_database'
+# NOTE: `/etc/hosts`` does not support wildcard hostnames, so adding `*.aoam.dev` won’t make
+# subdomains resolve. If you need wildcard resolution locally, use a local DNS resolver
+# (e.g., dnsmasq) or enumerate the exact hostnames you need.
+LINE='127.0.0.1 aoam.dev pg_database'
 HOSTS_FILE='/etc/hosts'
 
 # Check if the line exists exactly as is

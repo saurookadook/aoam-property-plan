@@ -3,9 +3,7 @@ from __future__ import annotations
 import os
 from typing_extensions import Self
 
-from pydantic import Field, model_validator
-
-from utils.pydantic_helpers import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 
 class EnvVars(BaseModel):
@@ -33,7 +31,10 @@ class EnvVars(BaseModel):
     )
     env: str = Field(default_factory=lambda: os.getenv("ENV", "dev"))
     log_level: str = Field(default_factory=lambda: os.getenv("LOG_LEVEL", "DEBUG"))
-    log_sql: bool = Field(default_factory=lambda: bool(os.getenv("LOG_SQL", False)))
+    log_sql: bool = Field(default_factory=lambda: EnvVars._parse_bool("LOG_SQL", False))
+    """
+    Valid values: `true`, `false`, `1`, `0`, `yes`, `no` (case insensitive)
+    """
 
     # Auth
     auth_cookie_key: str = Field(
@@ -72,3 +73,8 @@ class EnvVars(BaseModel):
         setattr(self, "base_api_url", f"https://{self.base_domain}/api")
         setattr(self, "base_app_url", f"https://{self.base_domain}/app")
         return self
+
+    @classmethod
+    def _parse_bool(cls, key: str, fallback_value: bool) -> bool:
+        value = os.getenv(key, str(fallback_value))
+        return value.lower() in ("true", "1", "yes")

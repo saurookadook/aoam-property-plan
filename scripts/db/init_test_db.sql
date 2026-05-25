@@ -15,10 +15,12 @@ BEGIN
 END
 $body$;
 
-GRANT ALL ON SCHEMA public TO app;
-
 
 \connect test_aoam_property_plan;
+
+
+GRANT ALL ON SCHEMA public TO app;
+
 
 CREATE EXTENSION IF NOT EXISTS postgis;
 -- NOTE: Maybe needed?

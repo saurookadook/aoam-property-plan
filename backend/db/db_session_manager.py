@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Optional
 
 from sqlalchemy import Engine, create_engine
-from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from config.env_var_manager import EnvVarManager
