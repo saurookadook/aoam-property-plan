@@ -80,7 +80,6 @@ dependencies = [
     { name = "pymemcache" },
     { name = "python-dotenv" },
     { name = "requests" },
-    { name = "scrapy" },
     { name = "sqlalchemy" },
     { name = "uvicorn", extra = ["standard"] },
     { name = "vadersentiment" },
@@ -99,7 +98,6 @@ dev = [
     { name = "pytest-xdist" },
     { name = "requests-mock" },
     { name = "rich" },
-    { name = "scrapy-splash" },
 ]
 
 [package.metadata]
@@ -114,7 +112,6 @@ requires-dist = [
     { name = "pymemcache", specifier = ">=4.0.0" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "requests", specifier = ">=2.34.1" },
-    { name = "scrapy", specifier = ">=2.15.2" },
     { name = "sqlalchemy", specifier = ">=2.0.49" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.47.0" },
     { name = "vadersentiment", specifier = ">=3.3.2" },
@@ -133,7 +130,6 @@ dev = [
     { name = "pytest-xdist", specifier = ">=3.8.0" },
     { name = "requests-mock", specifier = ">=1.12.1" },
     { name = "rich", specifier = ">=15.0.0" },
-    { name = "scrapy-splash", specifier = ">=0.11.1" },
 ]
 
 [[package]]
@@ -1470,48 +1466,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c0/8f/0722ca900cc807c13a6a0c696dacf35430f72e0ec571c4275d2371fca3e9/rich-15.0.0.tar.gz", hash = "sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36", size = 230680, upload-time = "2026-04-12T08:24:00.75Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl", hash = "sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb", size = 310654, upload-time = "2026-04-12T08:24:02.83Z" },
-]
-
-[[package]]
-name = "scrapy"
-version = "2.15.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cryptography" },
-    { name = "cssselect" },
-    { name = "defusedxml" },
-    { name = "itemadapter" },
-    { name = "itemloaders" },
-    { name = "lxml" },
-    { name = "packaging" },
-    { name = "parsel" },
-    { name = "protego" },
-    { name = "pydispatcher", marker = "platform_python_implementation == 'CPython'" },
-    { name = "pyopenssl" },
-    { name = "pypydispatcher", marker = "platform_python_implementation == 'PyPy'" },
-    { name = "queuelib" },
-    { name = "service-identity" },
-    { name = "tldextract" },
-    { name = "twisted" },
-    { name = "w3lib" },
-    { name = "zope-interface" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/11/ee/601014b8696e2e869c806d4377da6c468b278fd891b03fc5d1c830f2b641/scrapy-2.15.2.tar.gz", hash = "sha256:c7b8fc8d2c51a39d52f6025bdd7e9c714e43f97afd300e8c44157cf7a05c0c9e", size = 1291748, upload-time = "2026-04-28T13:29:54.141Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/2c/b9d926e117765d84654efb5a8280379e76a681338155c5c79578b4b207ac/scrapy-2.15.2-py3-none-any.whl", hash = "sha256:ff47379299699f1fcc7bc1d404754306f04371d0822e077c2857777d60743e07", size = 352868, upload-time = "2026-04-28T13:29:52.623Z" },
-]
-
-[[package]]
-name = "scrapy-splash"
-version = "0.11.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "scrapy" },
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ff/d9/afecfbb8d7b1f02a78ca563c958cf02f5c31e3155c40a421208c64e0a5cc/scrapy_splash-0.11.1.tar.gz", hash = "sha256:c7d5c155c76392b922f3090d133409d1b060a4991b027f3b77cc93abc2096214", size = 62286, upload-time = "2025-02-11T17:04:05.412Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/fd/5b4d6165acae877c1754566c97e9d52a15acd9e29f16e3908c563a9eb43f/scrapy_splash-0.11.1-py2.py3-none-any.whl", hash = "sha256:81d76bdc9033a2df6689e5738dbdb99027aaece4586b45a48ebd88736ec775df", size = 29267, upload-time = "2025-02-11T17:04:03.206Z" },
 ]
 
 [[package]]

@@ -15,7 +15,6 @@ dependencies = [
     "pymemcache>=4.0.0",
     "python-dotenv>=1.2.2",
     "requests>=2.34.1",
-    "scrapy>=2.15.2",
     "sqlalchemy>=2.0.49",
     "uvicorn[standard]>=0.47.0",
     "vadersentiment>=3.3.2",
@@ -34,7 +33,6 @@ dev = [
     "pytest-xdist>=3.8.0",
     "requests-mock>=1.12.1",
     "rich>=15.0.0",
-    "scrapy-splash>=0.11.1",
 ]
 
 # [build-system]
