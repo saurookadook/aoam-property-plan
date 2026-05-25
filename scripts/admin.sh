@@ -146,21 +146,22 @@ initTestDatabase() {
 }
 
 scriptController() {
-    # TODO: fix this case :]
     if [ "$1" == "dcr-alembic" ]; then
-        echo "before: $@"
+        # echo "before: $@"
         shift
-        echo "after: $@"
-        while getopts "m" arg; do
-            echo "m arg: ${$arg}"
-            case ${arg} in
-                m)
-                    echo "m: ${$OPTARG}"
-                    docker compose run --rm backend-migrations revision --autogenerate -m "'${OPTARG}'"
-                    exit 0
-                    ;;
-            esac
-        done
+        # echo "after: $@"
+        docker compose run --rm backend-migrations revision --autogenerate -m "$@"
+        # TODO: fix this :]
+        # while getopts "m" arg; do
+        #     echo "m arg: ${arg}"
+        #     case ${arg} in
+        #         m)
+        #             echo "m: ${OPTARG}"
+        #             docker compose run --rm backend-migrations revision --autogenerate -m "'${OPTARG}'"
+        #             exit 0
+        #             ;;
+        #     esac
+        # done
     elif [ "$1" == "db" ]; then
         echo ""
         echo "======================================================================================"
