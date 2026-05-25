@@ -1,0 +1,185 @@
+# ###### In case you forget...
+# :ro === :readonly
+# for each 'ports' entry -> HOST_PORT:CONTAINER_PORT
+
+services:
+  all:
+    image: alpine
+    command: sh -c "echo start"
+    platform: linux/amd64
+    depends_on:
+      - backend
+      # - frontend
+      # - memcached
+      - nginx
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx-reverse-proxy/Dockerfile
+    links:
+      # - frontend
+      - backend
+    # network_mode: host
+    networks:
+      - main_app
+      - scraper
+    platform: linux/amd64
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      # TODO: revisit whether this is necessary once the frontend and backend have been established
+      # - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx-reverse-proxy/conf/:/etc/nginx/conf.d/:ro
+      - ./nginx-reverse-proxy/certs/:/etc/nginx/ssl/:ro
+      # Assets to be served by NGINX
+      # - ./frontend/dist/:/etc/nginx/html/
+
+  pg_database:
+    # image: postgres:16.2-bullseye # higher than this?
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD: example
+    networks:
+      - main_app
+      - scraper
+    platform: linux/amd64
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scripts/db:/opt/scripts/db
+      - db_volume:/var/lib/postgresql/data
+
+  backend:
+    depends_on:
+      - pg_database
+      # - memcached
+    env_file: .env
+    environment:
+      COLUMNS: ${COLUMNS}
+      HOST: ${HOST}
+      PORT: ${PORT}
+      WORKERS: 1
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+      target: backend-dev
+    networks:
+      - main_app
+    platform: linux/amd64
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/api:/opt/aoam-property-plan/backend/api
+      - ./backend/config:/opt/aoam-property-plan/backend/config
+      - ./backend/constants:/opt/aoam-property-plan/backend/constants
+      - ./backend/db:/opt/aoam-property-plan/backend/db
+      - ./backend/models:/opt/aoam-property-plan/backend/models
+      - ./backend/scripts:/opt/aoam-property-plan/backend/scripts
+      - ./backend/utils:/opt/aoam-property-plan/backend/utils
+      # - ~/.aws:/home/nlpstocksaapp/.aws:ro
+
+  backend-migrations:
+    build:
+      target: backend-migrations
+    extends: backend
+
+  backend-scripts:
+    build:
+      target: backend-scripts
+    extends: backend
+
+  backend-test:
+    build:
+      target: backend-test
+    environment:
+      DATABASE_NAME: test_aoam_property_plan
+      ENV: test
+    extends: backend
+
+  # TODO: later!
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: app/Dockerfile
+  #     target: frontend-dev
+  #   env_file: .env
+  #   environment:
+  #     EXAMPLE: woof
+  #   networks:
+  #     - main_app
+  #   platform: linux/amd64
+  #   ports:
+  #     - "8080:8080"
+  #     - "9229:9229"
+  #   volumes:
+  #     - ./app/.yarn/:/opt/nlpssa-frontend/.yarn/:ro
+  #     - ./app/src/client:/opt/nlpssa-frontend/src/client:ro
+  #     - ./app/src/server:/opt/nlpssa-frontend/src/server:ro
+  #     - ./app/src/types:/opt/nlpssa-frontend/src/types:ro
+  #     - ./app/.yarnrc.yml:/opt/nlpssa-frontend/.yarnrc.yml:ro
+  #     - ./app/customTSNodeLoader.js:/opt/nlpssa-frontend/customTSNodeLoader.js:ro
+  #     - ./app/package.json:/opt/nlpssa-frontend/package.json:ro
+  #     - ./app/tsconfig.json:/opt/nlpssa-frontend/tsconfig.json:ro
+  #     - ./app/webpack.config.js:/opt/nlpssa-frontend/webpack.config.js:ro
+  #     - ./app/yarn.lock:/opt/nlpssa-frontend/yarn.lock:ro
+  #     - /opt/nlpssa-frontend/node_modules
+  #     # - ~/.aws:/home/nlpstocksaapp/.aws:ro
+
+  # TODO: if we ever need it?
+  # memcached:
+  #   image: memcached:1.6.10
+  #   networks:
+  #     - main_app
+  #   platform: linux/amd64
+  #   ports:
+  #     - '11211:11211'
+
+  # TODO: for when web scraper is ready
+  # scraper:
+  #   depends_on:
+  #     - pg_database
+  #     - splash-server
+  #   env_file: .env
+  #   environment:
+  #     EXAMPLE: woof
+  #     WORKERS: 1
+  #   build:
+  #     context: .
+  #     dockerfile: backend/Dockerfile
+  #     target: scraper-dev
+  #   networks:
+  #     - scraper
+  #   platform: linux/amd64
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ./backend:/opt/aoam-property-plan/backend
+  #     # - ~/.aws:/home/nlpstocksaapp/.aws:ro
+
+  # splash-server:
+  #   # Currently open issue related to this not working on M1 Macs
+  #   # https://github.com/docker/for-mac/issues/7220
+  #   image: scrapinghub/splash:latest
+  #   networks:
+  #     - scraper
+  #   platform: linux/amd64
+  #   ports:
+  #     - "8050:8050"
+  #   volumes:
+  #     - splash:/opt/aoam-property-plan/scraper/splash
+
+networks:
+  main_app:
+    driver: bridge
+  scraper:
+    driver: bridge
+
+volumes:
+  db_volume:
+  # splash:

@@ -1,0 +1,32 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnType": false, // required
+    "editor.formatOnPaste": false, // optional
+    "editor.formatOnSave": true, // optional
+    "editor.formatOnSaveMode": "file", // required to format on save
+    // "files.autoSave": "onFocusChange", // optional but recommended
+    "vs-code-prettier-eslint.prettierLast": true, // set as "true" to run 'prettier' last not first
+    "editor.tabSize": 4,
+    // "prettier.requireConfig": true,
+    // "prettier.resolveGlobalModules": true,
+    // "prettier.configPath": "./app/.prettierrc",
+    "[typescriptreact]": {
+        "editor.tabSize": 2
+    },
+    "[sql]": {
+        "editor.formatOnSave": false
+    },
+    "flake8.args": [
+        "--max-line-length=120",
+        "--per-file-ignores='__init__.py: F401'"
+    ],
+    "python.analysis.extraPaths": [
+        "backend/.venv/lib/python3.12/site-packages",
+    ],
+    "path-autocomplete.pathMappings": {
+        // "__mocks__": "app/src/__mocks__",
+        // "client": "app/src/client",
+        // "server": "app/src/server",
+        // "types": "app/src/types"
+    }
+}
