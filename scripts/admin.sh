@@ -54,7 +54,8 @@ isDbReady() {
 
 dbExists() {
     # Q: Is this a common practice for predicate functions in bash? Or is there some other common practice?
-    psql $PSQL_CONNECTION -l | grep "\b$DATABASE_NAME\b" | wc -l
+    local db_name="${1:-$DATABASE_NAME}"
+    psql $PSQL_CONNECTION -l | grep "\b$db_name\b" | wc -l
 }
 
 dropDatabase() {
@@ -129,7 +130,7 @@ initDatabase() {
 initTestDatabase() {
     isDbReady
 
-    if [[ $* == "-d" || $(dbExists) -ne 0 ]]; then
+    if [[ $* == "-d" || $(dbExists $TEST_DATABASE_NAME) -ne 0 ]]; then
         echo ""
         echo "======================================================================================"
         echo "Creating $TEST_DATABASE_NAME database..."
