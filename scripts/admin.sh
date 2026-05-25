@@ -54,8 +54,7 @@ isDbReady() {
 
 dbExists() {
     # Q: Is this a common practice for predicate functions in bash? Or is there some other common practice?
-    psql $PSQL_CONNECTION -l | grep "\b$DATABASE_NAME\b" | wc -l > /dev/null 2>&1;
-    return $?
+    psql $PSQL_CONNECTION -l | grep "\b$DATABASE_NAME\b" | wc -l
 }
 
 dropDatabase() {
