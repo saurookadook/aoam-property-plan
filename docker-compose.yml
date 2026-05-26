@@ -102,6 +102,16 @@ services:
       ENV: test
     extends: backend
 
+  backend-release:
+    build:
+      context: backend
+      dockerfile: ./Dockerfile.release
+      target: backend-release
+    environment:
+      DATABASE_NAME: aoam_property_plan
+      ENV: production
+    extends: backend
+
   # TODO: later!
   # frontend:
   #   build:
