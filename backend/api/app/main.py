@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from typing import cast
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 
 # from fastapi_csrf_protect import CsrfProtect
@@ -17,25 +18,42 @@ from utils.logging.extended_logger import ExtendedLogger
 from utils.logging.init import init_logging
 
 init_logging(app_name="aoam-api")
-logger = cast(ExtendedLogger, logging.getLogger(__file__))
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(
-        f"\n{'-' * window_width}"
-        "\nStarting aoam API server..."
-        f"\n{'-' * window_width}"
+    logger = cast(ExtendedLogger, logging.getLogger(__file__))
+
+    divider = "-" * window_width
+
+    # logger.info("Starting aoam API server...")
+    print(
+        "\n".join(
+            [
+                divider,
+                "Starting aoam API server...",
+                divider,
+            ]
+        )
     )
     yield
-    logger.info(
-        f"\n{'-' * window_width}"
-        "\nShutting down aoam API server..."
-        f"\n{'-' * window_width}"
+    # logger.info("Shutting down aoam API server...")
+    print(
+        "\n".join(
+            [
+                divider,
+                "Shutting down aoam API server...",
+                divider,
+            ]
+        )
     )
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    TrustedHostMiddleware, allowed_hosts=["healthcheck.railway.app", "localhost"]
+)
 
 
 # NOTE: middleware executed bottom to top

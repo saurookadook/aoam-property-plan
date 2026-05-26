@@ -1,0 +1,12 @@
+{
+    "$schema": "https://railway.com/railway.schema.json",
+    "build": {
+        "dockerfilePath": "Dockerfile.release"
+    },
+    "//TODO": "fix this healthcheck",
+    "//deploy": {
+        "healthcheckPath": "/api/health-check",
+        "healthcheckTimeout": 100,
+        "restartPolicyType": "NEVER"
+    }
+}

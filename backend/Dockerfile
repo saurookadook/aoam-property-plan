@@ -6,7 +6,9 @@ COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
 
 FROM install-base AS install-dev
 WORKDIR /opt/aoam-property-plan/backend
-COPY ./api \
+COPY ./_factories \
+    ./_mocks \
+    ./api \
     ./config \
     ./constants \
     ./db \
@@ -17,6 +19,7 @@ COPY ./api \
     ./alembic.ini \
     ./gunicorn_config.py \
     ./pyproject.toml \
+    ./README.md \
     ./pytest.ini \
     ./uv.lock \
     ./
@@ -38,7 +41,8 @@ RUN mkdir -p /var/log/aoam-property-plan
 # USER aoam_app
 WORKDIR /opt/aoam-property-plan/backend
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
-ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
+ENV PYTHONPATH="/opt/aoam-property-plan/backend"
+ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 
 
 
@@ -49,6 +53,7 @@ ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
 # TODO: figure out why $HOST and $PORT aren't getting interpolated correctly
 EXPOSE 3000
+WORKDIR /opt/aoam-property-plan/backend
 ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
 CMD [ "--host", "0.0.0.0", "--port", "3000", "--reload" ]
 
@@ -89,36 +94,8 @@ CMD [ "-s", "--import-mode=append" ]
 
 FROM dev-base AS scraper-dev
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
-ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
+ENV PYTHONPATH="/opt/aoam-property-plan/backend"
+ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 USER root
 WORKDIR /opt/aoam-property-plan/backend
 ENTRYPOINT [ "python3", "scraper/main.py" ]
-
-
-FROM install-base AS install-release
-WORKDIR /opt/aoam-property-plan/backend
-COPY ./pyproject.toml ./uv.lock ./
-RUN uv venv --python 3.12
-RUN uv sync --locked
-RUN useradd --uid 2000 aoam_app
-RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
-
-
-FROM install-release AS release-base
-RUN mkdir -p /var/log/aoam-property-plan/backend
-# RUN useradd --uid 2000 aoam_app
-# RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
-# USER aoam_app
-# ARG venv
-WORKDIR /opt/aoam-property-plan/backend
-ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
-ENV PYTHONPATH="/opt/aoam-property-plan/backend/:$PYTHONPATH"
-
-
-# Maybe backend-api? api-server?
-FROM release-base AS backend
-ARG HOST
-ARG PORT
-ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
-CMD [ "--host", "$HOST", "--port", "$PORT"]
-# ^ may need to change this command

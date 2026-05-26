@@ -6,15 +6,13 @@ from config.env_var_manager import EnvVarManager
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
 
-logging.setLoggerClass(ExtendedLogger)
-
 root_logger = logging.getLogger()
 
 env_vars = EnvVarManager().env_vars
 
 
 def is_prod():
-    return env_vars.env.lower() == "prod"
+    return "prod" in env_vars.env.lower()
 
 
 def init_logging(app_name: str):
@@ -37,3 +35,7 @@ def init_logging(app_name: str):
     )
     console_handler.setFormatter(logging.Formatter(format_str, style="{"))
     root_logger.addHandler(console_handler)
+
+    logging.setLoggerClass(ExtendedLogger)
+
+    return root_logger
