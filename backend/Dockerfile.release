@@ -1,10 +1,10 @@
-FROM python:3.12-bullseye AS install-base
+FROM python:3.12-bullseye AS backend-install-base
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y libssl-dev build-essential vim nano
 COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
 
 
-FROM install-base AS install-release
+FROM backend-install-base AS backend-install-release
 WORKDIR /opt/aoam-property-plan/backend
 COPY ./_factories/__init__.py ./_factories/__init__.py
 COPY ./_mocks/__init__.py ./_mocks/__init__.py
@@ -32,7 +32,7 @@ RUN .venv/bin/python -c "import api; import config; import utils"
 # RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
 
 
-FROM install-release AS release-base
+FROM backend-install-release AS backend-release-base
 RUN mkdir -p /var/log/aoam-property-plan/backend
 # RUN useradd --uid 2000 aoam_app
 # RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
@@ -45,7 +45,7 @@ ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 
 
 # Maybe backend-api? api-server?
-FROM release-base AS backend-release
+FROM backend-release-base AS backend-release-app
 ARG HOST=::
 ARG PORT=3000
 ENV HOST=$HOST
@@ -56,3 +56,37 @@ ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
 CMD [ "--host", "::", "--port", "3000" ]
 # CMD [ "--host", "$HOST", "--port", "$PORT"]
 # ^ may need to change this command
+
+
+FROM backend-release-base AS backend-release-migrations
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "alembic" ]
+
+
+FROM backend-release-base AS backend-release-scripts
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "python3" ]
+
+
+FROM backend-release-base AS backend-release-test
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "pytest" ]
+CMD [ "-s", "--import-mode=append" ]

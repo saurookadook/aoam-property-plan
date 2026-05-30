@@ -146,6 +146,51 @@ initTestDatabase() {
     fi
 }
 
+backendPublishBase() {
+    docker buildx build \
+        -f backend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-backend-base:latest" \
+        --target backend-release-base \
+        --push backend
+        # --platform linux/amd64,linux/arm64 \
+}
+
+backendPublishApp() {
+    docker buildx build \
+        -f backend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-backend-app:latest" \
+        --target backend-release-app \
+        --push backend
+        # --platform linux/amd64,linux/arm64 \
+}
+
+backendPublishMigrations() {
+    docker buildx build \
+        -f backend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-backend-migrations:latest" \
+        --target backend-release-migrations \
+        --push backend
+        # --platform linux/amd64,linux/arm64 \
+}
+
+backendPublishScripts() {
+    docker buildx build \
+        -f backend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-backend-scripts:latest" \
+        --target backend-release-scripts \
+        --push backend
+        # --platform linux/amd64,linux/arm64 \
+}
+
+backendPublishTest() {
+    docker buildx build \
+        -f backend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-backend-test:latest" \
+        --target backend-release-test \
+        --push backend
+        # --platform linux/amd64,linux/arm64 \
+}
+
 scriptController() {
     if [ "$1" == "dcr-alembic" ]; then
         # echo "before: $@"
@@ -256,6 +301,35 @@ scriptController() {
         echo ""
         if [ "$2" == "docker" ]; then
             cleanDocker
+        fi
+    elif [ "$1" == "docker" ]; then
+        echo ""
+        echo "======================================================================================"
+        echo "docker case"
+        echo "======================================================================================"
+        echo ""
+        if [ "$2" == "publish" ]; then
+            if [ "$3" == "backend" ]; then
+                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
+
+                if [ "$4" == "all" ]; then
+                    backendPublishBase
+                    backendPublishApp
+                    backendPublishMigrations
+                    backendPublishScripts
+                    backendPublishTest
+                elif [ "$4" == "base" ]; then
+                    backendPublishBase
+                elif [ "$4" == "app" ]; then
+                    backendPublishApp
+                elif [ "$4" == "migrations" ]; then
+                    backendPublishMigrations
+                elif [ "$4" == "scripts" ]; then
+                    backendPublishScripts
+                elif [ "$4" == "test" ]; then
+                    backendPublishTest
+                fi
+            fi
         fi
     elif [ "$1" == "reset-backend" ]; then
         docker compose down && \

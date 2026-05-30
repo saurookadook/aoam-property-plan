@@ -56,6 +56,10 @@ services:
       - db_volume:/var/lib/postgresql/data
 
   backend:
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+      target: backend-dev
     depends_on:
       - pg_database
       # - memcached
@@ -65,10 +69,6 @@ services:
       HOST: ${HOST}
       PORT: ${PORT}
       WORKERS: 1
-    build:
-      context: backend
-      dockerfile: ./Dockerfile
-      target: backend-dev
     networks:
       - main_app
     platform: linux/amd64
