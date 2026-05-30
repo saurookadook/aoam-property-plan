@@ -1,0 +1,16 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Quindío",
+        "locality": "Salento",
+        "district": null
+    },
+    "occupancy": 0.34,
+    "average_daily_rate": 336288.5,
+    "rev_par": 110974.6,
+    "revenue": 2.58204091E7,
+    "booking_lead_time": 37.7,
+    "length_of_stay": 2.6,
+    "min_nights": 1.6,
+    "active_listings_count": 514.8
+}
