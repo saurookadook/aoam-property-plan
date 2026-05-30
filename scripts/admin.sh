@@ -196,7 +196,11 @@ scriptController() {
         # echo "before: $@"
         shift
         # echo "after: $@"
-        docker compose run --rm backend-migrations revision --autogenerate -m "$@"
+        docker compose run \
+            --build \
+            --rm \
+            --remove-orphans \
+            backend-migrations revision --autogenerate -m "$@"
         # TODO: fix this :]
         # while getopts "m" arg; do
         #     echo "m arg: ${arg}"

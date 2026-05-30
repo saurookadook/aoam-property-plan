@@ -9,7 +9,7 @@ def db_session():
     Yields:
         Session: open database session
     """
-    session = DBSessionManager().scoped_session
+    session = DBSessionManager().scoped_session()
     try:
         yield session
         session.commit()
@@ -17,4 +17,4 @@ def db_session():
         session.rollback()
         raise
     finally:
-        session.remove()
+        session.close()
