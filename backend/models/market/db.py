@@ -16,8 +16,9 @@ class MarketDB(BaseDB, TimestampsDB):
     country: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     listing_count: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
     last_updated: Mapped[datetime] = mapped_column(postgresql.TIMESTAMP, nullable=False)
-    neighborhood: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
+    neighborhood: Mapped[str] = mapped_column(postgresql.TEXT, nullable=True)
     occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     peak_months: Mapped[list[str]] = mapped_column(
-        postgresql.ARRAY(postgresql.TEXT), nullable=False
+        postgresql.ARRAY(postgresql.TEXT), nullable=True
     )
+    region: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
