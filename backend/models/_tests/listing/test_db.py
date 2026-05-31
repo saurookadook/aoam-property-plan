@@ -58,7 +58,9 @@ def test_listing_db(expected_listing_dict, mock_utcnow, test_db_session):
     test_db_session.commit()
 
     result = test_db_session.execute(
-        select(ListingDB).where(
+        select(ListingDB)
+        .join(MarketDB, ListingDB.market_id == MarketDB.id)
+        .where(
             and_(
                 ListingDB.id == expected_listing_dict["id"],
                 MarketDB.id == expected_listing_dict["market_id"],
