@@ -82,3 +82,26 @@ def property_record(expected_property_dict, test_db_session):
     property_record = PropertyDBFactory(**expected_property_dict)
     test_db_session.commit()
     return property_record
+
+
+@pytest.fixture
+def expected_property_financial_report_dict(property_record, mock_utcnow):
+    calculated_at = (
+        (mock_utcnow - timedelta(days=5)).replace(tzinfo=timezone.utc).isoformat()
+    )
+
+    return dict(
+        id=UUID("53cd9d19-65f7-4796-ac2c-b6616eb46d63"),
+        property_id=property_record.id,
+        annual_net_income_usd=50000.0,
+        annual_revenue_usd=20000.0,
+        calculated_at=calculated_at,
+        cash_invested_usd=10000.0,
+        coc_return_percentage=10.0,
+        down_payment_percentage=20.0,
+        exchange_rate=1.7,
+        interest_rate=5.0,
+        loan_term_years=30,
+        monthly_expenses_usd=2000.0,
+        payback_years=5.0,
+    )

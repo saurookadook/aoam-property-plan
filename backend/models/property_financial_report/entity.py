@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from models.base.entity import BaseEntityModel
@@ -26,7 +25,7 @@ class PropertyFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     """
 
     interest_rate: float
-    long_term_years: float
+    loan_term_years: float
     """
     NOTE: Mapped as a ``float`` to leave room for partial years.
     """
