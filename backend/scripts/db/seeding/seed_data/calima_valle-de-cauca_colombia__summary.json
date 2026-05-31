@@ -1,0 +1,16 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Valle del Cauca",
+        "locality": "Calima",
+        "district": null
+    },
+    "occupancy": 0.18,
+    "average_daily_rate": 860093.1,
+    "rev_par": 163426.0,
+    "revenue": 3.18708307E7,
+    "booking_lead_time": 23.4,
+    "length_of_stay": 2.4,
+    "min_nights": 3.5,
+    "active_listings_count": 177.3
+}

@@ -40,8 +40,8 @@ services:
   pg_database:
     # image: postgres:16.2-bullseye # higher than this?
     build:
-      context: .
-      dockerfile: postgres/Dockerfile
+      context: postgres
+      dockerfile: Dockerfile
     env_file: .env
     environment:
       POSTGRES_PASSWORD: example
@@ -56,6 +56,10 @@ services:
       - db_volume:/var/lib/postgresql/data
 
   backend:
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+      target: backend-dev
     depends_on:
       - pg_database
       # - memcached
@@ -65,10 +69,6 @@ services:
       HOST: ${HOST}
       PORT: ${PORT}
       WORKERS: 1
-    build:
-      context: backend
-      dockerfile: ./Dockerfile
-      target: backend-dev
     networks:
       - main_app
     platform: linux/amd64
@@ -100,6 +100,16 @@ services:
     environment:
       DATABASE_NAME: test_aoam_property_plan
       ENV: test
+    extends: backend
+
+  backend-release:
+    build:
+      context: backend
+      dockerfile: ./Dockerfile.release
+      target: backend-release-app
+    environment:
+      DATABASE_NAME: aoam_property_plan
+      ENV: production
     extends: backend
 
   # TODO: later!

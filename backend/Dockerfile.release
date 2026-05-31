@@ -1,0 +1,92 @@
+FROM python:3.12-bullseye AS backend-install-base
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y libssl-dev build-essential vim nano
+COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
+
+
+FROM backend-install-base AS backend-install-release
+WORKDIR /opt/aoam-property-plan/backend
+COPY ./_factories/__init__.py ./_factories/__init__.py
+COPY ./_mocks/__init__.py ./_mocks/__init__.py
+# ^ these 2 are included to prevent build failure
+COPY ./api ./api
+COPY ./config ./config
+COPY ./constants ./constants
+COPY ./db ./db
+COPY ./models ./models
+COPY ./scripts ./scripts
+COPY ./utils ./utils
+COPY ./.python-version \
+    ./alembic.ini \
+    ./gunicorn_config.py \
+    ./pyproject.toml \
+    ./README.md \
+    ./uv.lock \
+    ./
+RUN uv venv --python 3.12
+RUN uv sync --locked --no-install-project --no-dev
+RUN echo "/opt/aoam-property-plan/backend" > .venv/lib/python3.12/site-packages/project.pth
+# Smoke test to catch issues with package resolution earlier in build process
+RUN .venv/bin/python -c "import api; import config; import utils"
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app /opt/aoam-property-plan/backend/.venv
+
+
+FROM backend-install-release AS backend-release-base
+RUN mkdir -p /var/log/aoam-property-plan/backend
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app /var/log/aoam-property-plan/backend
+# USER aoam_app
+# ARG venv
+WORKDIR /opt/aoam-property-plan/backend
+ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
+ENV PYTHONPATH="/opt/aoam-property-plan/backend"
+# ENV PYTHONPATH="/opt/aoam-property-plan/backend/:${PYTHONPATH:-$PATH}"
+
+
+FROM backend-release-base AS backend-release-migrations
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "alembic" ]
+
+
+FROM backend-release-base AS backend-release-scripts
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "python3" ]
+
+
+FROM backend-release-base AS backend-release-test
+ARG HOST
+ARG PORT
+ENV PYTHONUNBUFFERED=1
+ENV FORCE_COLOR=1
+# RUN useradd --uid 2000 aoam_app
+# RUN chown -R aoam_app:aoam_app ./.venv
+# RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
+ENTRYPOINT [ "uv", "run", "pytest" ]
+CMD [ "-s", "--import-mode=append" ]
+
+
+# Maybe backend-api? api-server?
+FROM backend-release-base AS backend-release-app
+ARG HOST=::
+ARG PORT=3000
+ENV HOST=$HOST
+ENV PORT=$PORT
+EXPOSE 3000
+WORKDIR /opt/aoam-property-plan/backend
+ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
+CMD [ "--host", "::", "--port", "3000" ]
+# CMD [ "--host", "$HOST", "--port", "$PORT"]
+# ^ may need to change this command

@@ -23,7 +23,7 @@ class MarketDBFactory(TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelF
     )
     city = factory.Faker("city")
     country = factory.Faker("country")
-    listing_count = factory.Faker("random_int", min=1, max=500)
+    listing_count = factory.Faker("pyfloat", min_value=1.0, max_value=500.0)
     last_updated = factory.LazyAttribute(lambda o: o.updated_at + timedelta(days=1))
     neighborhood = factory.Faker("street_name")
     occupancy_rate = factory.Faker("pyfloat", positive=True, min_value=0.5, max_value=1)
@@ -34,3 +34,4 @@ class MarketDBFactory(TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelF
             factory.Faker("month_name"),
         ]
     )
+    region = factory.Faker("state")

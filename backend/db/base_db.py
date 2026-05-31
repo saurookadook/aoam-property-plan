@@ -4,7 +4,7 @@ import re
 from uuid import UUID, uuid4
 
 from pydantic import alias_generators
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, Table
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import (
     Mapped,
@@ -26,6 +26,7 @@ def simple_pluralize(word: str) -> str:
 @as_declarative()
 class BaseDB:
     metadata: MetaData
+    __table__: Table
 
     __table_args__ = {"extend_existing": True}
 
