@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from datetime import timedelta, timezone
 from uuid import UUID
 
 import pytest
 
 from _factories.market.db import MarketDBFactory
+from _factories.property.db import PropertyDBFactory
 
 
 @pytest.fixture
@@ -49,3 +51,34 @@ def expected_listing_dict(test_market_record):
         property_type="Apartment",
         source_url="https://example.com/listing/12345",
     )
+
+
+@pytest.fixture
+def expected_property_dict(mock_utcnow):
+    return dict(
+        id=UUID("44cf56a4-1f14-4a08-915f-dc40b7ef657e"),
+        address="123 Test St",
+        bedrooms=3,
+        city="Test City",
+        country="Test Country",
+        latitude=37.7749,
+        longitude=-122.4194,
+        neighborhood="Test Neighborhood",
+        notes="Test notes",
+        postal_code="12345",
+        property_type="Apartment",
+        purchase_price_cop=770000.0,
+        purchase_price_usd=100000.0,
+        source_created_at=(mock_utcnow - timedelta(days=30))
+        .replace(tzinfo=timezone.utc)
+        .isoformat(),
+        source_url="https://example.com/property/12345",
+        state="Test State",
+    )
+
+
+@pytest.fixture
+def property_record(expected_property_dict, test_db_session):
+    property_record = PropertyDBFactory(**expected_property_dict)
+    test_db_session.commit()
+    return property_record
