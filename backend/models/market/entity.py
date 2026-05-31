@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Optional
 
+from models.base.entity import BaseEntityModel
 from models.mixins import TimestampsEntityMixin
-from utils.pydantic_helpers import BaseEntityModel
 
 
 class MarketEntity(BaseEntityModel, TimestampsEntityMixin):
