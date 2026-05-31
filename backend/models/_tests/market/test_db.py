@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from uuid import UUID
 
 import pytest
 from sqlalchemy import select, and_
@@ -16,13 +17,13 @@ def test_market_db(expected_market_dict, mock_utcnow, test_db_session):
     result = test_db_session.execute(
         select(MarketDB).where(
             and_(
-                MarketDB.id == expected_market_dict["id"],
                 MarketDB.city == expected_market_dict["city"],
+                MarketDB.country == expected_market_dict["country"],
             )
         )
     ).scalar_one()
 
-    assert result.id == expected_market_dict["id"]
+    assert isinstance(result.id, UUID)
     assert result.adr_usd == expected_market_dict["adr_usd"]
     assert result.annual_revenue_usd == expected_market_dict["annual_revenue_usd"]
     assert result.city == expected_market_dict["city"]

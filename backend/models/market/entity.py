@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Optional
 
 from models.base.entity import BaseEntityModel
@@ -11,6 +12,7 @@ class MarketEntity(BaseEntityModel, TimestampsEntityMixin):
     annual_revenue_usd: float
     city: str
     country: str
+    last_updated: datetime
     listing_count: float
     neighborhood: Optional[str]
     occupancy_rate: float
