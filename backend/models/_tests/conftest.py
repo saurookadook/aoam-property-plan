@@ -5,6 +5,7 @@ from uuid import UUID
 
 import pytest
 
+from _factories.exchange_rate.db import ExchangeRateDBFactory
 from _factories.market.db import MarketDBFactory
 from _factories.property.db import PropertyDBFactory
 
@@ -105,3 +106,26 @@ def expected_property_financial_report_dict(property_record, mock_utcnow):
         monthly_expenses_usd=2000.0,
         payback_years=5.0,
     )
+
+
+@pytest.fixture
+def expected_exchange_rate_dict(mock_utcnow):
+    record_date = (
+        (mock_utcnow - timedelta(days=1))
+        .replace(tzinfo=timezone.utc)
+        .date()
+        .isoformat()
+    )
+
+    return dict(
+        id=UUID("5fd8ed45-5c16-47ab-b625-2cd37cc1f1a6"),
+        record_date=record_date,
+        cop_per_usd=500.0,
+    )
+
+
+@pytest.fixture
+def exchange_rate_record(expected_exchange_rate_dict, test_db_session):
+    exchange_rate = ExchangeRateDBFactory(**expected_exchange_rate_dict)
+    test_db_session.commit()
+    return exchange_rate
