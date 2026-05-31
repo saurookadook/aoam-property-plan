@@ -17,4 +17,4 @@ def db_session():
         session.rollback()
         raise
     finally:
-        session.close()
+        DBSessionManager().scoped_session.remove()

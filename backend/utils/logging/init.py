@@ -12,7 +12,7 @@ env_vars = EnvVarManager().env_vars
 
 
 def is_prod():
-    return "prod" in env_vars.env.lower()
+    return env_vars.env.lower() in set(["prod", "production"])
 
 
 def init_logging(app_name: str):

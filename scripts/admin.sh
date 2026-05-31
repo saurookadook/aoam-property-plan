@@ -314,7 +314,7 @@ scriptController() {
         echo ""
         if [ "$2" == "publish" ]; then
             if [ "$3" == "backend" ]; then
-                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
+                printf '%s\n' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
                 if [ "$4" == "all" ]; then
                     backendPublishBase

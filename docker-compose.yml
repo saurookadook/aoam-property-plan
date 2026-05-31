@@ -40,8 +40,8 @@ services:
   pg_database:
     # image: postgres:16.2-bullseye # higher than this?
     build:
-      context: .
-      dockerfile: postgres/Dockerfile
+      context: postgres
+      dockerfile: Dockerfile
     env_file: .env
     environment:
       POSTGRES_PASSWORD: example
@@ -106,7 +106,7 @@ services:
     build:
       context: backend
       dockerfile: ./Dockerfile.release
-      target: backend-release
+      target: backend-release-app
     environment:
       DATABASE_NAME: aoam_property_plan
       ENV: production

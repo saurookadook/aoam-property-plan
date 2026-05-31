@@ -44,20 +44,6 @@ ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 # ENV PYTHONPATH="/opt/aoam-property-plan/backend/:${PYTHONPATH:-$PATH}"
 
 
-# Maybe backend-api? api-server?
-FROM backend-release-base AS backend-release-app
-ARG HOST=::
-ARG PORT=3000
-ENV HOST=$HOST
-ENV PORT=$PORT
-EXPOSE 3000
-WORKDIR /opt/aoam-property-plan/backend
-ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
-CMD [ "--host", "::", "--port", "3000" ]
-# CMD [ "--host", "$HOST", "--port", "$PORT"]
-# ^ may need to change this command
-
-
 FROM backend-release-base AS backend-release-migrations
 ARG HOST
 ARG PORT
@@ -90,3 +76,17 @@ ENV FORCE_COLOR=1
 # RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
 ENTRYPOINT [ "uv", "run", "pytest" ]
 CMD [ "-s", "--import-mode=append" ]
+
+
+# Maybe backend-api? api-server?
+FROM backend-release-base AS backend-release-app
+ARG HOST=::
+ARG PORT=3000
+ENV HOST=$HOST
+ENV PORT=$PORT
+EXPOSE 3000
+WORKDIR /opt/aoam-property-plan/backend
+ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
+CMD [ "--host", "::", "--port", "3000" ]
+# CMD [ "--host", "$HOST", "--port", "$PORT"]
+# ^ may need to change this command

@@ -52,7 +52,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["healthcheck.railway.app", "localhost"]
+    TrustedHostMiddleware,
+    allowed_hosts=[
+        "healthcheck.railway.app",
+        "localhost",
+        "aoam-property-plan-production.up.railway.app",
+    ],
 )
 
 
