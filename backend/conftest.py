@@ -11,6 +11,9 @@ from starlette.testclient import TestClient
 from _mocks.temporal import get_mock_utcnow
 from db.db_session_manager import DBSessionManager
 
+os.environ["FORCE_COLOR"] = "1"
+os.environ["PYTHONUNBUFFERED"] = "1"
+
 
 def pytest_sessionstart(session):
     os.environ["DATABASE_NAME"] = "test_aoam_property_plan"

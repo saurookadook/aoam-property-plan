@@ -1,14 +1,6 @@
 from __future__ import annotations
 
-from uuid import UUID
-
 from pydantic import BaseModel, ConfigDict, alias_generators
-
-
-class BaseEntityModel(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: UUID
 
 
 class BaseResponseModel(BaseModel):
