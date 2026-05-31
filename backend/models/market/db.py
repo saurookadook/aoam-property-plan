@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime
-
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -10,15 +8,15 @@ from models.mixins import TimestampsDB
 
 
 class MarketDB(BaseDB, TimestampsDB):
-    adr_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
-    annual_revenue_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
-    city: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
+    """
+    From biggest to smallest:
+    - country
+    - region
+    - locality
+    - district
+    """
+
     country: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
-    last_updated: Mapped[datetime] = mapped_column(postgresql.TIMESTAMP, nullable=False)
-    listing_count: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
-    neighborhood: Mapped[str] = mapped_column(postgresql.TEXT, nullable=True)
-    occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
-    peak_months: Mapped[list[str]] = mapped_column(
-        postgresql.ARRAY(postgresql.TEXT), nullable=True
-    )
+    district: Mapped[str] = mapped_column(postgresql.TEXT, nullable=True)
+    locality: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     region: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
