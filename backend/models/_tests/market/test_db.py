@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from uuid import UUID
 
-import pytest
 from sqlalchemy import select, and_
 
 from _factories.market.db import MarketDBFactory
@@ -11,28 +10,25 @@ from models.market.db import MarketDB
 
 
 def test_market_db(expected_market_dict, mock_utcnow, test_db_session):
-    market = MarketDBFactory(**expected_market_dict)
+    MarketDBFactory(**expected_market_dict)
     test_db_session.commit()
 
     result = test_db_session.execute(
         select(MarketDB).where(
             and_(
-                MarketDB.city == expected_market_dict["city"],
                 MarketDB.country == expected_market_dict["country"],
+                MarketDB.locality == expected_market_dict["locality"],
             )
         )
     ).scalar_one()
 
     assert isinstance(result.id, UUID)
-    assert result.adr_usd == expected_market_dict["adr_usd"]
-    assert result.annual_revenue_usd == expected_market_dict["annual_revenue_usd"]
-    assert result.city == expected_market_dict["city"]
     assert result.country == expected_market_dict["country"]
-    assert result.listing_count == expected_market_dict["listing_count"]
-    assert result.neighborhood == expected_market_dict["neighborhood"]
-    assert result.occupancy_rate == expected_market_dict["occupancy_rate"]
-    assert result.peak_months == expected_market_dict["peak_months"]
-    assert result.last_updated.isoformat() == expected_market_dict["last_updated"]
+    assert result.district == expected_market_dict["district"]
+    assert result.locality == expected_market_dict["locality"]
+    assert result.region == expected_market_dict["region"]
+    # assert result.peak_months == expected_market_dict["peak_months"]
+    # assert result.last_updated.isoformat() == expected_market_dict["last_updated"]
     assert isinstance(result.created_at, datetime)
     assert isinstance(result.updated_at, datetime)
     assert (

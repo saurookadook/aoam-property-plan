@@ -20,10 +20,7 @@ class TestMarketFacade:
 
     def _compare_result_with_expected(self, result: MarketEntity, expected_dict: dict):
         for key, value in expected_dict.items():
-            if key == "last_updated":
-                assert result.last_updated.isoformat() == value
-            else:
-                assert getattr(result, key) == value
+            assert getattr(result, key) == value
 
         return True
 
@@ -52,11 +49,10 @@ class TestMarketFacade:
         market_record_dict = market_entity.model_dump()
         updated_payload = {
             **market_record_dict,
-            "last_updated": market_entity.last_updated.isoformat(),
-            "listing_count": market_record_dict["listing_count"] + 10,
+            "region": "Updated Region",
         }
 
         result = market_facade.create_or_update(payload=updated_payload)
 
         assert self._compare_result_with_expected(result, updated_payload)
-        assert result.listing_count != market_record_dict["listing_count"]
+        assert result.region != market_record_dict["region"]
