@@ -313,9 +313,9 @@ scriptController() {
         echo "======================================================================================"
         echo ""
         if [ "$2" == "publish" ]; then
-            if [ "$3" == "backend" ]; then
-                printf '%s\n' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            printf '%s\n' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
+            if [ "$3" == "backend" ]; then
                 if [ "$4" == "all" ]; then
                     backendPublishBase
                     backendPublishApp
@@ -333,6 +333,11 @@ scriptController() {
                 elif [ "$4" == "test" ]; then
                     backendPublishTest
                 fi
+            elif [ "$3" == "pg" ]; then
+                docker buildx build \
+                    -f postgres/Dockerfile \
+                    -t "${DOCKER_USERNAME}/aoam-postgres:latest" \
+                    --push postgres
             fi
         fi
     elif [ "$1" == "reset-backend" ]; then
