@@ -7,21 +7,16 @@ import pytest
 
 from _factories.exchange_rate.db import ExchangeRateDBFactory
 from _factories.market.db import MarketDBFactory
+from _factories.market_financial_report.db import MarketFinancialReportDBFactory
 from _factories.property.db import PropertyDBFactory
 
 
 @pytest.fixture
 def expected_market_dict():
     return dict(
-        adr_usd=100.0,
-        annual_revenue_usd=1000.0,
-        city="Test City",
         country="Test Country",
-        last_updated="2026-05-18T11:29:20.063778",
-        listing_count=10.0,
-        neighborhood="Test Neighborhood",
-        occupancy_rate=0.85,
-        peak_months=["June", "July", "August"],
+        district="Test District",
+        locality="Test Locality",
         region="Test Region",
     )
 
@@ -31,6 +26,30 @@ def test_market_record(expected_market_dict, test_db_session):
     market_record = MarketDBFactory(**expected_market_dict)
     test_db_session.commit()
     return market_record
+
+
+@pytest.fixture
+def expected_market_financial_report_dict(test_market_record):
+    return dict(
+        market_id=test_market_record.id,
+        adr_usd=100.0,
+        annual_revenue_usd=1000.0,
+        last_updated="2026-05-18T11:29:20.063778",
+        listing_count=10.0,
+        occupancy_rate=0.85,
+        peak_months=["June", "July", "August"],
+    )
+
+
+@pytest.fixture
+def test_market_financial_report_record(
+    expected_market_financial_report_dict, test_db_session
+):
+    market_financial_report_record = MarketFinancialReportDBFactory(
+        **expected_market_financial_report_dict
+    )
+    test_db_session.commit()
+    return market_financial_report_record
 
 
 @pytest.fixture
@@ -56,6 +75,10 @@ def expected_listing_dict(test_market_record):
 
 @pytest.fixture
 def expected_property_dict(mock_utcnow):
+    source_created_at = (
+        (mock_utcnow - timedelta(days=30)).replace(tzinfo=timezone.utc).isoformat()
+    )
+
     return dict(
         id=UUID("44cf56a4-1f14-4a08-915f-dc40b7ef657e"),
         address="123 Test St",
@@ -70,9 +93,7 @@ def expected_property_dict(mock_utcnow):
         property_type="Apartment",
         purchase_price_cop=770000.0,
         purchase_price_usd=100000.0,
-        source_created_at=(mock_utcnow - timedelta(days=30))
-        .replace(tzinfo=timezone.utc)
-        .isoformat(),
+        source_created_at=source_created_at,
         source_url="https://example.com/property/12345",
         state="Test State",
     )

@@ -17,21 +17,7 @@ class MarketDBFactory(TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelF
         sqlalchemy_session = DBSessionManager().scoped_session
 
     id = factory.LazyFunction(uuid4)
-    adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)
-    annual_revenue_usd = factory.Faker(
-        "pyfloat", positive=True, min_value=1000, max_value=100000
-    )
-    city = factory.Faker("city")
     country = factory.Faker("country")
-    listing_count = factory.Faker("pyfloat", min_value=1.0, max_value=500.0)
-    last_updated = factory.LazyAttribute(lambda o: o.updated_at + timedelta(days=1))
-    neighborhood = factory.Faker("street_name")
-    occupancy_rate = factory.Faker("pyfloat", positive=True, min_value=0.5, max_value=1)
-    peak_months = factory.List(
-        [
-            factory.Faker("month_name"),
-            factory.Faker("month_name"),
-            factory.Faker("month_name"),
-        ]
-    )
+    district = factory.Faker("street_name")
+    locality = factory.Faker("city")
     region = factory.Faker("state")
