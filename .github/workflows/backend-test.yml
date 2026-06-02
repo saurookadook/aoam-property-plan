@@ -1,0 +1,37 @@
+name: Backend Test
+
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ["ubuntu-latest"]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: 🐳 Build Images
+        run: |
+          docker compose build backend-scripts backend-test nginx pg_database
+
+      - name: 🐘 Set up Database
+        run: |
+          docker compose up -d pg_database
+          # Wait for the database to be ready before proceeding
+          docker compose exec pg_database sh -c "until pg_isready -U postgres; do sleep 1; done"
+          ./scripts/admin.sh db create-test
+
+      - name: 🖊️ Run tests
+        run: |
+          docker compose run --rm --remove-orphans backend-test
