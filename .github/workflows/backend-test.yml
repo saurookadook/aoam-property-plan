@@ -23,6 +23,7 @@ jobs:
 
       - name: 🐳 Build Images
         run: |
+          cp .env.example .env
           docker compose build backend-scripts backend-test nginx pg_database
 
       - name: 🐘 Set up Database
