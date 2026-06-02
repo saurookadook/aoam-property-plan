@@ -71,6 +71,9 @@ ARG HOST
 ARG PORT
 ENV PYTHONUNBUFFERED=1
 ENV FORCE_COLOR=1
+WORKDIR /opt/aoam-property-plan/backend
+COPY ./_factories ./_factories
+COPY ./_mocks ./_mocks
 # RUN useradd --uid 2000 aoam_app
 # RUN chown -R aoam_app:aoam_app ./.venv
 # RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv

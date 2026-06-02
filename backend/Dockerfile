@@ -6,16 +6,16 @@ COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
 
 FROM install-base AS install-dev
 WORKDIR /opt/aoam-property-plan/backend
-COPY ./_factories \
-    ./_mocks \
-    ./api \
-    ./config \
-    ./constants \
-    ./db \
-    ./models \
-    ./scripts \
-    ./utils \
-    ./.python-version \
+COPY ./_factories ./_factories
+COPY ./_mocks ./_mocks
+COPY ./api ./api
+COPY ./config ./config
+COPY ./constants ./constants
+COPY ./db ./db
+COPY ./models ./models
+COPY ./scripts ./scripts
+COPY ./utils ./utils
+COPY ./.python-version \
     ./alembic.ini \
     ./gunicorn_config.py \
     ./pyproject.toml \
