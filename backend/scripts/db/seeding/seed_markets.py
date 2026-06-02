@@ -10,6 +10,7 @@ from rich import inspect as ri
 from db.db_session_manager import DBSessionManager
 from models.market.db import MarketDB
 from models.market.facade import MarketFacade
+from models.market_financial_report.db import MarketFinancialReportDB
 from models.market_financial_report.facade import MarketFinancialReportFacade
 from utils.filesystem import get_module_root
 from utils.logging.init import init_logging
@@ -59,6 +60,18 @@ def seed_db_with_markets():
 
                 market_record = market_facade.create_or_update(payload=market_dict)
                 local_db_session.commit()
+
+                maybe_one_report = local_db_session.execute(
+                    select(MarketFinancialReportDB).where(
+                        MarketFinancialReportDB.market_id == market_record.id
+                    )
+                ).scalar_one_or_none()
+
+                if maybe_one_report is not None:
+                    root_logger.info(
+                        f"Market financial report already exists for market with ``id``: '{market_record.id}'. Skipping..."
+                    )
+                    continue
 
                 market_financial_report_dict = dict(
                     market_id=market_record.id,

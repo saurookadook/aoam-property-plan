@@ -47,30 +47,27 @@ def downgrade() -> None:
     op.add_column(
         "markets",
         sa.Column(
-            "last_updated", postgresql.TIMESTAMP(), autoincrement=False, nullable=False
+            "last_updated",
+            postgresql.TIMESTAMP(),
+            autoincrement=False,
+            nullable=False,
+            server_default=sa.text("now()"),
         ),
     )
     op.add_column(
         "markets",
-        sa.Column("neighborhood", sa.TEXT(), autoincrement=False, nullable=True),
+        sa.Column("listing_count", sa.REAL(), autoincrement=False, nullable=True),
+    )
+    op.add_column(
+        "markets", sa.Column("adr_usd", sa.REAL(), autoincrement=False, nullable=True)
     )
     op.add_column(
         "markets",
-        sa.Column("listing_count", sa.REAL(), autoincrement=False, nullable=False),
-    )
-    op.add_column(
-        "markets", sa.Column("city", sa.TEXT(), autoincrement=False, nullable=False)
-    )
-    op.add_column(
-        "markets", sa.Column("adr_usd", sa.REAL(), autoincrement=False, nullable=False)
+        sa.Column("occupancy_rate", sa.REAL(), autoincrement=False, nullable=True),
     )
     op.add_column(
         "markets",
-        sa.Column("occupancy_rate", sa.REAL(), autoincrement=False, nullable=False),
-    )
-    op.add_column(
-        "markets",
-        sa.Column("annual_revenue_usd", sa.REAL(), autoincrement=False, nullable=False),
+        sa.Column("annual_revenue_usd", sa.REAL(), autoincrement=False, nullable=True),
     )
     op.alter_column("markets", "locality", new_column_name="city")
     op.alter_column("markets", "district", new_column_name="neighborhood")
