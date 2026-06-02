@@ -1,0 +1,19 @@
+name: "Backend CI Trigger: 'main' branch"
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/**.yml"
+      - "!.github/workflows/frontend-*.yml"
+      - "backend/**/*.ini"
+      - "backend/**/*.py"
+      - "backend/**/*.pyi"
+      - "backend/**/*.toml"
+      - "backend/**/*.yaml"
+      - "backend/**/*.yml"
+
+jobs:
+  build:
+    uses: ./.github/workflows/backend-test.yml

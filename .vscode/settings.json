@@ -6,7 +6,7 @@
     "editor.formatOnSaveMode": "file", // required to format on save
     // "files.autoSave": "onFocusChange", // optional but recommended
     "vs-code-prettier-eslint.prettierLast": true, // set as "true" to run 'prettier' last not first
-    "editor.tabSize": 4,
+    "editor.tabSize": 2,
     // "prettier.requireConfig": true,
     // "prettier.resolveGlobalModules": true,
     // "prettier.configPath": "./app/.prettierrc",
@@ -15,6 +15,9 @@
     },
     "[sql]": {
         "editor.formatOnSave": false
+    },
+    "[python]": {
+        "editor.tabSize": 4
     },
     "flake8.args": [
         "--max-line-length=120",
@@ -39,5 +42,13 @@
         "https://json-schema.org/": true,
         "https://developer.microsoft.com/json-schemas/": true,
         "https://railway.com/railway.schema.json": true
+    },
+    "[yaml]": {
+        "editor.detectIndentation": false,
+        "editor.tabSize": 2
+    },
+    "[yml]": {
+        "editor.detectIndentation": false,
+        "editor.tabSize": 2
     }
 }
