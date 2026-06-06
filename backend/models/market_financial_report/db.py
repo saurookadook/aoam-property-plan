@@ -14,7 +14,11 @@ from models.mixins import TimestampsDB
 
 class MarketFinancialReportDB(BaseDB, TimestampsDB):
     market_id: Mapped[UUID] = mapped_column(ForeignKey("markets.id"), nullable=False)
-    adr_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
+    adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
+    adr_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    annual_revenue_cop: Mapped[float] = mapped_column(
+        postgresql.NUMERIC, nullable=False
+    )
     annual_revenue_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     last_updated: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP, index=True, nullable=False
