@@ -8,7 +8,9 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 def get_module_root(file: str) -> Path:
-    """Returns the root directory of the module."""
+    """
+    From the given ``file``, resolves to the root directory of the module: ``aoam-property-plan/backend``.
+    """
 
     return scan_for_directory(
         file,
@@ -18,7 +20,9 @@ def get_module_root(file: str) -> Path:
 
 
 def get_project_root(file: str) -> Path:
-    """Returns the root directory of the project."""
+    """
+    From the given ``file``, resolves to the root directory of the project: ``aoam-property-plan``.
+    """
 
     return scan_for_directory(
         file,
