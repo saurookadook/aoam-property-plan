@@ -53,8 +53,8 @@ def handle_markets_summaries():
             market_financial_report_facade.create_or_update(
                 payload={
                     "market_id": market.id,
-                    "adr_usd": result["average_daily_rate"],
-                    "annual_revenue_usd": float(result["revenue"]),
+                    "adr_cop": result["average_daily_rate"],
+                    "annual_revenue_cop": float(result["revenue"]),
                     "last_updated": result.get(
                         "last_updated", datetime.now(timezone.utc)
                     ),

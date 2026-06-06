@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from decimal import Decimal
 from typing import Any, Callable, Generator
 
 import pytest
@@ -115,8 +116,8 @@ class TestHandleMarketsSummaries:
             assert market_record.country == seed_data["market"]["country"]
             assert market_record.region == seed_data["market"]["region"]
             assert market_record.locality == seed_data["market"]["locality"]
-            assert mfr.adr_usd == seed_data["average_daily_rate"]
-            assert mfr.annual_revenue_usd == seed_data["revenue"]
+            assert float(mfr.adr_cop) == seed_data["average_daily_rate"]
+            assert float(mfr.annual_revenue_cop) == seed_data["revenue"]
             assert mfr.listing_count == seed_data["active_listings_count"]
             assert mfr.occupancy_rate == seed_data["occupancy"]
             assert mfr.peak_months == seed_data.get("peak_months", None)
