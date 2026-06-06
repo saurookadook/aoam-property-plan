@@ -9,6 +9,7 @@ from sqlalchemy.exc import InvalidRequestError
 from starlette.testclient import TestClient
 
 from _mocks.temporal import get_mock_utcnow
+from config.env_var_manager import EnvVarManager
 from db.db_session_manager import DBSessionManager
 
 os.environ["FORCE_COLOR"] = "1"
@@ -16,7 +17,10 @@ os.environ["PYTHONUNBUFFERED"] = "1"
 
 
 def pytest_sessionstart(session):
-    os.environ["DATABASE_NAME"] = "test_aoam_property_plan"
+    # os.environ["DATABASE_NAME"] = "test_aoam_property_plan"
+    EnvVarManager().env_vars.database_name = os.environ["DATABASE_NAME"] = (
+        "test_aoam_property_plan"
+    )
 
     alembic_ini = os.path.join(os.path.abspath("."), "alembic.ini")
     alembic_config = config.Config(alembic_ini)
@@ -30,15 +34,15 @@ def test_db_session():
     _test_db_session = db_session_manager.scoped_session
 
     with _test_engine.connect() as db_connection:
-        transaction = db_connection.begin()
-        try:
-            yield _test_db_session(bind=db_connection)
-        except InvalidRequestError as e:
-            raise InvalidRequestError(
-                str(e) + " Make sure you're using `_test_db_session` correctly!"
-            )
-        transaction.rollback()
-        db_connection.close()
+        with db_connection.begin() as transaction:
+            try:
+                yield _test_db_session(bind=db_connection)
+            except InvalidRequestError as e:
+                raise InvalidRequestError(
+                    str(e) + " Make sure you're using `_test_db_session` correctly!"
+                )
+            transaction.rollback()
+            db_connection.close()
     _test_db_session.remove()
 
 
