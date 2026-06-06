@@ -32,7 +32,9 @@ def test_market_record(expected_market_dict, test_db_session):
 def expected_market_financial_report_dict(test_market_record):
     return dict(
         market_id=test_market_record.id,
+        adr_cop=359677.0,
         adr_usd=100.0,
+        annual_revenue_cop=35967700.0,
         annual_revenue_usd=1000.0,
         last_updated="2026-05-18T11:29:20.063778",
         listing_count=10.0,
