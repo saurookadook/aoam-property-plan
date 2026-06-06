@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 import requests
 
+from config.env_var_manager import EnvVarManager
 from constants import AIRROI_BASE_URL
 from db.db_session_manager import DBSessionManager
 from models.market.facade import MarketFacade
@@ -21,6 +22,11 @@ def handle_markets_summaries():
     )
 
     all_markets = market_facade.get_all()
+    env_vars = EnvVarManager().env_vars
+    request_headers = {
+        "Content-Type": "application/json",
+        "x-api-key": env_vars.airroi_api_key,
+    }
 
     for market in all_markets:
         logger.info(
@@ -30,7 +36,7 @@ def handle_markets_summaries():
         try:
             response = requests.post(
                 f"{AIRROI_BASE_URL}/markets/summary",
-                headers={"Accept": "application/json"},
+                headers=request_headers,
                 json={
                     "market": {
                         "country": market.country,
