@@ -17,7 +17,12 @@ os.environ["PYTHONUNBUFFERED"] = "1"
 
 
 def pytest_sessionstart(session):
-    # os.environ["DATABASE_NAME"] = "test_aoam_property_plan"
+    import shutil
+
+    raw_window_width, raw_window_height = shutil.get_terminal_size()
+    os.environ["COLUMNS"] = str(raw_window_width)
+    os.environ["LINES"] = str(raw_window_height)
+
     EnvVarManager().env_vars.database_name = os.environ["DATABASE_NAME"] = (
         "test_aoam_property_plan"
     )
@@ -25,6 +30,12 @@ def pytest_sessionstart(session):
     alembic_ini = os.path.join(os.path.abspath("."), "alembic.ini")
     alembic_config = config.Config(alembic_ini)
     command.upgrade(alembic_config, "head")
+
+
+@pytest.fixture
+def http_requests_mock():
+    with requests_mock.Mocker(real_http=True) as mock:
+        yield mock
 
 
 @pytest.fixture(autouse=True)
