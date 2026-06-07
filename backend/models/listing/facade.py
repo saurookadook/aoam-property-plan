@@ -23,18 +23,13 @@ class ListingFacade(BaseFacade):
                 self.db_session.execute(
                     select(
                         ListingDB.id,
-                        ListingDB.adr_cop,
-                        ListingDB.adr_usd,
                         ListingDB.airroi_id,
-                        ListingDB.annual_revenue_cop,
-                        ListingDB.annual_revenue_usd,
                         ListingDB.bedrooms,
                         ListingDB.latitude,
                         # TODO: cleaner way to handle this conversion?
                         func.ST_AsText(ListingDB.location).label("location"),
                         ListingDB.longitude,
                         ListingDB.market_id,
-                        ListingDB.occupancy_rate,
                         ListingDB.property_type,
                         ListingDB.source_url,
                         ListingDB.created_at,
@@ -49,7 +44,36 @@ class ListingFacade(BaseFacade):
                 f"Listing record with ``id='{id}'`` not found"
             )
 
-        return ListingEntity.model_validate(dict(listing))
+        return ListingEntity.model_validate(listing)
+
+    def get_one_by_airroi_id(self, airroi_id: int) -> ListingEntity:
+        try:
+            listing = (
+                self.db_session.execute(
+                    select(
+                        ListingDB.id,
+                        ListingDB.airroi_id,
+                        ListingDB.bedrooms,
+                        ListingDB.latitude,
+                        # TODO: cleaner way to handle this conversion?
+                        func.ST_AsText(ListingDB.location).label("location"),
+                        ListingDB.longitude,
+                        ListingDB.market_id,
+                        ListingDB.property_type,
+                        ListingDB.source_url,
+                        ListingDB.created_at,
+                        ListingDB.updated_at,
+                    ).where(ListingDB.airroi_id == airroi_id)
+                )
+                .mappings()
+                .one()
+            )
+        except NoResultFound:
+            raise ListingFacade.NoResultFound(
+                f"Listing record with ``airroi_id='{airroi_id}'`` not found"
+            )
+
+        return ListingEntity.model_validate(listing)
 
     def create_or_update(self, *, payload: dict[str, Any]) -> ListingEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
@@ -69,6 +93,7 @@ class ListingFacade(BaseFacade):
         listing_id = self.db_session.execute(full_stmt).scalar_one()
         self.db_session.flush()
 
+        # TODO: this seems inefficient...
         return self.get_one_by_id(id=listing_id)
 
     def update(self, *, payload: dict[str, Any]) -> ListingEntity:
@@ -79,6 +104,7 @@ class ListingFacade(BaseFacade):
         listing_id = self.db_session.execute(update_stmt).scalar_one()
         self.db_session.flush()
 
+        # TODO: this seems inefficient...
         return self.get_one_by_id(id=listing_id)
 
     def _find_one_if_exists(

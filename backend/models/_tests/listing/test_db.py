@@ -26,9 +26,7 @@ def test_listing_db(expected_listing_dict, mock_utcnow, test_db_session):
     ).scalar_one()
 
     assert result.id == expected_listing_dict["id"]
-    assert result.adr_usd == expected_listing_dict["adr_usd"]
     assert result.airroi_id == expected_listing_dict["airroi_id"]
-    assert result.annual_revenue_usd == expected_listing_dict["annual_revenue_usd"]
     assert result.bedrooms == expected_listing_dict["bedrooms"]
     assert result.latitude == expected_listing_dict["latitude"]
     assert isinstance(result.location, WKBElement)
@@ -36,7 +34,6 @@ def test_listing_db(expected_listing_dict, mock_utcnow, test_db_session):
     # assert result.location == expected_listing_dict["location"]
     assert result.longitude == expected_listing_dict["longitude"]
     assert result.market_id == expected_listing_dict["market_id"]
-    assert result.occupancy_rate == expected_listing_dict["occupancy_rate"]
     assert result.property_type == expected_listing_dict["property_type"]
     assert result.source_url == expected_listing_dict["source_url"]
     assert isinstance(result.created_at, datetime)

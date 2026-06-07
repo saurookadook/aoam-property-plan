@@ -15,12 +15,6 @@ class ListingDB(BaseDB, TimestampsDB):
     airroi_id: Mapped[int] = mapped_column(
         postgresql.BIGINT, nullable=False, unique=True
     )
-    adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
-    adr_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
-    annual_revenue_cop: Mapped[float] = mapped_column(
-        postgresql.NUMERIC, nullable=False
-    )
-    annual_revenue_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     bedrooms: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
     latitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     location: Mapped[WKBElement] = mapped_column(
@@ -28,9 +22,8 @@ class ListingDB(BaseDB, TimestampsDB):
     )
     longitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     market_id: Mapped[UUID] = mapped_column(ForeignKey("markets.id"), nullable=True)
-    occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     property_type: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
-    source_url: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
+    source_url: Mapped[str] = mapped_column(postgresql.TEXT, nullable=True)
 
     __table_args__ = (
         Index(
