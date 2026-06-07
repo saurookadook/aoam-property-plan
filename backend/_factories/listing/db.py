@@ -19,8 +19,14 @@ class ListingDBFactory(
         sqlalchemy_session = DBSessionManager().scoped_session
 
     id = factory.LazyFunction(uuid4)
+    adr_cop = factory.Faker(
+        "pyfloat", positive=True, min_value=179838.5, max_value=1798385
+    )
     adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)
     airroi_id = factory.LazyFunction(uuid4)
+    annual_revenue_cop = factory.Faker(
+        "pyfloat", positive=True, min_value=359677000, max_value=35967700000
+    )
     annual_revenue_usd = factory.Faker(
         "pyfloat", positive=True, min_value=1000, max_value=100000
     )

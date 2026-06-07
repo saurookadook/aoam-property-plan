@@ -22,22 +22,34 @@ class PropertyFinancialReportDBFactory(
 
     id = factory.LazyFunction(uuid4)
     property_id = factory.LazyFunction(uuid4)
+    annual_net_income_cop = factory.Faker(
+        "pyfloat", positive=True, min_value=359677000, max_value=359677000000
+    )
     annual_net_income_usd = factory.Faker(
-        "pyfloat", positive=True, min_value=10000, max_value=100000000
+        "pyfloat", positive=True, min_value=1000, max_value=1000000
+    )
+    annual_revenue_cop = factory.Faker(
+        "pyfloat", positive=True, min_value=359677000, max_value=359677000000
     )
     annual_revenue_usd = factory.Faker(
-        "pyfloat", positive=True, min_value=10000, max_value=100000000
+        "pyfloat", positive=True, min_value=10000, max_value=1000000
     )
     calculated_at = factory.LazyAttribute(
         lambda o: (o.created_at - timedelta(days=1)).replace(tzinfo=timezone.utc)
     )
+    cash_invested_cop = factory.Faker(
+        "pyfloat", positive=True, min_value=35967700000, max_value=359677000000
+    )
     cash_invested_usd = factory.Faker(
-        "pyfloat", positive=True, min_value=1000000, max_value=100000000
+        "pyfloat", positive=True, min_value=100000, max_value=1000000
     )
     coc_return_percentage = factory.Faker("pyfloat", min_value=0, max_value=100)
     down_payment_percentage = factory.Faker("pyfloat", min_value=0, max_value=100)
     exchange_rate = factory.Faker("pyfloat", min_value=0, max_value=100)
     interest_rate = factory.Faker("pyfloat", min_value=0, max_value=100)
     loan_term_years = factory.Faker("pyfloat", min_value=0, max_value=100)
-    monthly_expenses_usd = factory.Faker("pyfloat", min_value=1000, max_value=10000)
+    monthly_expenses_cop = factory.Faker(
+        "pyfloat", min_value=35967700, max_value=3596770000
+    )
+    monthly_expenses_usd = factory.Faker("pyfloat", min_value=100, max_value=10000)
     payback_years = factory.Faker("pyfloat", min_value=0, max_value=100)

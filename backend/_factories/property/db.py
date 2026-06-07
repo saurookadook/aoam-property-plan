@@ -29,7 +29,7 @@ class PropertyDBFactory(
     postal_code = factory.Faker("postcode")
     property_type = factory.Faker("word")
     purchase_price_cop = factory.Faker(
-        "pyfloat", positive=True, min_value=1000000, max_value=100000000
+        "pyfloat", positive=True, min_value=35967700000, max_value=359677000000
     )
     purchase_price_usd = factory.Faker(
         "pyfloat", positive=True, min_value=100000, max_value=1000000
