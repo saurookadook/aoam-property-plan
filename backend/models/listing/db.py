@@ -12,11 +12,11 @@ from models.mixins import TimestampsDB
 
 
 class ListingDB(BaseDB, TimestampsDB):
+    airroi_id: Mapped[int] = mapped_column(
+        postgresql.BIGINT, nullable=False, unique=True
+    )
     adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
     adr_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
-    airroi_id: Mapped[UUID] = mapped_column(
-        postgresql.UUID(as_uuid=True), primary_key=True, nullable=False
-    )
     annual_revenue_cop: Mapped[float] = mapped_column(
         postgresql.NUMERIC, nullable=False
     )

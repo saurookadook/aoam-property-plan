@@ -1,7 +1,6 @@
 # pyright: reportIncompatibleVariableOverride=false
 from __future__ import annotations
 
-from datetime import timedelta
 from uuid import uuid4
 
 import factory
@@ -19,11 +18,15 @@ class ListingDBFactory(
         sqlalchemy_session = DBSessionManager().scoped_session
 
     id = factory.LazyFunction(uuid4)
+    airroi_id = factory.Sequence(lambda n: n + 1)
+    """
+    Auto-incrementing integer starting from 1
+    """
+
     adr_cop = factory.Faker(
         "pyfloat", positive=True, min_value=179838.5, max_value=1798385
     )
     adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)
-    airroi_id = factory.LazyFunction(uuid4)
     annual_revenue_cop = factory.Faker(
         "pyfloat", positive=True, min_value=359677000, max_value=35967700000
     )
