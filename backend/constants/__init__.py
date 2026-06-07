@@ -5,6 +5,7 @@ try:
 
     raw_window_width, raw_window_height = shutil.get_terminal_size()
 except OSError:
+    raw_window_height = 70
     raw_window_width = 200
 
 logging_prefix_offset = 40
