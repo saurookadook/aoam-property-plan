@@ -15,10 +15,17 @@ class PropertyFinancialReportDB(BaseDB, TimestampsDB):
     property_id: Mapped[UUID] = mapped_column(
         ForeignKey("properties.id"), nullable=True
     )
-    annual_net_income_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
-    annual_revenue_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    annual_net_income_cop: Mapped[float] = mapped_column(
+        postgresql.NUMERIC, nullable=True
+    )
+    annual_net_income_usd: Mapped[float] = mapped_column(
+        postgresql.NUMERIC, nullable=True
+    )
+    annual_revenue_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
+    annual_revenue_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     calculated_at: Mapped[datetime] = mapped_column(postgresql.TIMESTAMP, nullable=True)
-    cash_invested_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    cash_invested_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
+    cash_invested_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     coc_return_percentage: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     """
     Cash-on-Cash Return Percentage
@@ -38,7 +45,12 @@ class PropertyFinancialReportDB(BaseDB, TimestampsDB):
     NOTE: Mapped as a ``float`` to leave room for partial years.
     """
 
-    monthly_expenses_usd: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    monthly_expenses_cop: Mapped[float] = mapped_column(
+        postgresql.NUMERIC, nullable=True
+    )
+    monthly_expenses_usd: Mapped[float] = mapped_column(
+        postgresql.NUMERIC, nullable=True
+    )
     payback_years: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     """
     NOTE: Mapped as a ``float`` to leave room for partial years.
