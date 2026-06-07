@@ -8,7 +8,8 @@ from models.mixins import TimestampsEntityMixin
 
 
 class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
-    adr_usd: float
+    adr_cop: float
+    adr_usd: Optional[float]
     airroi_id: UUID
     annual_revenue_cop: float
     annual_revenue_usd: Optional[float]
@@ -16,7 +17,7 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     latitude: float
     location: str
     longitude: float
-    market_id: UUID | None
+    market_id: Optional[UUID]
     occupancy_rate: float
     property_type: str
     source_url: str
