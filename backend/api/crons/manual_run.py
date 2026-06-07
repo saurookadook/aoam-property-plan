@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import logging
-
 from api.crons.handlers import handle_markets_summaries
+from utils.logging.init import init_logging
 
-logger = logging.getLogger(__name__)
+logger = init_logging(__name__)
 
 if __name__ == "__main__":
     import argparse
