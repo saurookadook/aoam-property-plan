@@ -7,6 +7,8 @@ from config.env_var_manager import EnvVarManager
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
 
+logging.setLoggerClass(ExtendedLogger)
+
 root_logger = logging.getLogger()
 
 env_vars = EnvVarManager().env_vars
@@ -36,7 +38,5 @@ def init_logging(app_name: str) -> ExtendedLogger:
     )
     console_handler.setFormatter(logging.Formatter(format_str, style="{"))
     root_logger.addHandler(console_handler)
-
-    logging.setLoggerClass(ExtendedLogger)
 
     return cast(ExtendedLogger, root_logger)

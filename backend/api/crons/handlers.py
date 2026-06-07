@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
+from typing import cast
 
 import requests
 
@@ -9,9 +11,9 @@ from constants import AIRROI_BASE_URL
 from db.db_session_manager import DBSessionManager
 from models.market.facade import MarketFacade
 from models.market_financial_report.facade import MarketFinancialReportFacade
-from utils.logging.init import init_logging
+from utils.logging.extended_logger import ExtendedLogger
 
-logger = init_logging(__name__)
+logger = cast(ExtendedLogger, logging.getLogger(__name__))
 
 
 def handle_markets_summaries():
@@ -46,9 +48,11 @@ def handle_markets_summaries():
                     "num_months": 12,
                     "currency": "native",
                 },
+                timeout=30,
             )
+            response.raise_for_status()
             result = response.json()
-        except Exception as e:
+        except (ValueError, requests.RequestException) as e:
             logger.error(
                 f"Error fetching market summary for market with id='{market.id}' "
                 f"and locality='{market.locality}': {e}"
@@ -82,3 +86,5 @@ def handle_markets_summaries():
             local_db_session.rollback()
             continue
     local_db_session.commit()
+    local_db_session.close()
+    DBSessionManager().scoped_session.remove()

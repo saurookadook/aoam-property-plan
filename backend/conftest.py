@@ -34,7 +34,7 @@ def pytest_sessionstart(session):
 
 @pytest.fixture
 def http_requests_mock():
-    with requests_mock.Mocker(real_http=True) as mock:
+    with requests_mock.Mocker(real_http=False) as mock:
         yield mock
 
 
