@@ -6,13 +6,16 @@ from uuid import uuid4
 
 import factory
 
+from _factories.base_meta import BaseMetaFactory
 from _factories.mixins.db import TimestampsDBMixinFactory
 from db.db_session_manager import DBSessionManager
 from models.property.db import PropertyDB
 
 
 class PropertyDBFactory(
-    TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelFactory
+    TimestampsDBMixinFactory,
+    factory.alchemy.SQLAlchemyModelFactory,
+    metaclass=BaseMetaFactory[PropertyDB],
 ):
     class Meta:
         model = PropertyDB
