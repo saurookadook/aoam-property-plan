@@ -11,8 +11,8 @@ from models.mixins import TimestampsEntityMixin
 class MarketFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     market_id: UUID
     adr_cop: float
-    annual_revenue_cop: float
     adr_usd: Optional[float] = None
+    annual_revenue_cop: float
     annual_revenue_usd: Optional[float] = None
     last_updated: datetime
     listing_count: float
