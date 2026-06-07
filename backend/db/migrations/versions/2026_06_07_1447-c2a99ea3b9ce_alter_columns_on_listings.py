@@ -1,0 +1,62 @@
+"""Alter columns on listings
+
+Revision ID: c2a99ea3b9ce
+Revises: 245022a5cc23
+Create Date: 2026-06-07 14:47:58.202526
+
+"""
+
+from typing import Sequence, Union
+
+import sqlalchemy as sa
+from alembic import op
+
+# revision identifiers, used by Alembic.
+revision: str = "c2a99ea3b9ce"
+down_revision: Union[str, Sequence[str], None] = "245022a5cc23"
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+
+    op.add_column("listings", sa.Column("adr_cop", sa.NUMERIC(), nullable=False))
+    op.add_column(
+        "listings", sa.Column("annual_revenue_cop", sa.NUMERIC(), nullable=False)
+    )
+    op.alter_column(
+        "listings",
+        "adr_usd",
+        existing_type=sa.REAL(),
+        type_=sa.NUMERIC(),
+        nullable=True,
+    )
+    op.alter_column(
+        "listings",
+        "annual_revenue_usd",
+        existing_type=sa.REAL(),
+        type_=sa.NUMERIC(),
+        nullable=True,
+    )
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+
+    op.alter_column(
+        "listings",
+        "adr_usd",
+        existing_type=sa.NUMERIC(),
+        type_=sa.REAL(),
+        nullable=False,
+    )
+    op.alter_column(
+        "listings",
+        "annual_revenue_usd",
+        existing_type=sa.NUMERIC(),
+        type_=sa.REAL(),
+        nullable=False,
+    )
+    op.drop_column("listings", "annual_revenue_cop")
+    op.drop_column("listings", "adr_cop")

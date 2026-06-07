@@ -21,10 +21,10 @@ class PropertyDB(BaseDB, TimestampsDB):
     notes: Mapped[str] = mapped_column(String(), nullable=True)
     postal_code: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     property_type: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
-    purchase_price_cop: Mapped[float] = mapped_column(postgresql.BIGINT, nullable=False)
-    purchase_price_usd: Mapped[float] = mapped_column(
+    purchase_price_cop: Mapped[float] = mapped_column(
         postgresql.NUMERIC, nullable=False
     )
+    purchase_price_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     source_created_at: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP, nullable=False
     )

@@ -19,7 +19,7 @@ class PropertyEntity(BaseEntityModel, TimestampsEntityMixin):
     postal_code: str
     property_type: str
     purchase_price_cop: float
-    purchase_price_usd: float
+    purchase_price_usd: Optional[float] = None
     source_created_at: datetime
     source_url: str
     state: str

@@ -61,8 +61,10 @@ def expected_listing_dict(test_market_record):
 
     return dict(
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
+        adr_cop=539515.5,
         adr_usd=150.0,
         airroi_id=UUID("e6b77c9d-5e83-4150-851b-81327f537dfd"),
+        annual_revenue_cop=7193540.0,
         annual_revenue_usd=2000.0,
         bedrooms=3,
         latitude=lat,
@@ -117,8 +119,10 @@ def expected_property_financial_report_dict(property_record, mock_utcnow):
     return dict(
         id=UUID("53cd9d19-65f7-4796-ac2c-b6616eb46d63"),
         property_id=property_record.id,
-        annual_net_income_usd=50000.0,
-        annual_revenue_usd=20000.0,
+        annual_net_income_cop=17983850.0,
+        annual_net_income_usd=5000.0,
+        annual_revenue_cop=7193540.0,
+        annual_revenue_usd=2000.0,
         calculated_at=calculated_at,
         cash_invested_usd=10000.0,
         coc_return_percentage=10.0,
@@ -126,7 +130,8 @@ def expected_property_financial_report_dict(property_record, mock_utcnow):
         exchange_rate=1.7,
         interest_rate=5.0,
         loan_term_years=30,
-        monthly_expenses_usd=2000.0,
+        monthly_expenses_cop=359677.0,
+        monthly_expenses_usd=100.0,
         payback_years=5.0,
     )
 
