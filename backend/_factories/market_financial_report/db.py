@@ -20,8 +20,8 @@ class MarketFinancialReportDBFactory(
 
     id = factory.LazyFunction(uuid4)
     market_id = factory.LazyFunction(uuid4)
-    adr_usd = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)
-    annual_revenue_usd = factory.Faker(
+    adr_cop = factory.Faker("pyfloat", positive=True, min_value=50, max_value=500)
+    annual_revenue_cop = factory.Faker(
         "pyfloat", positive=True, min_value=1000, max_value=100000
     )
     last_updated = factory.LazyAttribute(lambda o: o.updated_at + timedelta(days=1))

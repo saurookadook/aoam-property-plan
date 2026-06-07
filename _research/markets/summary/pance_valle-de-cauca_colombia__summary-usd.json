@@ -1,0 +1,16 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Valle del Cauca",
+        "locality": "Pance",
+        "district": null
+    },
+    "occupancy": 0.33,
+    "average_daily_rate": 97.5,
+    "rev_par": 31.2,
+    "revenue": 6877.1,
+    "booking_lead_time": 20.6,
+    "length_of_stay": 4.6,
+    "min_nights": 2.3,
+    "active_listings_count": 27.9
+}

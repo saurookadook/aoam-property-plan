@@ -29,6 +29,21 @@ class MarketFacade(BaseFacade):
             )
         return MarketEntity.model_validate(market)
 
+    def get_all(self) -> list[MarketEntity]:
+        """Gets all records in ``markets`` table.
+
+        Returns:
+            ``list[MarketEntity]``: A list of all market entities in the database,
+                sorted by locality.
+        """
+
+        market_records = (
+            self.db_session.execute(select(MarketDB).order_by(MarketDB.locality.asc()))
+            .scalars()
+            .all()
+        )
+        return [MarketEntity.model_validate(market) for market in market_records]
+
     def create_or_update(self, *, payload: dict) -> MarketEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
         if maybe_one:

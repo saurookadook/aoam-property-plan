@@ -7,6 +7,9 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class EnvVars(BaseModel):
+    airroi_api_key: str = Field(
+        default_factory=lambda: os.getenv("AIRROI_API_KEY", default="UNSET")
+    )
     base_domain: str = Field(
         default_factory=lambda: os.getenv("BASE_DOMAIN", default="aoam.dev")
     )

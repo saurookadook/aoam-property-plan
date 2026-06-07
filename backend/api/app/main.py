@@ -7,6 +7,7 @@ from typing import cast
 from fastapi import FastAPI, Request
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
+from fastapi_crons import Crons, get_cron_router
 
 # from fastapi_csrf_protect import CsrfProtect
 # from fastapi_csrf_protect.exceptions import CsrfProtectError
@@ -26,8 +27,7 @@ async def lifespan(app: FastAPI):
 
     divider = "-" * window_width
 
-    # logger.info("Starting aoam API server...")
-    print(
+    logger.info(
         "\n".join(
             [
                 divider,
@@ -37,8 +37,7 @@ async def lifespan(app: FastAPI):
         )
     )
     yield
-    # logger.info("Shutting down aoam API server...")
-    print(
+    logger.info(
         "\n".join(
             [
                 divider,
@@ -50,6 +49,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+crons = Crons(app)
+
+# Ensure cron decorators execute (registration happens at import time)
+import api.crons.ingest_markets_summaries  # noqa: E402,F401
+
+app.include_router(
+    get_cron_router(),
+    # prefix="/api/crons"
+)
 
 app.add_middleware(
     TrustedHostMiddleware,

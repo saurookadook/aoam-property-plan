@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import logging
+from typing import cast
 
 from config.env_var_manager import EnvVarManager
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
+
+logging.setLoggerClass(ExtendedLogger)
 
 root_logger = logging.getLogger()
 
@@ -15,7 +18,7 @@ def is_prod():
     return env_vars.env.lower() in set(["prod", "production"])
 
 
-def init_logging(app_name: str):
+def init_logging(app_name: str) -> ExtendedLogger:
     if is_prod():
         console_handler = logging.StreamHandler()
     else:
@@ -36,6 +39,4 @@ def init_logging(app_name: str):
     console_handler.setFormatter(logging.Formatter(format_str, style="{"))
     root_logger.addHandler(console_handler)
 
-    logging.setLoggerClass(ExtendedLogger)
-
-    return root_logger
+    return cast(ExtendedLogger, root_logger)

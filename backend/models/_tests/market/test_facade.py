@@ -33,6 +33,20 @@ class TestMarketFacade:
             non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
             market_facade.get_one_by_id(non_existent_id)
 
+    def test_get_all(self, market_facade, market_record, test_db_session):
+        market_2 = MarketDBFactory(locality="Bogotá")
+        market_3 = MarketDBFactory(locality="Medellín")
+        test_db_session.commit()
+
+        result = market_facade.get_all()
+        expected = [
+            MarketEntity.model_validate(market_2),
+            MarketEntity.model_validate(market_3),
+            MarketEntity.model_validate(market_record),
+        ]
+
+        assert result == expected
+
     def test_create_or_update_creates_new_record(
         self, market_facade, expected_market_dict
     ):

@@ -196,6 +196,7 @@ scriptController() {
         # echo "before: $@"
         shift
         # echo "after: $@"
+        # docker compose run --build --rm --remove-orphans backend-migrations revision --autogenerate -m
         docker compose run \
             --build \
             --rm \
