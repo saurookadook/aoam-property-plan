@@ -75,8 +75,8 @@ def seed_db_with_markets():
 
                 market_financial_report_dict = dict(
                     market_id=market_record.id,
-                    adr_usd=market_data.get("average_daily_rate", 0),
-                    annual_revenue_usd=market_data.get("revenue", 0),
+                    adr_cop=market_data.get("average_daily_rate", 0),
+                    annual_revenue_cop=market_data.get("revenue", 0),
                     listing_count=market_data.get("active_listings_count"),
                     last_updated=market_data.get(
                         "last_updated", datetime.now(timezone.utc)
