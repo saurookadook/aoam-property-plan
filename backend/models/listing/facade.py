@@ -23,8 +23,10 @@ class ListingFacade(BaseFacade):
                 self.db_session.execute(
                     select(
                         ListingDB.id,
+                        ListingDB.adr_cop,
                         ListingDB.adr_usd,
                         ListingDB.airroi_id,
+                        ListingDB.annual_revenue_cop,
                         ListingDB.annual_revenue_usd,
                         ListingDB.bedrooms,
                         ListingDB.latitude,
