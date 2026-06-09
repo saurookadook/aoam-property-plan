@@ -32,20 +32,16 @@ class ListingFinancialReportDBFactory(
     annual_revenue_usd = factory.Faker(
         "pyfloat", positive=True, min_value=1000, max_value=100000
     )
-    occupancy_rate = factory.Faker("pyfloat", positive=True, min_value=0, max_value=1)
+    occupancy_rate = factory.Faker("pyfloat", min_value=0, max_value=1)
     # Ratings
     number_of_reviews = factory.Faker("pyint", min_value=0, max_value=100)
-    rating_overall = factory.Faker("pyfloat", positive=True, min_value=0, max_value=5)
-    rating_accuracy = factory.Faker("pyfloat", positive=True, min_value=0, max_value=5)
-    rating_checkin = factory.Faker("pyfloat", positive=True, min_value=0, max_value=5)
-    rating_cleanliness = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=5
-    )
-    rating_communication = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=5
-    )
-    rating_location = factory.Faker("pyfloat", positive=True, min_value=0, max_value=5)
-    rating_value = factory.Faker("pyfloat", positive=True, min_value=0, max_value=5)
+    rating_overall = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_accuracy = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_checkin = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_cleanliness = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_communication = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_location = factory.Faker("pyfloat", min_value=0, max_value=5)
+    rating_value = factory.Faker("pyfloat", min_value=0, max_value=5)
     # Performance Metrics
     ttm_revenue = factory.Faker(
         "pyfloat", positive=True, min_value=359677000, max_value=35967700000
@@ -53,12 +49,8 @@ class ListingFinancialReportDBFactory(
     ttm_avg_rate = factory.Faker(
         "pyfloat", positive=True, min_value=179838.5, max_value=1798385
     )
-    ttm_occupancy_rate = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=1
-    )
-    ttm_adjusted_occupancy_rate = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=1
-    )
+    ttm_occupancy_rate = factory.Faker("pyfloat", min_value=0, max_value=1)
+    ttm_adjusted_occupancy_rate = factory.Faker("pyfloat", min_value=0, max_value=1)
     ttm_revpar = factory.Faker(
         "pyfloat", positive=True, min_value=179838.5, max_value=1798385
     )
@@ -81,12 +73,8 @@ class ListingFinancialReportDBFactory(
     l90d_avg_rate = factory.Faker(
         "pyfloat", positive=True, min_value=179838.5, max_value=1798385
     )
-    l90d_occupancy_rate = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=1
-    )
-    l90d_adjusted_occupancy_rate = factory.Faker(
-        "pyfloat", positive=True, min_value=0, max_value=1
-    )
+    l90d_occupancy_rate = factory.Faker("pyfloat", min_value=0, max_value=1)
+    l90d_adjusted_occupancy_rate = factory.Faker("pyfloat", min_value=0, max_value=1)
     l90d_revpar = factory.Faker(
         "pyfloat", positive=True, min_value=179838.5, max_value=1798385
     )
