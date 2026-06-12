@@ -16,6 +16,7 @@ class ListingDB(BaseDB, TimestampsDB):
         postgresql.BIGINT, nullable=False, unique=True
     )
     bedrooms: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
+    cover_photo_url: Mapped[str] = mapped_column(postgresql.TEXT, nullable=True)
     latitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     location: Mapped[WKBElement] = mapped_column(
         Geography(geometry_type="POINT", srid=4326, spatial_index=True), nullable=False

@@ -10,6 +10,7 @@ from models.mixins import TimestampsEntityMixin
 class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     airroi_id: int
     bedrooms: int
+    cover_photo_url: Optional[str]
     latitude: float
     location: str
     longitude: float

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from typing import Any, Optional, Union
 from uuid import UUID
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, select, update, and_
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
@@ -17,6 +18,10 @@ class ListingFacade(BaseFacade):
     class NoResultFound(Exception):
         pass
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+
     def get_one_by_id(self, id: UUID | str) -> ListingEntity:
         try:
             listing = (
@@ -25,6 +30,7 @@ class ListingFacade(BaseFacade):
                         ListingDB.id,
                         ListingDB.airroi_id,
                         ListingDB.bedrooms,
+                        ListingDB.cover_photo_url,
                         ListingDB.latitude,
                         # TODO: cleaner way to handle this conversion?
                         func.ST_AsText(ListingDB.location).label("location"),
@@ -54,6 +60,7 @@ class ListingFacade(BaseFacade):
                         ListingDB.id,
                         ListingDB.airroi_id,
                         ListingDB.bedrooms,
+                        ListingDB.cover_photo_url,
                         ListingDB.latitude,
                         # TODO: cleaner way to handle this conversion?
                         func.ST_AsText(ListingDB.location).label("location"),
@@ -76,7 +83,10 @@ class ListingFacade(BaseFacade):
         return ListingEntity.model_validate(listing)
 
     def create_or_update(self, *, payload: dict[str, Any]) -> ListingEntity:
-        maybe_one = self._find_one_if_exists(id=payload.get("id"))
+        maybe_one = self._find_one_if_exists(
+            id=payload.get("id"), airroi_id=payload.get("airroi_id")
+        )
+
         if maybe_one:
             return self.update(payload=payload)
 
@@ -88,31 +98,48 @@ class ListingFacade(BaseFacade):
                 **payload,
                 "updated_at": datetime.now(timezone.utc),
             },
-        ).returning(ListingDB.id)
+        ).returning(ListingDB.airroi_id)
 
-        listing_id = self.db_session.execute(full_stmt).scalar_one()
+        airroi_id = self.db_session.execute(full_stmt).scalar_one()
         self.db_session.flush()
 
         # TODO: this seems inefficient...
-        return self.get_one_by_id(id=listing_id)
+        return self.get_one_by_airroi_id(airroi_id=airroi_id)
 
     def update(self, *, payload: dict[str, Any]) -> ListingEntity:
         update_stmt = (
-            update(ListingDB).where(ListingDB.id == payload.get("id")).values(**payload)
-        ).returning(ListingDB.id)
+            update(ListingDB)
+            .where(
+                and_(
+                    ListingDB.id == payload.get("id"),
+                    ListingDB.airroi_id == payload.get("airroi_id"),
+                )
+            )
+            .values(**payload)
+        ).returning(ListingDB.airroi_id)
 
-        listing_id = self.db_session.execute(update_stmt).scalar_one()
+        airroi_id = self.db_session.execute(update_stmt).scalar_one()
         self.db_session.flush()
 
         # TODO: this seems inefficient...
-        return self.get_one_by_id(id=listing_id)
+        return self.get_one_by_airroi_id(airroi_id=airroi_id)
 
     def _find_one_if_exists(
-        self, *, id: Optional[Union[UUID, str]] = None
+        self, *, id: Optional[Union[UUID, str]] = None, airroi_id: Optional[int] = None
     ) -> ListingEntity | None:
         try:
+            if not airroi_id:
+                self.logger.warning("No 'airroi_id' provided to find listing record")
+                return None
+
+            return self.get_one_by_airroi_id(airroi_id=airroi_id)
+        except (ValueError, ListingFacade.NoResultFound):
+            pass
+
+        try:
             if not id:
-                raise ValueError("No 'id' provided to find listing record")
+                self.logger.warning("No 'id' provided to find listing record")
+                return None
 
             return self.get_one_by_id(id=id)
         except (ValueError, ListingFacade.NoResultFound):

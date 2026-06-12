@@ -27,6 +27,7 @@ class ListingDBFactory(
     """
 
     bedrooms = factory.Faker("random_int", min=1, max=10)
+    cover_photo_url = factory.Faker("url")
     latitude = factory.Faker("latitude")
     location = factory.Faker("latlng")
     longitude = factory.Faker("longitude")
