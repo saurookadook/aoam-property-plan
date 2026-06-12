@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import ForeignKey, Index
+from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -13,13 +13,13 @@ from models.mixins import TimestampsDB
 
 class ListingFinancialReportDB(BaseDB, TimestampsDB):
     listing_id: Mapped[UUID] = mapped_column(ForeignKey("listings.id"), nullable=False)
-    adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
-    adr_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
-    annual_revenue_cop: Mapped[float] = mapped_column(
-        postgresql.NUMERIC, nullable=False
-    )
-    annual_revenue_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
-    occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
+    # adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
+    # adr_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
+    # annual_revenue_cop: Mapped[float] = mapped_column(
+    #     postgresql.NUMERIC, nullable=False
+    # )
+    # annual_revenue_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
+    # occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     # Ratings
     number_of_reviews: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=True)
     rating_overall: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)

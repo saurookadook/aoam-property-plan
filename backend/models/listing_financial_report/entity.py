@@ -9,11 +9,11 @@ from models.mixins import TimestampsEntityMixin
 
 class ListingFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     listing_id: UUID
-    adr_cop: float
-    adr_usd: Optional[float]
-    annual_revenue_cop: float
-    annual_revenue_usd: Optional[float]
-    occupancy_rate: float
+    # adr_cop: float
+    # adr_usd: Optional[float]
+    # annual_revenue_cop: float
+    # annual_revenue_usd: Optional[float]
+    # occupancy_rate: float
     number_of_reviews: Optional[int]
     rating_overall: Optional[float]
     rating_accuracy: Optional[float]
