@@ -130,7 +130,7 @@ class ListingFacade(BaseFacade):
         try:
             if not airroi_id:
                 self.logger.warning("No 'airroi_id' provided to find listing record")
-                return None
+                raise ValueError("No 'airroi_id' provided to find listing record")
 
             return self.get_one_by_airroi_id(airroi_id=airroi_id)
         except (ValueError, ListingFacade.NoResultFound):

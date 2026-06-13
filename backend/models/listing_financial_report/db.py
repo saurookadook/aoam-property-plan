@@ -40,10 +40,10 @@ class ListingFinancialReportDB(BaseDB, TimestampsDB):
     ttm_adjusted_revpar: Mapped[float] = mapped_column(
         postgresql.NUMERIC, nullable=True
     )
-    ttm_total_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    ttm_available_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    ttm_blocked_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    ttm_days_reserved: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
+    ttm_total_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    ttm_available_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    ttm_blocked_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    ttm_days_reserved: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     ttm_avg_min_nights: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     ttm_avg_length_of_stay: Mapped[float] = mapped_column(
         postgresql.REAL, nullable=True
@@ -58,10 +58,10 @@ class ListingFinancialReportDB(BaseDB, TimestampsDB):
     l90d_adjusted_revpar: Mapped[float] = mapped_column(
         postgresql.NUMERIC, nullable=True
     )
-    l90d_total_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    l90d_available_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    l90d_blocked_days: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
-    l90d_days_reserved: Mapped[int] = mapped_column(postgresql.REAL, nullable=True)
+    l90d_total_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    l90d_available_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    l90d_blocked_days: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
+    l90d_days_reserved: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     l90d_avg_min_nights: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     l90d_avg_length_of_stay: Mapped[float] = mapped_column(
         postgresql.REAL, nullable=True

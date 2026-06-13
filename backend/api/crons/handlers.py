@@ -196,29 +196,18 @@ def handle_listings_by_market():
                     continue
 
                 try:
-                    ratings = listing_result.get("ratings", {})
-                    ratings = {
-                        **ratings,
-                        "number_of_reviews": ratings.get("num_reviews", None),
-                    }
-                    del ratings["num_reviews"]
+                    ratings = dict(listing_result.get("ratings", {}) or {})
+                    ratings["number_of_reviews"] = ratings.pop("num_reviews", None)
 
-                    metrics = listing_result.get("performance_metrics", {})
-                    metrics = {
-                        **metrics,
-                        "ttm_occupancy_rate": metrics.get("ttm_occupancy", None),
-                        "ttm_adjusted_occupancy_rate": metrics.get(
-                            "ttm_adjusted_occupancy", None
-                        ),
-                        "l90d_occupancy_rate": metrics.get("l90d_occupancy", None),
-                        "l90d_adjusted_occupancy_rate": metrics.get(
-                            "l90d_adjusted_occupancy", None
-                        ),
-                    }
-                    del metrics["ttm_occupancy"]
-                    del metrics["ttm_adjusted_occupancy"]
-                    del metrics["l90d_occupancy"]
-                    del metrics["l90d_adjusted_occupancy"]
+                    metrics = dict(listing_result.get("performance_metrics", {}) or {})
+                    metrics["ttm_occupancy_rate"] = metrics.pop("ttm_occupancy", None)
+                    metrics["ttm_adjusted_occupancy_rate"] = metrics.pop(
+                        "ttm_adjusted_occupancy", None
+                    )
+                    metrics["l90d_occupancy_rate"] = metrics.pop("l90d_occupancy", None)
+                    metrics["l90d_adjusted_occupancy_rate"] = metrics.pop(
+                        "l90d_adjusted_occupancy", None
+                    )
 
                     listing_financial_report_facade.create_or_update(
                         payload={

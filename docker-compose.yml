@@ -57,8 +57,8 @@ services:
 
   backend:
     build:
-      context: backend
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
       target: backend-dev
     depends_on:
       - pg_database
@@ -104,8 +104,8 @@ services:
 
   backend-release:
     build:
-      context: backend
-      dockerfile: ./Dockerfile.release
+      context: .
+      dockerfile: backendDockerfile.release
       target: backend-release-app
     environment:
       DATABASE_NAME: aoam_property_plan

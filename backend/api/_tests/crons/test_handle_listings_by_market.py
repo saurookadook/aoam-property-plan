@@ -17,8 +17,6 @@ from models.market.db import MarketDB
 from models.market.facade import MarketFacade
 from utils.filesystem import get_project_root
 
-from rich import inspect as ri
-
 
 @pytest.fixture
 def listings_by_market_response_dicts_by_locality() -> dict[str, list[dict]]:
@@ -49,17 +47,15 @@ def listings_by_market_dynamic_resp_callback(
         paged_responses = listings_by_market_response_dicts_by_locality.get(
             req_locality, None
         )
-        # ri((req_locality, req_offset, len(paged_responses)), all=True)
-        # breakpoint()
         if paged_responses is None or req_offset > len(paged_responses) - 1:
             context.status_code = 404
             return {}
 
-        listing_ids_in_response = [
-            listing["listing_info"]["listing_id"]
-            for listing in paged_responses[req_offset]["results"]
-        ]
-        ri(listing_ids_in_response, title="Listing IDs in Response")
+        # listing_ids_in_response = [
+        #     listing["listing_info"]["listing_id"]
+        #     for listing in paged_responses[req_offset]["results"]
+        # ]
+        # ri(listing_ids_in_response, title="Listing IDs in Response")
         response_page = paged_responses[req_offset]
         context.status_code = 200
         return response_page
@@ -108,11 +104,6 @@ class TestHandleListingsByMarket:
         # markets_data_from_responses,
         test_db_session,
     ):
-        # from rich import inspect as ri
-
-        # ri(listings_by_market_response_dicts_by_locality, all=True)
-        # breakpoint()
-
         listings_before = test_db_session.execute(select(ListingDB)).scalars().all()
         assert len(listings_before) == 0
         listing_financial_reports_before = (
