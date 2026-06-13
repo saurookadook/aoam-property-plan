@@ -105,7 +105,7 @@ services:
   backend-release:
     build:
       context: .
-      dockerfile: backendDockerfile.release
+      dockerfile: backend/Dockerfile.release
       target: backend-release-app
     environment:
       DATABASE_NAME: aoam_property_plan
