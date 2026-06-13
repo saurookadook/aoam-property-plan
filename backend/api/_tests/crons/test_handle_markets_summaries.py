@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from decimal import Decimal
 from typing import Any, Callable, Generator
 
 import pytest
@@ -24,11 +23,6 @@ def market_summary_seed_files() -> list[dict]:
             data = json.load(f)
             seed_files.append(data)
     return seed_files
-
-
-@pytest.fixture
-def markets_data_from_seeds(market_summary_seed_files) -> list[dict]:
-    return [seed_file["market"] for seed_file in market_summary_seed_files]
 
 
 @pytest.fixture
@@ -67,10 +61,8 @@ class TestHandleMarketsSummaries:
         return MarketFacade(db_session=test_db_session)
 
     @pytest.fixture
-    def market_records(self, markets_data_from_seeds, test_db_session):
-        markets = [
-            MarketDBFactory(**market_dict) for market_dict in markets_data_from_seeds
-        ]
+    def market_records(self, markets_data, test_db_session):
+        markets = [MarketDBFactory(**market_dict) for market_dict in markets_data]
         test_db_session.commit()
         return markets
 
