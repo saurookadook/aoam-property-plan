@@ -63,7 +63,7 @@ def expected_listing_dict(test_market_record):
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
         adr_cop=539515.5,
         adr_usd=150.0,
-        airroi_id=UUID("e6b77c9d-5e83-4150-851b-81327f537dfd"),
+        airroi_id=2341532,
         annual_revenue_cop=7193540.0,
         annual_revenue_usd=2000.0,
         bedrooms=3,

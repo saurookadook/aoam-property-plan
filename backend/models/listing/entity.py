@@ -8,9 +8,9 @@ from models.mixins import TimestampsEntityMixin
 
 
 class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
+    airroi_id: int
     adr_cop: float
     adr_usd: Optional[float]
-    airroi_id: UUID
     annual_revenue_cop: float
     annual_revenue_usd: Optional[float]
     bedrooms: int
