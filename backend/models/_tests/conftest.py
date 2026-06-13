@@ -77,11 +77,11 @@ def expected_listing_financial_report_dict(expected_listing_dict):
     return dict(
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
         listing_id=expected_listing_dict["id"],
-        adr_cop=539515.5,
-        adr_usd=150.0,
-        annual_revenue_cop=7193540.0,
-        annual_revenue_usd=2000.0,
-        occupancy_rate=0.75,
+        # adr_cop=539515.5,
+        # adr_usd=150.0,
+        # annual_revenue_cop=7193540.0,
+        # annual_revenue_usd=2000.0,
+        # occupancy_rate=0.75,
     )
 
 

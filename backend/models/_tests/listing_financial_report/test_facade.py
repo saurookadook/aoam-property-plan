@@ -59,22 +59,28 @@ class TestListingFinancialReportFacade:
             non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
             listing_financial_report_facade.get_one_by_id(non_existent_id)
 
-    def test_get_one_by_listing_id(
+    def test_get_all_by_listing_id(
         self,
+        expected_listing_financial_report_dict,
         listing_financial_report_facade,
         listing_financial_report_record,
+        test_db_session,
     ):
-        result = listing_financial_report_facade.get_one_by_listing_id(
+        for _ in range(2):
+            ListingFinancialReportDBFactory(
+                listing_id=expected_listing_financial_report_dict["listing_id"]
+            )
+        test_db_session.commit()
+
+        result = listing_financial_report_facade.get_all_by_listing_id(
             listing_financial_report_record.listing_id
         )
-        assert result == ListingFinancialReportEntity.model_validate(
-            listing_financial_report_record
-        )
+        assert len(result) == 3
 
-    def test_get_one_by_listing_id_no_result(self, listing_financial_report_facade):
-        with pytest.raises(ListingFinancialReportFacade.NoResultFound):
-            non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
-            listing_financial_report_facade.get_one_by_listing_id(non_existent_id)
+    def test_get_all_by_listing_id_no_result(self, listing_financial_report_facade):
+        non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
+        results = listing_financial_report_facade.get_all_by_listing_id(non_existent_id)
+        assert results == []
 
     def test_create_or_update_creates_new_record(
         self,
@@ -101,7 +107,9 @@ class TestListingFinancialReportFacade:
         listing_financial_report_dict = listing_financial_report_entity.model_dump()
         updated_payload = {
             **listing_financial_report_dict,
-            "occupancy_rate": (listing_financial_report_dict["occupancy_rate"] + 0.05),
+            "ttm_occupancy_rate": (
+                listing_financial_report_dict["ttm_occupancy_rate"] + 0.05
+            ),
             "rating_overall": 4.95,
         }
 
@@ -110,5 +118,4 @@ class TestListingFinancialReportFacade:
         )
 
         assert self._compare_result_with_expected(result, updated_payload)
-        assert result.occupancy_rate != listing_financial_report_dict["occupancy_rate"]
         assert result.rating_overall != listing_financial_report_dict["rating_overall"]

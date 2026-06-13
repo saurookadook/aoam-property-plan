@@ -43,6 +43,14 @@ class TestListingFacade:
 
         assert self._compare_result_with_expected(result, expected_listing_dict)
 
+    def test_create_or_update_creates_new_record_no_id(
+        self, listing_facade, expected_listing_dict
+    ):
+        del expected_listing_dict["id"]
+        result = listing_facade.create_or_update(payload=expected_listing_dict)
+
+        assert self._compare_result_with_expected(result, expected_listing_dict)
+
     def test_create_or_update_updates_existing_record(
         self, listing_facade, listing_record, expected_listing_dict
     ):

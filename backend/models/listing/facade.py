@@ -88,7 +88,7 @@ class ListingFacade(BaseFacade):
         )
 
         if maybe_one:
-            return self.update(payload=payload)
+            return self.update(payload={**maybe_one.model_dump(), **payload})
 
         insert_stmt = insert(ListingDB).values(**payload)
 

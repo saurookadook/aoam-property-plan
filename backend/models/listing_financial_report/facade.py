@@ -31,28 +31,33 @@ class ListingFinancialReportFacade(BaseFacade):
 
         return ListingFinancialReportEntity.model_validate(listing_financial_report)
 
-    def get_one_by_listing_id(
+    def get_all_by_listing_id(
         self, listing_id: UUID | str
-    ) -> ListingFinancialReportEntity:
+    ) -> list[ListingFinancialReportEntity]:
         try:
-            listing_financial_report = self.db_session.execute(
-                select(ListingFinancialReportDB).where(
-                    ListingFinancialReportDB.listing_id == listing_id
+            listing_financial_reports = (
+                self.db_session.execute(
+                    select(ListingFinancialReportDB).where(
+                        ListingFinancialReportDB.listing_id == listing_id
+                    )
                 )
-            ).scalar_one()
+                .scalars()
+                .all()
+            )
         except NoResultFound:
             raise ListingFinancialReportFacade.NoResultFound(
                 f"Listing financial report record with ``listing_id='{listing_id}'`` not found"
             )
 
-        return ListingFinancialReportEntity.model_validate(listing_financial_report)
+        return [
+            ListingFinancialReportEntity.model_validate(record)
+            for record in listing_financial_reports
+        ]
 
     def create_or_update(self, *, payload: dict) -> ListingFinancialReportEntity:
-        maybe_one = self._find_one_if_exists(
-            id=payload.get("id"), listing_id=payload.get("listing_id")
-        )
+        maybe_one = self._find_one_if_exists(id=payload.get("id"))
         if maybe_one:
-            return self.update(payload=payload)
+            return self.update(payload={**maybe_one.model_dump(), **payload})
 
         insert_stmt = insert(ListingFinancialReportDB).values(**payload)
 
@@ -89,17 +94,17 @@ class ListingFinancialReportFacade(BaseFacade):
         self,
         *,
         id: Optional[Union[UUID, str]] = None,
-        listing_id: Optional[Union[UUID, str]] = None,
+        # listing_id: Optional[Union[UUID, str]] = None,
     ) -> ListingFinancialReportEntity | None:
-        try:
-            if not listing_id:
-                raise ValueError(
-                    "No 'listing_id' provided to find listing financial report record"
-                )
+        # try:
+        #     if not listing_id:
+        #         raise ValueError(
+        #             "No 'listing_id' provided to find listing financial report record"
+        #         )
 
-            return self.get_one_by_listing_id(listing_id=listing_id)
-        except (ValueError, ListingFinancialReportFacade.NoResultFound):
-            pass
+        #     return self.get_one_by_listing_id(listing_id=listing_id)
+        # except (ValueError, ListingFinancialReportFacade.NoResultFound):
+        #     pass
 
         try:
             if not id:
