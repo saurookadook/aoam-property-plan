@@ -7,6 +7,7 @@ from db.base_db import BaseDB
 from db.db_session_manager import DBSessionManager
 from models.exchange_rate.db import ExchangeRateDB
 from models.listing.db import ListingDB
+from models.listing_financial_report.db import ListingFinancialReportDB
 from models.market.db import MarketDB
 from models.market_financial_report.db import MarketFinancialReportDB
 from models.property.db import PropertyDB

@@ -6,15 +6,16 @@ from uuid import uuid4
 
 import factory
 
+from _factories.base_meta import BaseMetaFactory
 from _factories.mixins.db import TimestampsDBMixinFactory
-
-# from _mocks.temporal import get_mock_utcnow
 from db.db_session_manager import DBSessionManager
 from models.property_financial_report.db import PropertyFinancialReportDB
 
 
 class PropertyFinancialReportDBFactory(
-    TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelFactory
+    TimestampsDBMixinFactory,
+    factory.alchemy.SQLAlchemyModelFactory,
+    metaclass=BaseMetaFactory[PropertyFinancialReportDB],
 ):
     class Meta:
         model = PropertyFinancialReportDB

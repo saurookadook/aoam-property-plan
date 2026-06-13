@@ -9,15 +9,11 @@ from models.mixins import TimestampsEntityMixin
 
 class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     airroi_id: int
-    adr_cop: float
-    adr_usd: Optional[float]
-    annual_revenue_cop: float
-    annual_revenue_usd: Optional[float]
     bedrooms: int
+    cover_photo_url: Optional[str]
     latitude: float
     location: str
     longitude: float
     market_id: Optional[UUID]
-    occupancy_rate: float
     property_type: str
-    source_url: str
+    source_url: Optional[str]

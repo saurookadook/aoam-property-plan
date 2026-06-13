@@ -6,13 +6,16 @@ from random import randint
 
 import factory
 
+from _factories.base_meta import BaseMetaFactory
 from _factories.mixins.db import TimestampsDBMixinFactory
 from db.db_session_manager import DBSessionManager
 from models.exchange_rate.db import ExchangeRateDB
 
 
 class ExchangeRateDBFactory(
-    TimestampsDBMixinFactory, factory.alchemy.SQLAlchemyModelFactory
+    TimestampsDBMixinFactory,
+    factory.alchemy.SQLAlchemyModelFactory,
+    metaclass=BaseMetaFactory[ExchangeRateDB],
 ):
     class Meta:
         model = ExchangeRateDB

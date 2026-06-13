@@ -67,3 +67,27 @@ def patch_utcnow(mocker):
     mock_datetime = mocker.patch("datetime.datetime", autospec=True)
     mock_datetime.now.return_value = get_mock_utcnow()
     return mock_datetime
+
+
+@pytest.fixture
+def markets_data() -> list[dict[str, str | None]]:
+    return [
+        {
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Calima",
+            "district": None,
+        },
+        {
+            "country": "Colombia",
+            "region": "Valle del Cauca",
+            "locality": "Pance",
+            "district": None,
+        },
+        {
+            "country": "Colombia",
+            "region": "Quindío",
+            "locality": "Salento",
+            "district": None,
+        },
+    ]
