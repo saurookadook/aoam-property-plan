@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from api.crons.handlers import handle_markets_summaries
+from api.crons.handlers import handle_listings_by_market, handle_markets_summaries
 from utils.logging.init import init_logging
 
 logger = init_logging(__name__)
@@ -11,6 +11,7 @@ if __name__ == "__main__":
     import argparse
 
     handler_ids = [
+        "listings_by_market",
         "markets_summaries",
     ]
 
@@ -18,11 +19,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "handler_name",
         choices=handler_ids,
-        help="Run the markets summaries handler",
+        help=f"Run the handler for the specified handler name. Valid options are: \n{'\n'.join(handler_ids)}",
     )
 
     args = parser.parse_args()
-    if args.handler_name in handler_ids:
+    if args.handler_name == "listings_by_market":
+        handle_listings_by_market()
+    elif args.handler_name == "markets_summaries":
         handle_markets_summaries()
     else:
         logger.error(
