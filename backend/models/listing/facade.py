@@ -12,6 +12,8 @@ from sqlalchemy.exc import NoResultFound
 from models.base.facade import BaseFacade
 from models.listing.db import ListingDB
 from models.listing.entity import ListingEntity
+from models.market.db import MarketDB
+from models.market.facade import MarketFacade
 
 
 class ListingFacade(BaseFacade):
@@ -81,6 +83,13 @@ class ListingFacade(BaseFacade):
             )
 
         return ListingEntity.model_validate(listing)
+
+    def get_all_by_market_id(self, market_id: UUID | str) -> list[ListingEntity]:
+        listing_records = []
+
+        market = MarketFacade(db_session=self.db_session).get_one_by_id(market_id)
+
+        return listing_records
 
     def create_or_update(self, *, payload: dict[str, Any]) -> ListingEntity:
         maybe_one = self._find_one_if_exists(

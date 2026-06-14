@@ -6,27 +6,21 @@ from uuid import uuid4
 import factory
 
 from _factories.base_meta import BaseMetaFactory
-from _factories.mixins.db import TimestampsDBMixinFactory
-from db.db_session_manager import DBSessionManager
-from models.listing.db import ListingDB
+from _factories.mixins.entity import TimestampsEntityFactoryMixin
+from models.listing.entity import ListingEntity
 
 
-class ListingDBFactory(
-    TimestampsDBMixinFactory,
-    factory.alchemy.SQLAlchemyModelFactory,
-    metaclass=BaseMetaFactory[ListingDB],
+class ListingEntityFactory(
+    TimestampsEntityFactoryMixin,
+    factory.Factory,
+    metaclass=BaseMetaFactory[ListingEntity],
 ):
     class Meta:
-        model = ListingDB
-        sqlalchemy_session = DBSessionManager().scoped_session
+        model = ListingEntity
 
     id = factory.LazyFunction(uuid4)
     airroi_id = factory.Sequence(lambda n: n + 1)
-    """
-    Auto-incrementing integer starting from 1
-    """
-
-    bedrooms = factory.Faker("random_int", min=1, max=10)
+    bedrooms = factory.Sequence(lambda n: (n % 10) + 1)
     cover_photo_url = factory.Faker("url")
     latitude = factory.Faker("latitude")
     location = factory.Faker(
