@@ -36,7 +36,20 @@ class MarketFinancialReportFacade(BaseFacade):
     ) -> list[MarketFinancialReportEntity]:
         market = MarketFacade(db_session=self.db_session).get_one_by_id(market_id)
 
-        return []
+        mfr_records = (
+            self.db_session.execute(
+                select(MarketFinancialReportDB).where(
+                    MarketFinancialReportDB.market_id == market.id
+                )
+            )
+            .scalars()
+            .all()
+        )
+
+        return [
+            MarketFinancialReportEntity.model_validate(mfr_rec)
+            for mfr_rec in mfr_records
+        ]
 
     def create_or_update(self, *, payload: dict) -> MarketFinancialReportEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
