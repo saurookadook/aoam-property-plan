@@ -42,12 +42,12 @@ class TestListingFacade:
             non_existent_id = UUID("988d0b5d-d4a5-4808-a94d-2d9df1df7588")
             listing_facade.get_one_by_id(non_existent_id)
 
-    def test_get_all_by_market_id(self, listing_facade, test_db_session):
+    def test_get_all_by_market_id(self, listing_facade: ListingFacade, test_db_session):
         expected_market = MarketEntityFactory()
         MarketDBFactory(**expected_market.model_dump())
         test_db_session.commit()
 
-        expected_listings = []
+        expected_listings: list[ListingEntity] = []
         for _ in range(3):
             listing = ListingEntityFactory(market_id=expected_market.id)
             ListingDBFactory(**listing.model_dump())
@@ -57,6 +57,21 @@ class TestListingFacade:
         results = listing_facade.get_all_by_market_id(expected_market.id)
 
         assert len(results) == 3
+        for listing_result in results:
+            expected_listing = next(
+                (e_l for e_l in expected_listings if e_l.id == listing_result.id), None
+            )
+            assert expected_listing is not None
+            assert expected_listing.model_dump() == listing_result.model_dump()
+
+    def test_get_all_by_market_id_no_results(self, listing_facade, test_db_session):
+        expected_market = MarketEntityFactory()
+        MarketDBFactory(**expected_market.model_dump())
+        test_db_session.commit()
+
+        results = listing_facade.get_all_by_market_id(expected_market.id)
+
+        assert results == []
 
     def test_create_or_update_creates_new_record(
         self, listing_facade, expected_listing_dict
