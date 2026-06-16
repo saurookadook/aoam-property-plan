@@ -22,11 +22,9 @@ class ListingEntityFactory(
     airroi_id = factory.Sequence(lambda n: n + 1)
     bedrooms = factory.Sequence(lambda n: (n % 10) + 1)
     cover_photo_url = factory.Faker("url")
-    latitude = factory.Faker("latitude")
-    location = factory.Faker(
-        "latlng"
-    )  # NOTE: should maybe use `location_on_land` and then set lat/lng in `post_generation` method?
-    longitude = factory.Faker("longitude")
+    latitude = factory.LazyAttribute(lambda obj: float(obj.location[0]))
+    location = factory.Faker("location_on_land")
+    longitude = factory.LazyAttribute(lambda obj: float(obj.location[1]))
     market_id = factory.LazyFunction(
         uuid4
     )  # NOTE: this should probably just throw if it's not provided?
