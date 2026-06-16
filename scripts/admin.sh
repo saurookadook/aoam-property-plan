@@ -151,7 +151,7 @@ backendPublishBase() {
         -f backend/Dockerfile.release \
         -t "${DOCKER_USERNAME}/aoam-backend-base:latest" \
         --target backend-release-base \
-        --push backend
+        --push .
         # --platform linux/amd64,linux/arm64 \
 }
 
@@ -160,7 +160,7 @@ backendPublishApp() {
         -f backend/Dockerfile.release \
         -t "${DOCKER_USERNAME}/aoam-backend-app:latest" \
         --target backend-release-app \
-        --push backend
+        --push .
         # --platform linux/amd64,linux/arm64 \
 }
 
@@ -169,7 +169,7 @@ backendPublishMigrations() {
         -f backend/Dockerfile.release \
         -t "${DOCKER_USERNAME}/aoam-backend-migrations:latest" \
         --target backend-release-migrations \
-        --push backend
+        --push .
         # --platform linux/amd64,linux/arm64 \
 }
 
@@ -178,7 +178,7 @@ backendPublishScripts() {
         -f backend/Dockerfile.release \
         -t "${DOCKER_USERNAME}/aoam-backend-scripts:latest" \
         --target backend-release-scripts \
-        --push backend
+        --push .
         # --platform linux/amd64,linux/arm64 \
 }
 
@@ -187,7 +187,7 @@ backendPublishTest() {
         -f backend/Dockerfile.release \
         -t "${DOCKER_USERNAME}/aoam-backend-test:latest" \
         --target backend-release-test \
-        --push backend
+        --push .
         # --platform linux/amd64,linux/arm64 \
 }
 
