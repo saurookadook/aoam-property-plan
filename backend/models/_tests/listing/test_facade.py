@@ -10,9 +10,7 @@ from _factories.market.db import MarketDBFactory
 from _factories.market.entity import MarketEntityFactory
 from models.listing.entity import ListingEntity
 from models.listing.facade import ListingFacade
-from models.market.entity import MarketEntity
-
-from rich import inspect as ri
+from models.market.facade import MarketFacade
 
 
 class TestListingFacade:
@@ -72,6 +70,12 @@ class TestListingFacade:
         results = listing_facade.get_all_by_market_id(expected_market.id)
 
         assert results == []
+
+    def test_get_all_by_market_id_no_market(self, listing_facade):
+        non_existent_market_id = "01d336ff-c742-4682-80bb-5f7d5cdf8d26"
+
+        with pytest.raises(MarketFacade.NoResultFound):
+            listing_facade.get_all_by_market_id(non_existent_market_id)
 
     def test_create_or_update_creates_new_record(
         self, listing_facade, expected_listing_dict

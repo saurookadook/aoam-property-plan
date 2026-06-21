@@ -12,7 +12,6 @@ from sqlalchemy.exc import NoResultFound
 from models.base.facade import BaseFacade
 from models.listing.db import ListingDB
 from models.listing.entity import ListingEntity
-from models.market.db import MarketDB
 from models.market.facade import MarketFacade
 
 _LISTING_COLUMNS = (

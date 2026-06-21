@@ -25,10 +25,10 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     @classmethod
     def parse_location(cls, data_val: Sequence[Decimal] | str | Any) -> str:
         if isinstance(data_val, str):
-            return str(data_val)
+            return data_val
         try:
             return f"POINT({float(data_val[1])} {float(data_val[0])})"
-        except:
-            raise TypeError(
-                f"Argumnt 'data_val' must be of type 'Sequence[Decimal] | str | Any'. Received: {data_val} '{type(data_val)}'"
-            )
+        except (TypeError, ValueError, IndexError) as exc:
+            raise ValueError(
+                "'location' must be a 'WKT POINT' string like `'POINT(lng lat)'` or a 2-item sequence `(lat, lon)`"
+            ) from exc
