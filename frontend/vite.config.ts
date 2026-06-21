@@ -23,6 +23,7 @@ const configLogLevel =
 type ViteConfig = UserConfig & { test: InlineConfig; logLevel?: LogLevel };
 
 const config: ViteConfig = {
+  logLevel: configLogLevel,
   plugins: [react()],
   resolve: {
     alias: {
