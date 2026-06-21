@@ -29,3 +29,26 @@ chmod +x scripts/admin.sh
 [airroi--dev-dash]: https://www.airroi.com/api/developer/activate
 [airroi--search-listings-by-market]: https://www.airroi.com/api/documentation#tag/Listings/operation/searchListingsByMarket
 [airbnb--salento-wknd-2-adlt]: https://www.airbnb.com/s/Salento--Quind%C3%ADo--Colombia/homes?refinement_paths%5B%5D=%2Fhomes&place_id=ChIJ5SDE7bySOI4RupnWre7tgY8&location_bb=QJbqasKWxDRAjxuNwpdJCw%3D%3D&acp_id=67370121-2a39-4dd2-8d33-8c8a55504b5a&date_picker_type=flexible_dates&flexible_trip_lengths%5B%5D=weekend_trip&adults=2&search_type=autocomplete_click
+
+## Storybook
+
+Run this later to install Playwright
+
+```sh
+pnpm exec playwright install chromium --with-deps
+```
+
+### Final output
+
+```log
+◇  Storybook setup completed, but some non-blocking errors occurred. Please check
+│  the log file below for details.
+│
+│  To run Storybook, run pnpm run storybook. CTRL+C to stop.
+│
+│  Official documentation reference: https://storybook.js.org/llms.txt
+│
+◇  To finalize setting up with AI, paste this prompt to your AI agent:
+
+│  Run `npx storybook ai setup` and follow its instructions precisely.
+```
