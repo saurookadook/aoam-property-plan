@@ -9,6 +9,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
 from models.base.facade import BaseFacade
+from models.market.facade import MarketFacade
 from models.market_financial_report.db import MarketFinancialReportDB
 from models.market_financial_report.entity import (
     MarketFinancialReportEntity,
@@ -29,6 +30,26 @@ class MarketFinancialReportFacade(BaseFacade):
                 f"Market financial report record with ``id='{id}'`` not found"
             )
         return MarketFinancialReportEntity.model_validate(market_financial_report)
+
+    def get_all_by_market_id(
+        self, market_id: UUID | str
+    ) -> list[MarketFinancialReportEntity]:
+        market = MarketFacade(db_session=self.db_session).get_one_by_id(market_id)
+
+        mfr_records = (
+            self.db_session.execute(
+                select(MarketFinancialReportDB).where(
+                    MarketFinancialReportDB.market_id == market.id
+                )
+            )
+            .scalars()
+            .all()
+        )
+
+        return [
+            MarketFinancialReportEntity.model_validate(mfr_rec)
+            for mfr_rec in mfr_records
+        ]
 
     def create_or_update(self, *, payload: dict) -> MarketFinancialReportEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
