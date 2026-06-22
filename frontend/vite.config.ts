@@ -23,6 +23,9 @@ const configLogLevel =
 type ViteConfig = UserConfig & { test: InlineConfig; logLevel?: LogLevel };
 
 const config: ViteConfig = {
+  css: {
+    postcss: path.resolve(__dirname, './postcss.config.js'),
+  },
   logLevel: configLogLevel,
   plugins: [react()],
   resolve: {
@@ -35,7 +38,7 @@ const config: ViteConfig = {
       /* Fixes for module resolutions */
       '#saurookkadookk/react-utils-render-with-context': path.resolve(
         __dirname,
-        '../node_modules/@saurookkadookk/react-utils-render-with-context/dist/esm',
+        './node_modules/@saurookkadookk/react-utils-render-with-context/dist/esm',
       ),
     },
     environment: 'jsdom',
