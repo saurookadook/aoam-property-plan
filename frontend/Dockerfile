@@ -1,4 +1,4 @@
-FROM node:22-bullseye AS client-dev-base
+FROM node:22-bullseye AS frontend-dev-base
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 ENV PNPM_VERSION=11.8.0
@@ -17,15 +17,15 @@ COPY ./src /opt/aoam-property-plan/frontend/src
 RUN corepack enable
 RUN corepack use pnpm@$PNPM_VERSION
 
-FROM client-dev-base AS client-dev-build
+FROM frontend-dev-base AS frontend-dev-build
 RUN $pnpm install --frozen-lockfile
 RUN $pnpm build
 
-FROM client-dev-build AS client-dev
+FROM frontend-dev-build AS frontend-dev
 ENTRYPOINT [ "corepack", "pnpm" ]
 CMD [ "dev" ]
 
-FROM client-dev-build AS client-test
+FROM frontend-dev-build AS client-test
 COPY .env.test /opt/aoam-property-plan/frontend
 ENTRYPOINT [ "corepack", "pnpm" ]
 CMD [ "test" ]
