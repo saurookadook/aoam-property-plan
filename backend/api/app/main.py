@@ -52,7 +52,7 @@ app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
 
 # Ensure cron decorators execute (registration happens at import time)
-import api.crons.ingest_markets_summaries  # noqa: E402,F401
+import api.crons.job_registry  # noqa: E402,F401
 
 app.include_router(
     get_cron_router(),
