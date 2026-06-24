@@ -9,7 +9,7 @@ services:
     platform: linux/amd64
     depends_on:
       - backend
-      # - frontend
+      - frontend
       # - memcached
       - nginx
 
@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: nginx-reverse-proxy/Dockerfile
     links:
-      # - frontend
+      - frontend
       - backend
     # network_mode: host
     networks:
@@ -47,7 +47,7 @@ services:
       POSTGRES_PASSWORD: example
     networks:
       - main_app
-      - scraper
+      # - scraper
     platform: linux/amd64
     ports:
       - 5432:5432
@@ -112,34 +112,41 @@ services:
       ENV: production
     extends: backend
 
-  # TODO: later!
-  # frontend:
-  #   build:
-  #     context: .
-  #     dockerfile: app/Dockerfile
-  #     target: frontend-dev
-  #   env_file: .env
-  #   environment:
-  #     EXAMPLE: woof
-  #   networks:
-  #     - main_app
-  #   platform: linux/amd64
-  #   ports:
-  #     - "8080:8080"
-  #     - "9229:9229"
-  #   volumes:
-  #     - ./app/.yarn/:/opt/nlpssa-frontend/.yarn/:ro
-  #     - ./app/src/client:/opt/nlpssa-frontend/src/client:ro
-  #     - ./app/src/server:/opt/nlpssa-frontend/src/server:ro
-  #     - ./app/src/types:/opt/nlpssa-frontend/src/types:ro
-  #     - ./app/.yarnrc.yml:/opt/nlpssa-frontend/.yarnrc.yml:ro
-  #     - ./app/customTSNodeLoader.js:/opt/nlpssa-frontend/customTSNodeLoader.js:ro
-  #     - ./app/package.json:/opt/nlpssa-frontend/package.json:ro
-  #     - ./app/tsconfig.json:/opt/nlpssa-frontend/tsconfig.json:ro
-  #     - ./app/webpack.config.js:/opt/nlpssa-frontend/webpack.config.js:ro
-  #     - ./app/yarn.lock:/opt/nlpssa-frontend/yarn.lock:ro
-  #     - /opt/nlpssa-frontend/node_modules
-  #     # - ~/.aws:/home/nlpstocksaapp/.aws:ro
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: frontend-dev
+    env_file: .env
+    environment:
+      EXAMPLE: woof
+    networks:
+      - main_app
+    platform: linux/amd64
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/opt/aoam-property-plan/frontend/src:ro
+      - ./frontend/.nvmrc:/opt/aoam-property-plan/frontend/.nvmrc:ro
+      - ./frontend/package.json:/opt/aoam-property-plan/frontend/package.json:ro
+      - ./frontend/pnpm-lock.yaml:/opt/aoam-property-plan/frontend/pnpm-lock.yaml:ro
+      - ./frontend/pnpm-workspace.yaml:/opt/aoam-property-plan/frontend/pnpm-workspace.yaml:ro
+      - ./frontend/tsconfig.app.json:/opt/aoam-property-plan/frontend/tsconfig.app.json:ro
+      - ./frontend/tsconfig.common.json:/opt/aoam-property-plan/frontend/tsconfig.common.json:ro
+      - ./frontend/tsconfig.json:/opt/aoam-property-plan/frontend/tsconfig.json:ro
+      - ./frontend/tsconfig.node.json:/opt/aoam-property-plan/frontend/tsconfig.node.json:ro
+      - ./frontend/tsconfig.test.json:/opt/aoam-property-plan/frontend/tsconfig.test.json:ro
+      - ./frontend/vite.config.ts:/opt/aoam-property-plan/frontend/vite.config.ts:ro
+      - /opt/aoam-property-plan/frontend/node_modules
+      # - ~/.aws:/home/nlpstocksaapp/.aws:ro
+
+  frontend-test:
+    build:
+      target: frontend-test
+    extends: frontend
+    volumes:
+      - ./frontend/vitest.setup.ts:/opt/aoam-property-plan/frontend/vitest.setup.ts:ro
+      - ./frontend/vitest.shims.d.ts:/opt/aoam-property-plan/frontend/vitest.shims.d.ts:ro
 
   # TODO: if we ever need it?
   # memcached:

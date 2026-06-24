@@ -1,0 +1,12 @@
+name: "Frontend CI Trigger: PR"
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**.yml"
+      - "!.github/workflows/backend-*.yml"
+      - "frontend/**"
+
+jobs:
+  build:
+    uses: ./.github/workflows/frontend-test.yml

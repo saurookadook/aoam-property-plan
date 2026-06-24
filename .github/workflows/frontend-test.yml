@@ -1,0 +1,31 @@
+name: Frontend Test
+
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ["ubuntu-latest"]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Node 22.
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: 🐳 Build Images
+        run: |
+          cp .env.example .env
+          docker compose build frontend-test
+
+      - name: 🖊️ Run tests
+        run: |
+          docker compose run --rm --remove-orphans frontend-test

@@ -7,15 +7,23 @@
     // "files.autoSave": "onFocusChange", // optional but recommended
     "vs-code-prettier-eslint.prettierLast": true, // set as "true" to run 'prettier' last not first
     "editor.tabSize": 2,
-    // "prettier.requireConfig": true,
-    // "prettier.resolveGlobalModules": true,
-    // "prettier.configPath": "./app/.prettierrc",
+    "path-autocomplete.pathMappings": {
+        // "__mocks__": "app/src/__mocks__",
+        // "client": "app/src/client",
+        // "server": "app/src/server",
+        // "types": "app/src/types"
+    },
+    "prettier.requireConfig": true,
+    "prettier.resolveGlobalModules": true,
+    "prettier.configPath": "./frontend/.prettierrc.js",
     "[typescriptreact]": {
         "editor.tabSize": 2
     },
-    "[sql]": {
-        "editor.formatOnSave": false
+    // ------ CSS
+    "[scss]": {
+        "editor.tabSize": 4
     },
+    // ------ Python
     "[python]": {
         "editor.tabSize": 4
     },
@@ -26,11 +34,8 @@
     "python.analysis.extraPaths": [
         "backend/.venv/lib/python3.12/site-packages",
     ],
-    "path-autocomplete.pathMappings": {
-        // "__mocks__": "app/src/__mocks__",
-        // "client": "app/src/client",
-        // "server": "app/src/server",
-        // "types": "app/src/types"
+    "[sql]": {
+        "editor.formatOnSave": false
     },
     // ------ JSON
     "json.schemaDownload.trustedDomains": {
