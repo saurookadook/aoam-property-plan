@@ -5,12 +5,7 @@ on:
     paths:
       - ".github/workflows/**.yml"
       - "!.github/workflows/backend-*.yml"
-      - "frontend/**/*.ini"
-      - "frontend/**/*.py"
-      - "frontend/**/*.pyi"
-      - "frontend/**/*.toml"
-      - "frontend/**/*.yaml"
-      - "frontend/**/*.yml"
+      - "frontend/**"
 
 jobs:
   build:
