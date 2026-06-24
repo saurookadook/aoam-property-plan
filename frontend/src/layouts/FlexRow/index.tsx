@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-import './styles.css';
+import './styles.scss';
 
 export type FlexRowProps = React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>;
 
