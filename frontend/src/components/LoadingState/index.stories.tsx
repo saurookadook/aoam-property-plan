@@ -6,7 +6,6 @@ const meta = {
   title: 'components/LoadingState',
   component: LoadingState,
   argTypes: {
-    isLoading: { control: 'boolean' },
     children: { control: 'text' },
   },
 } as Meta<typeof LoadingState>;

@@ -16,7 +16,7 @@ const ViteLogLevels = {
 const { LOG_LEVEL, SERVER_PORT } = process.env;
 
 const configLogLevel =
-  LOG_LEVEL != null && LOG_LEVEL in ViteLogLevels // force formatting
+  LOG_LEVEL != null && (Object.values(ViteLogLevels) as string[]).includes(LOG_LEVEL) // force formatting
     ? (LOG_LEVEL as LogLevel)
     : 'info';
 

@@ -9,7 +9,7 @@ services:
     platform: linux/amd64
     depends_on:
       - backend
-      # - frontend
+      - frontend
       # - memcached
       - nginx
 
@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: nginx-reverse-proxy/Dockerfile
     links:
-      # - frontend
+      - frontend
       - backend
     # network_mode: host
     networks:
@@ -47,7 +47,7 @@ services:
       POSTGRES_PASSWORD: example
     networks:
       - main_app
-      - scraper
+      # - scraper
     platform: linux/amd64
     ports:
       - 5432:5432
@@ -124,7 +124,6 @@ services:
       - main_app
     platform: linux/amd64
     ports:
-      - "8080:8080"
       - "5173:5173"
     volumes:
       - ./frontend/src:/opt/aoam-property-plan/frontend/src:ro

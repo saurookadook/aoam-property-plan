@@ -16,7 +16,6 @@ COPY ./frontend/index.html \
     ./frontend/tsconfig.json \
     ./frontend/tsconfig.node.json \
     ./frontend/tsconfig.test.json \
-    ./.env \
     /opt/aoam-property-plan/frontend/
 RUN corepack enable
 RUN corepack use pnpm
