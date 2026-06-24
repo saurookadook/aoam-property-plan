@@ -138,7 +138,7 @@ services:
       - ./frontend/tsconfig.node.json:/opt/aoam-property-plan/frontend/tsconfig.node.json:ro
       - ./frontend/tsconfig.test.json:/opt/aoam-property-plan/frontend/tsconfig.test.json:ro
       - ./frontend/vite.config.ts:/opt/aoam-property-plan/frontend/vite.config.ts:ro
-      - ./frontend/node_modules:/opt/aoam-property-plan/frontend/node_modules
+      - /opt/aoam-property-plan/frontend/node_modules
       # - ~/.aws:/home/nlpstocksaapp/.aws:ro
 
   frontend-test:
@@ -146,9 +146,8 @@ services:
       target: frontend-test
     extends: frontend
     volumes:
-      - ./frontend/tsconfig.test.json:/opt/aoam-property-plan/frontend/tsconfig.test.json:ro
       - ./frontend/vitest.setup.ts:/opt/aoam-property-plan/frontend/vitest.setup.ts:ro
-      - ./frontend/vitest.shim.d.ts:/opt/aoam-property-plan/frontend/vitest.shim.d.ts:ro
+      - ./frontend/vitest.shims.d.ts:/opt/aoam-property-plan/frontend/vitest.shims.d.ts:ro
 
   # TODO: if we ever need it?
   # memcached:
