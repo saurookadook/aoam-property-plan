@@ -283,6 +283,8 @@ def handle_exchange_rate(
         logger.error(
             f"Error fetching exchange rate for date='{current_date}' with params='{date_params}': {e}"
         )
+        local_db_session.close()
+        DBSessionManager().scoped_session.remove()
         return
 
     for rate_record in result:
@@ -290,7 +292,7 @@ def handle_exchange_rate(
             stmt = select(
                 exists().where(
                     func.cast(ListingFinancialReportDB.created_at, Date)
-                    == rate_record["date"]
+                    == datetime.strptime(rate_record["date"], "%Y-%m-%d").date()
                 )
             )
 
@@ -314,6 +316,8 @@ def handle_exchange_rate(
             logger.error(
                 f"Error creating/updating exchange rate record for date='{rate_record['date']}': {e}"
             )
+            local_db_session.rollback()
+            continue
 
     local_db_session.commit()
     local_db_session.close()

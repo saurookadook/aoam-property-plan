@@ -188,7 +188,11 @@ class TestHandleExchangeRate:
         handle_exchange_rate()
 
         exchange_rate_records_after = (
-            test_db_session.execute(select(ExchangeRateDB)).scalars().all()
+            test_db_session.execute(
+                select(ExchangeRateDB).order_by(ExchangeRateDB.record_date)
+            )
+            .scalars()
+            .all()
         )
 
         assert len(exchange_rate_records_after) > 0
@@ -253,7 +257,11 @@ class TestHandleExchangeRate:
         )
 
         exchange_rate_records_after = (
-            test_db_session.execute(select(ExchangeRateDB)).scalars().all()
+            test_db_session.execute(
+                select(ExchangeRateDB).order_by(ExchangeRateDB.record_date)
+            )
+            .scalars()
+            .all()
         )
 
         assert len(exchange_rate_records_after) == len(lfr_dates)
