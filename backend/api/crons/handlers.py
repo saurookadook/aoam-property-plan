@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime, timezone
-from typing import cast
+from typing import Optional, cast
 
 import requests
+from sqlalchemy import Date, exists, func, select
 
 from config.env_var_manager import EnvVarManager
 from constants import AIRROI_BASE_URL
 from db.db_session_manager import DBSessionManager
+from models.exchange_rate.facade import ExchangeRateFacade
 from models.listing.facade import ListingFacade
+from models.listing_financial_report.db import ListingFinancialReportDB
 from models.listing_financial_report.facade import ListingFinancialReportFacade
 from models.market.facade import MarketFacade
 from models.market_financial_report.facade import MarketFinancialReportFacade
@@ -231,6 +234,91 @@ def handle_listings_by_market():
                     continue
             local_db_session.commit()
         local_db_session.commit()
+    local_db_session.commit()
+    local_db_session.close()
+    DBSessionManager().scoped_session.remove()
+
+
+def handle_exchange_rate(
+    *, start_date: Optional[str] = None, end_date: Optional[str] = None
+):
+    local_db_session = DBSessionManager().scoped_session()
+    exchange_rate_facade = ExchangeRateFacade(db_session=local_db_session)
+
+    current_date = datetime.now(timezone.utc).date()
+
+    date_params: list[str] = []
+
+    if start_date:
+        try:
+            start_date_obj = datetime.strptime(start_date, "%Y-%m-%d").date()
+            date_params.append(f"from={start_date_obj}")
+        except ValueError as e:
+            logger.error(
+                f"Invalid start date format: {start_date}. Expected YYYY-MM-DD."
+            )
+            pass
+    if end_date:
+        try:
+            end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
+            date_params.append(f"to={end_date_obj}")
+        except ValueError as e:
+            logger.error(f"Invalid end date format: {end_date}. Expected YYYY-MM-DD.")
+            pass
+
+    if not date_params:
+        date_params.append(f"date={current_date}")
+
+    try:
+        response = requests.get(
+            f"https://api.frankfurter.dev/v2/rates?base=USD&quotes=COP&{'&'.join(date_params)}",
+            headers={
+                "Content-Type": "application/json",
+            },
+            timeout=30,
+        )
+        response.raise_for_status()
+        result = response.json()
+    except Exception as e:
+        logger.error(
+            f"Error fetching exchange rate for date='{current_date}' with params='{date_params}': {e}"
+        )
+        local_db_session.close()
+        DBSessionManager().scoped_session.remove()
+        return
+
+    for rate_record in result:
+        try:
+            stmt = select(
+                exists().where(
+                    func.cast(ListingFinancialReportDB.created_at, Date)
+                    == datetime.strptime(rate_record["date"], "%Y-%m-%d").date()
+                )
+            )
+
+            has_listing_financial_report_for_date = local_db_session.execute(
+                stmt
+            ).scalar()
+
+            if not has_listing_financial_report_for_date:
+                logger.warning(
+                    f"No listing financial report found for date='{rate_record['date']}'. Skipping exchange rate update."
+                )
+                continue
+
+            exchange_rate_facade.create_or_update(
+                payload={
+                    "record_date": rate_record["date"],
+                    "cop_per_usd": rate_record["rate"],
+                }
+            )
+        except Exception as e:
+            logger.error(
+                f"Error creating/updating exchange rate record for date='{rate_record['date']}': {e}"
+            )
+            local_db_session.rollback()
+            continue
+
     local_db_session.commit()
     local_db_session.close()
     DBSessionManager().scoped_session.remove()

@@ -5,6 +5,7 @@ from typing import Any, Callable, Generator
 
 import pytest
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from _factories.market.db import MarketDBFactory
 from api.crons.handlers import handle_markets_summaries
@@ -57,11 +58,11 @@ def airroi_request_mocks(
 class TestHandleMarketsSummaries:
 
     @pytest.fixture
-    def market_facade(self, test_db_session):
+    def market_facade(self, test_db_session: Session) -> MarketFacade:
         return MarketFacade(db_session=test_db_session)
 
     @pytest.fixture
-    def market_records(self, markets_data, test_db_session):
+    def market_records(self, markets_data, test_db_session: Session) -> list[MarketDB]:
         markets = [MarketDBFactory(**market_dict) for market_dict in markets_data]
         test_db_session.commit()
         return markets

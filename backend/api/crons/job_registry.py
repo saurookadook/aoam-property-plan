@@ -3,7 +3,11 @@ from __future__ import annotations
 import asyncio
 
 from api.app.main import crons
-from api.crons.handlers import handle_listings_by_market, handle_markets_summaries
+from api.crons.handlers import (
+    handle_exchange_rate,
+    handle_listings_by_market,
+    handle_markets_summaries,
+)
 
 
 @crons.cron(
@@ -18,3 +22,10 @@ async def run_ingest_markets_summaries():
 )  # Every Monday, Wednesday, and Friday at 6am UTC (2am EST)
 async def run_ingest_listings_by_market():
     return await asyncio.to_thread(handle_listings_by_market)
+
+
+@crons.cron(
+    "0 6 * * 1,3,5", name="ingest_exchange_rate", tags=["data_ingestion"]
+)  # Every Monday, Wednesday, and Friday at 6am UTC (2am EST)
+async def run_ingest_exchange_rate():
+    return await asyncio.to_thread(handle_exchange_rate)

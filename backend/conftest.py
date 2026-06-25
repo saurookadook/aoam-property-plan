@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from datetime import datetime
 
 import pytest
 import requests_mock
@@ -58,7 +59,7 @@ def test_db_session():
 
 
 @pytest.fixture
-def mock_utcnow():
+def mock_utcnow() -> datetime:
     return get_mock_utcnow()
 
 
