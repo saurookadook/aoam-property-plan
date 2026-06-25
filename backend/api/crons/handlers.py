@@ -9,6 +9,7 @@ import requests
 from config.env_var_manager import EnvVarManager
 from constants import AIRROI_BASE_URL
 from db.db_session_manager import DBSessionManager
+from models.exchange_rate.facade import ExchangeRateFacade
 from models.listing.facade import ListingFacade
 from models.listing_financial_report.facade import ListingFinancialReportFacade
 from models.market.facade import MarketFacade
@@ -231,6 +232,43 @@ def handle_listings_by_market():
                     continue
             local_db_session.commit()
         local_db_session.commit()
+    local_db_session.commit()
+    local_db_session.close()
+    DBSessionManager().scoped_session.remove()
+
+
+def handle_exchange_rate():
+    local_db_session = DBSessionManager().scoped_session()
+    exchange_rate_facade = ExchangeRateFacade(db_session=local_db_session)
+
+    current_date = datetime.now(timezone.utc).date()
+
+    try:
+        response = requests.get(
+            f"https://api.frankfurter.dev/v2/rates?base=USD&quotes=COP&date={current_date}",
+            headers={
+                "Content-Type": "application/json",
+            },
+            timeout=30,
+        )
+        response.raise_for_status()
+        result = response.json()
+    except Exception as e:
+        logger.error(f"Error fetching exchange rate for date='{current_date}': {e}")
+        return
+
+    try:
+        exchange_rate_facade.create_or_update(
+            payload={
+                "record_date": result[0]["date"],
+                "cop_per_usd": result[0]["rate"],
+            }
+        )
+    except Exception as e:
+        logger.error(
+            f"Error creating/updating exchange rate record for date='{current_date}': {e}"
+        )
+
     local_db_session.commit()
     local_db_session.close()
     DBSessionManager().scoped_session.remove()
