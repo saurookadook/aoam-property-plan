@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
@@ -28,8 +28,21 @@ class ExchangeRateFacade(BaseFacade):
             )
         return ExchangeRateEntity.model_validate(exchange_rate)
 
+    def get_one_by_date(self, record_date: date | str) -> ExchangeRateEntity:
+        try:
+            exchange_rate = self.db_session.execute(
+                select(ExchangeRateDB).where(ExchangeRateDB.record_date == record_date)
+            ).scalar_one()
+        except NoResultFound:
+            raise ExchangeRateFacade.NoResultFound(
+                f"Exchange rate record with ``date='{record_date}'`` not found"
+            )
+        return ExchangeRateEntity.model_validate(exchange_rate)
+
     def create_or_update(self, *, payload: dict) -> ExchangeRateEntity:
-        maybe_one = self._find_one_if_exists(id=payload.get("id"))
+        maybe_one = self._find_one_if_exists(
+            id=payload.get("id"), record_date=payload.get("record_date")
+        )
         if maybe_one:
             return self.update(payload=payload)
 
@@ -61,13 +74,26 @@ class ExchangeRateFacade(BaseFacade):
         return ExchangeRateEntity.model_validate(updated_record)
 
     def _find_one_if_exists(
-        self, *, id: Optional[Union[UUID, str]] = None
+        self,
+        *,
+        id: Optional[UUID | str] = None,
+        record_date: Optional[date | str] = None,
     ) -> ExchangeRateEntity | None:
         try:
             if not id:
                 raise ValueError("No 'id' provided to find exchange rate record")
 
             return self.get_one_by_id(id=id)
+        except (ValueError, ExchangeRateFacade.NoResultFound):
+            pass
+
+        try:
+            if not record_date:
+                raise ValueError(
+                    "No 'record_date' provided to find exchange rate record"
+                )
+
+            return self.get_one_by_date(record_date=record_date)
         except (ValueError, ExchangeRateFacade.NoResultFound):
             pass
 

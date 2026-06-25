@@ -35,6 +35,15 @@ class TestExchangeRateFacade:
             non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
             exchange_rate_facade.get_one_by_id(non_existent_id)
 
+    def test_get_one_by_date(self, exchange_rate_facade, exchange_rate_record):
+        result = exchange_rate_facade.get_one_by_date(exchange_rate_record.record_date)
+        assert result == ExchangeRateEntity.model_validate(exchange_rate_record)
+
+    def test_get_one_by_date_no_result(self, exchange_rate_facade):
+        with pytest.raises(ExchangeRateFacade.NoResultFound):
+            non_existent_date = "2024-01-01"
+            exchange_rate_facade.get_one_by_date(non_existent_date)
+
     def test_create_or_update_creates_new_record(
         self, exchange_rate_facade, expected_exchange_rate_dict
     ):
