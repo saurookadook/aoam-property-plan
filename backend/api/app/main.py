@@ -14,6 +14,7 @@ from fastapi_crons import Crons, get_cron_router
 from pydantic import BaseModel
 
 from api.middlewares.common import add_process_time_header
+from api.routes.markets import markets_router
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
 from utils.logging.init import init_logging
@@ -63,8 +64,10 @@ app.add_middleware(
     TrustedHostMiddleware,
     allowed_hosts=[
         "healthcheck.railway.app",
-        "localhost",
         "aoam-property-plan-production.up.railway.app",
+        # Dev
+        "localhost",
+        "aoam.dev",
     ],
 )
 
@@ -78,3 +81,6 @@ async def read_health_check():
     return JSONResponse(
         status_code=200, content={"message": "Yaaaaaay, health! Salud!"}
     )
+
+
+app.include_router(markets_router)
