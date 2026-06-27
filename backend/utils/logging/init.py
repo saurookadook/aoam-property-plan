@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import cast
+from typing import Optional, cast
 
 from config.env_var_manager import EnvVarManager
 from constants import window_width
@@ -18,7 +18,10 @@ def is_prod():
     return env_vars.env.lower() in set(["prod", "production"])
 
 
-def init_logging(app_name: str) -> ExtendedLogger:
+def init_logging(app_name: Optional[str] = None) -> ExtendedLogger:
+    if isinstance(app_name, str) and app_name != "aoam-api":
+        return cast(ExtendedLogger, root_logger.getChild(app_name))
+
     if is_prod():
         console_handler = logging.StreamHandler()
     else:
