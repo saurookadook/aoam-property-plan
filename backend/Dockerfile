@@ -55,7 +55,11 @@ ENV FORCE_COLOR=1
 EXPOSE 3000
 WORKDIR /opt/aoam-property-plan/backend
 ENTRYPOINT [ "uvicorn", "api.app.main:app" ]
-CMD [ "--host", "0.0.0.0", "--port", "3000", "--reload" ]
+CMD [ \
+  "--host", "0.0.0.0", \
+  "--port", "3000", \
+  "--reload" \
+]
 
 
 FROM dev-base AS backend-migrations

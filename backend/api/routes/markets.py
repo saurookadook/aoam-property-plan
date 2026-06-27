@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from fastapi import APIRouter, HTTPException, status
 
 from api.dependencies.db_session import DBSessionDependency
 from api.models.market import MarketOverviewResponse, MarketsListResponse
-from db.db_session_manager import DBSessionManager
 from models.listing.facade import ListingFacade
 from models.market.facade import MarketFacade
 from utils.logging.init import init_logging
@@ -20,13 +17,11 @@ markets_router = APIRouter(prefix="/api")
     "/markets",
     response_model=MarketsListResponse,
 )
-def read_markets_list(db_session_dep: Optional[DBSessionDependency] = None):
+def read_markets_list(api_db_session: DBSessionDependency):
     markets = []
 
     try:
-        db_session = DBSessionManager().scoped_session()
-
-        markets = MarketFacade(db_session=db_session).get_all()
+        markets = MarketFacade(db_session=api_db_session).get_all()
     except Exception as e:
         logger.error(f"Error fetching markets: {e}")
 
@@ -37,15 +32,10 @@ def read_markets_list(db_session_dep: Optional[DBSessionDependency] = None):
     "/markets/{market_id}",
     response_model=MarketOverviewResponse,
 )
-def read_market_overview(
-    market_id: str, db_session_dep: Optional[DBSessionDependency] = None
-):
+def read_market_overview(market_id: str, api_db_session: DBSessionDependency):
     market_overview_data = {}
 
-    # NOTE: make this work? :']
-    # db_session = yield db_session_dep
-    db_session = DBSessionManager().scoped_session()
-    market_facade = MarketFacade(db_session=db_session)
+    market_facade = MarketFacade(db_session=api_db_session)
 
     try:
         market_overview_data["market"] = market_facade.get_one_by_id(market_id)
@@ -56,7 +46,7 @@ def read_market_overview(
             detail="Error fetching market overview",
         )
 
-    listing_facade = ListingFacade(db_session=db_session)
+    listing_facade = ListingFacade(db_session=api_db_session)
 
     try:
         market_overview_data["listings"] = listing_facade.get_all_by_market_id(

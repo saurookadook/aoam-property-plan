@@ -1,46 +1,105 @@
 from __future__ import annotations
 
 import pytest
+from fastapi import status
 from sqlalchemy.orm import Session
 
+from _factories.listing.db import ListingDBFactory
+from _factories.listing.entity import ListingEntityFactory
 from _factories.market.db import MarketDBFactory
-from api.routes.markets import read_markets_list
+
+from models.listing.entity import ListingEntity
 from models.market.entity import MarketEntity
 from models.market.facade import MarketFacade
 
 
+@pytest.fixture
+def market_facade(test_db_session: Session):
+    return MarketFacade(db_session=test_db_session)
+
+
+@pytest.fixture
+def patch_route_db_session(monkeypatch, test_db_session: Session) -> None:
+    class MockDBSessionManager:
+        def scoped_session(self):
+            return test_db_session
+
+    monkeypatch.setattr("api.routes.markets.DBSessionManager", MockDBSessionManager)
+
+
 class TestReadMarketsListRoute:
-    @pytest.fixture
-    def market_facade(self, test_db_session: Session):
-        return MarketFacade(db_session=test_db_session)
-
-    @pytest.fixture
-    def patch_route_db_session(self, monkeypatch, test_db_session: Session) -> None:
-        class MockDBSessionManager:
-            def scoped_session(self):
-                return test_db_session
-
-        monkeypatch.setattr("api.routes.markets.DBSessionManager", MockDBSessionManager)
-
     def test_returns_all_markets(
-        self, patch_route_db_session, test_db_session: Session
+        self, patch_route_db_session, test_app_client, test_db_session: Session
     ):
         market_zipaquira = MarketDBFactory(locality="Zipaquira")
         market_bogota = MarketDBFactory(locality="Bogota")
         market_medellin = MarketDBFactory(locality="Medellin")
         test_db_session.commit()
 
-        result = read_markets_list()
+        result = test_app_client.get("/api/markets")
 
-        assert result == {
+        assert result.status_code == 200
+        assert result.json() == {
             "data": [
-                MarketEntity.model_validate(market_bogota),
-                MarketEntity.model_validate(market_medellin),
-                MarketEntity.model_validate(market_zipaquira),
+                MarketEntity.model_validate(market_bogota).model_dump(mode="json"),
+                MarketEntity.model_validate(market_medellin).model_dump(mode="json"),
+                MarketEntity.model_validate(market_zipaquira).model_dump(mode="json"),
             ]
         }
 
-    def test_returns_no_markets(self, patch_route_db_session):
-        result = read_markets_list()
+    def test_returns_no_markets(self, patch_route_db_session, test_app_client):
+        result = test_app_client.get("/api/markets")
 
-        assert result == {"data": []}
+        assert result.status_code == 200
+        assert result.json() == {"data": []}
+
+
+class TestReadMarketOverviewRoute:
+    def test_returns_market_and_listings(
+        self, patch_route_db_session, test_app_client, test_db_session: Session
+    ):
+        market = MarketDBFactory()
+        test_db_session.commit()
+
+        listings = [ListingEntityFactory(market_id=market.id) for _ in range(2)]
+        for listing in listings:
+            ListingDBFactory(**listing.model_dump())
+        test_db_session.commit()
+
+        result = test_app_client.get(f"/api/markets/{market.id}")
+
+        assert result.status_code == 200
+        assert result.json() == {
+            "data": {
+                "market": MarketEntity.model_validate(market).model_dump(mode="json"),
+                "listings": [
+                    ListingEntity.model_validate(listing).model_dump(mode="json")
+                    for listing in listings
+                ],
+            }
+        }
+
+    def test_returns_market_but_no_listings(
+        self, patch_route_db_session, test_app_client, test_db_session: Session
+    ):
+        market = MarketDBFactory()
+        test_db_session.commit()
+
+        result = test_app_client.get(f"/api/markets/{market.id}")
+
+        assert result.status_code == 200
+        assert result.json() == {
+            "data": {
+                "market": MarketEntity.model_validate(market).model_dump(mode="json"),
+                "listings": [],
+            }
+        }
+
+    def test_raises_http_exception_for_nonexistent_market(
+        self, patch_route_db_session, test_app_client, test_db_session: Session
+    ):
+        non_existent_market_id = "01d336ff-c742-4682-80bb-5f7d5cdf8d26"
+
+        result = test_app_client.get(f"/api/markets/{non_existent_market_id}")
+        assert result.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+        assert result.json() == {"detail": "Error fetching market overview"}

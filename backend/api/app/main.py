@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import logging
 from contextlib import asynccontextmanager
-from typing import cast
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -11,20 +9,18 @@ from fastapi_crons import Crons, get_cron_router
 
 # from fastapi_csrf_protect import CsrfProtect
 # from fastapi_csrf_protect.exceptions import CsrfProtectError
-from pydantic import BaseModel
 
 from api.middlewares.common import add_process_time_header
 from api.routes.markets import markets_router
 from constants import window_width
-from utils.logging.extended_logger import ExtendedLogger
 from utils.logging.init import init_logging, is_prod
 
-init_logging(app_name="aoam-api")
+logger = init_logging(app_name="aoam-api")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger = cast(ExtendedLogger, logging.getLogger(__file__))
+    global logger
 
     divider = "-" * window_width
 
@@ -52,6 +48,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
 
+
+@app.get("/api/health-check")
+async def read_health_check():
+    return JSONResponse(
+        status_code=200, content={"message": "Yaaaaaay, health! Salud!"}
+    )
+
+
 if is_prod():
     # Ensure cron decorators execute (registration happens at import time)
     import api.crons.job_registry  # noqa: E402,F401
@@ -72,16 +76,7 @@ app.add_middleware(
     ],
 )
 
-
 # NOTE: middleware executed bottom to top
 app.middleware("http")(add_process_time_header)
-
-
-@app.get("/api/health-check")
-async def read_health_check():
-    return JSONResponse(
-        status_code=200, content={"message": "Yaaaaaay, health! Salud!"}
-    )
-
 
 app.include_router(markets_router)
