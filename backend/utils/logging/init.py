@@ -19,27 +19,28 @@ def is_prod():
 
 
 def init_logging(app_name: Optional[str] = None) -> ExtendedLogger:
-    if isinstance(app_name, str) and app_name != "aoam-api":
-        return cast(ExtendedLogger, root_logger.getChild(app_name))
+    if not root_logger.handlers:
+        if is_prod():
+            console_handler = logging.StreamHandler()
+        else:
+            from rich.logging import RichHandler
 
-    if is_prod():
-        console_handler = logging.StreamHandler()
-    else:
-        from rich.logging import RichHandler
+            console_handler = RichHandler(
+                show_time=False, rich_tracebacks=True, tracebacks_theme="emacs"
+            )
 
-        console_handler = RichHandler(
-            show_time=False, rich_tracebacks=True, tracebacks_theme="emacs"
+        root_logger.setLevel(getattr(logging, env_vars.log_level.upper()))
+
+        format_str = (
+            # "{asctime} [{name}: {lineno}] [{levelname:<10s}]: {message:<"
+            "{asctime} [{name}: {lineno}]: {message:<"
+            + str(window_width)
+            + "s}"
         )
+        console_handler.setFormatter(logging.Formatter(format_str, style="{"))
+        root_logger.addHandler(console_handler)
 
-    root_logger.setLevel(getattr(logging, env_vars.log_level.upper()))
-
-    format_str = (
-        # "{asctime} [{name}: {lineno}] [{levelname:<10s}]: {message:<"
-        "{asctime} [{name}: {lineno}]: {message:<"
-        + str(window_width)
-        + "s}"
-    )
-    console_handler.setFormatter(logging.Formatter(format_str, style="{"))
-    root_logger.addHandler(console_handler)
+    if isinstance(app_name, str):
+        return cast(ExtendedLogger, root_logger.getChild(app_name))
 
     return cast(ExtendedLogger, root_logger)
