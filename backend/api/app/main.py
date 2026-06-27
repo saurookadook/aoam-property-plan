@@ -17,7 +17,7 @@ from api.middlewares.common import add_process_time_header
 from api.routes.markets import markets_router
 from constants import window_width
 from utils.logging.extended_logger import ExtendedLogger
-from utils.logging.init import init_logging
+from utils.logging.init import init_logging, is_prod
 
 init_logging(app_name="aoam-api")
 
@@ -52,8 +52,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
 
-# Ensure cron decorators execute (registration happens at import time)
-import api.crons.job_registry  # noqa: E402,F401
+if is_prod():
+    # Ensure cron decorators execute (registration happens at import time)
+    import api.crons.job_registry  # noqa: E402,F401
 
 app.include_router(
     get_cron_router(),
