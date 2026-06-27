@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
 
 from api.dependencies.db_session import DBSessionDependency
 from api.models.market import MarketsListResponse
