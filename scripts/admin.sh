@@ -191,6 +191,33 @@ backendPublishTest() {
         # --platform linux/amd64,linux/arm64 \
 }
 
+frontendPublishBase() {
+    docker buildx build \
+        -f frontend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-frontend-base:latest" \
+        --target frontend-release-base \
+        --push .
+        # --platform linux/amd64,linux/arm64 \
+}
+
+frontendPublishApp() {
+    docker buildx build \
+        -f frontend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-frontend-app:latest" \
+        --target frontend-release-app \
+        --push .
+        # --platform linux/amd64,linux/arm64 \
+}
+
+frontendPublishTest() {
+    docker buildx build \
+        -f frontend/Dockerfile.release \
+        -t "${DOCKER_USERNAME}/aoam-frontend-test:latest" \
+        --target frontend-release-test \
+        --push .
+        # --platform linux/amd64,linux/arm64 \
+}
+
 scriptController() {
     if [ "$1" == "dcr-alembic" ]; then
         # echo "before: $@"
@@ -334,6 +361,18 @@ scriptController() {
                 elif [ "$4" == "test" ]; then
                     backendPublishTest
                 fi
+            elif [ "$3" == "frontend" ]; then
+              if [ "$4" == "all" ]; then
+                frontendPublishBase
+                frontendPublishApp
+                frontendPublishTest
+              elif [ "$4" == "base" ]; then
+                frontendPublishBase
+              elif [ "$4" == "app" ]; then
+                frontendPublishApp
+              elif [ "$4" == "test" ]; then
+                frontendPublishTest
+              fi
             elif [ "$3" == "pg" ]; then
                 docker buildx build \
                     -f postgres/Dockerfile \
