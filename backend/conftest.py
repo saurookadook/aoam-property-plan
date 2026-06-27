@@ -10,6 +10,8 @@ from sqlalchemy.exc import InvalidRequestError
 from starlette.testclient import TestClient
 
 from _mocks.temporal import get_mock_utcnow
+from api.app.main import app
+from api.dependencies.db_session import api_db_session
 from config.env_var_manager import EnvVarManager
 from db.db_session_manager import DBSessionManager
 
@@ -56,6 +58,12 @@ def test_db_session():
             transaction.rollback()
             db_connection.close()
     _test_db_session.remove()
+
+
+@pytest.fixture
+def test_app_client(test_db_session):
+    app.dependency_overrides[api_db_session] = lambda: test_db_session
+    return TestClient(app, base_url="https://aoam.dev")
 
 
 @pytest.fixture

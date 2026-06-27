@@ -10,7 +10,7 @@ from db.db_session_manager import DBSessionManager
 DBSessionGenerator = Generator[Session, Any, None]
 
 
-def db_session() -> DBSessionGenerator:
+def db_session_generator() -> DBSessionGenerator:
     """FastAPI dependency to get database session
 
     Yields:
@@ -27,4 +27,8 @@ def db_session() -> DBSessionGenerator:
         DBSessionManager().scoped_session.remove()
 
 
-DBSessionDependency = Annotated[DBSessionGenerator, Depends(db_session)]
+def api_db_session() -> Session:
+    return DBSessionManager().scoped_session()
+
+
+DBSessionDependency = Annotated[Session, Depends(api_db_session)]
