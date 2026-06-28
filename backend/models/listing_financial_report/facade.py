@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import Date, and_, exists, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
@@ -53,6 +53,21 @@ class ListingFinancialReportFacade(BaseFacade):
             ListingFinancialReportEntity.model_validate(record)
             for record in listing_financial_reports
         ]
+
+    def has_one_by_listing_id_for_date(
+        self, *, listing_id: UUID | str, target_date_str: str
+    ) -> bool:
+        target_date = datetime.strptime(target_date_str, "%Y-%m-%d").date()
+        stmt = select(
+            exists().where(
+                and_(
+                    ListingFinancialReportDB.listing_id == listing_id,
+                    func.cast(ListingFinancialReportDB.created_at, Date) == target_date,
+                )
+            )
+        )
+
+        return bool(self.db_session.execute(stmt).scalar())
 
     def create_or_update(self, *, payload: dict) -> ListingFinancialReportEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))

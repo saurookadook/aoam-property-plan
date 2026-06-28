@@ -8,4 +8,5 @@ class BaseResponseModel(BaseModel):
         alias_generator=alias_generators.to_camel,
         from_attributes=True,
         populate_by_name=True,
+        serialize_by_alias=True,
     )

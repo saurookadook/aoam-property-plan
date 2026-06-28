@@ -120,6 +120,9 @@ class TestHandleListingsByMarket:
         )
         assert len(listing_financial_reports_after) >= 30
 
+        lfr_listing_id_set = {lfr.listing_id for lfr in listing_financial_reports_after}
+        assert len(lfr_listing_id_set) == len(listing_financial_reports_after)
+
         all_markets = market_facade.get_all()
 
         for (
@@ -159,6 +162,7 @@ class TestHandleListingsByMarket:
                             listing_record.id
                         )
                     )
+
                     listing_financial_report_record = next(
                         (
                             listing

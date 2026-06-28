@@ -103,6 +103,8 @@ def handle_listings_by_market():
         db_session=local_db_session
     )
 
+    current_date = datetime.now(timezone.utc).date()
+
     all_markets = market_facade.get_all()
     env_vars = EnvVarManager().env_vars
     request_headers = {
@@ -196,6 +198,11 @@ def handle_listings_by_market():
                     )
                     local_db_session.rollback()
                     local_db_session.commit()
+                    continue
+
+                if listing_financial_report_facade.has_one_by_listing_id_for_date(
+                    listing_id=listing_record.id, target_date_str=str(current_date)
+                ):
                     continue
 
                 try:

@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+from typing import Annotated, Any, Generator
+
+from fastapi import Depends
+from sqlalchemy.orm import Session
+
 from db.db_session_manager import DBSessionManager
 
+DBSessionGenerator = Generator[Session, Any, None]
 
-def db_session():
+
+def db_session_generator() -> DBSessionGenerator:
     """FastAPI dependency to get database session
 
     Yields:
@@ -18,3 +25,10 @@ def db_session():
         raise
     finally:
         DBSessionManager().scoped_session.remove()
+
+
+def api_db_session() -> DBSessionGenerator:
+    yield from db_session_generator()
+
+
+API_DB_SessionDependency = Annotated[Session, Depends(api_db_session)]

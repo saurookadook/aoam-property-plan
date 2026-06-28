@@ -9,10 +9,10 @@ from api.crons.handlers import (
 )
 from utils.logging.init import init_logging
 
-logger = init_logging(__name__)
-
 if __name__ == "__main__":
     import argparse
+
+    logger = init_logging(__name__)
 
     handler_ids = [
         "exchange_rate",
