@@ -10,6 +10,8 @@ from sqlalchemy.exc import InvalidRequestError
 from starlette.testclient import TestClient
 
 from _mocks.temporal import get_mock_utcnow
+from api.app.main import app
+from api.dependencies.db_session import api_db_session
 from config.env_var_manager import EnvVarManager
 from db.db_session_manager import DBSessionManager
 
@@ -58,6 +60,20 @@ def test_db_session():
     _test_db_session.remove()
 
 
+@pytest.fixture()
+def test_app_client(test_db_session):
+    app.dependency_overrides[api_db_session] = lambda: test_db_session
+    return TestClient(app, base_url="https://aoam.dev")
+
+
+@pytest.fixture(scope="class")
+def test_app_client_lifecycle(test_db_session):
+    app.dependency_overrides[api_db_session] = lambda: test_db_session
+    with TestClient(app, base_url="https://aoam.dev") as client:
+        yield client
+    app.dependency_overrides.pop(api_db_session, None)
+
+
 @pytest.fixture
 def mock_utcnow() -> datetime:
     return get_mock_utcnow()
@@ -65,7 +81,7 @@ def mock_utcnow() -> datetime:
 
 @pytest.fixture(autouse=True)
 def patch_utcnow(mocker):
-    mock_datetime = mocker.patch("datetime.datetime", autospec=True)
+    mock_datetime = mocker.patch("datetime.datetime")
     mock_datetime.now.return_value = get_mock_utcnow()
     return mock_datetime
 

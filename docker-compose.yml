@@ -35,7 +35,8 @@ services:
       - ./nginx-reverse-proxy/conf/:/etc/nginx/conf.d/:ro
       - ./nginx-reverse-proxy/certs/:/etc/nginx/ssl/:ro
       # Assets to be served by NGINX
-      # - ./frontend/dist/:/etc/nginx/html/
+      - ./frontend/dist/:/etc/nginx/html/
+      - ./frontend/index.html/:/etc/nginx/html/index.html
 
   pg_database:
     # image: postgres:16.2-bullseye # higher than this?
