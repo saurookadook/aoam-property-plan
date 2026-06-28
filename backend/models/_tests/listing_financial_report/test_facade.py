@@ -82,6 +82,28 @@ class TestListingFinancialReportFacade:
         results = listing_financial_report_facade.get_all_by_listing_id(non_existent_id)
         assert results == []
 
+    def has_one_by_listing_id_for_date_true(
+        self,
+        listing_financial_report_facade,
+        listing_financial_report_record,
+        test_db_session,
+    ):
+        result = listing_financial_report_facade.has_one_by_listing_id_for_date(
+            listing_id=listing_financial_report_record.listing_id,
+            target_date_str=str(listing_financial_report_record.created_at.date()),
+        )
+        assert result is True
+
+    def has_one_by_listing_id_for_date_false(
+        self, listing_financial_report_facade, mock_utcnow
+    ):
+        non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
+        result = listing_financial_report_facade.has_one_by_listing_id_for_date(
+            listing_id=non_existent_id,
+            target_date_str=str(mock_utcnow.date()),
+        )
+        assert result is False
+
     def test_create_or_update_creates_new_record(
         self,
         listing_financial_report_facade,
