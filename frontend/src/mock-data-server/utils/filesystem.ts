@@ -5,7 +5,7 @@ import { pipeline } from 'stream/promises';
 import { promisify } from 'util';
 import zlib from 'zlib';
 
-import type { KeyedObject } from '@src/types';
+import type { KeyedObject } from '@/types';
 
 export function createPathFileFromComponent(dateStr?: string) {
   if (dateStr == null) {
@@ -15,25 +15,22 @@ export function createPathFileFromComponent(dateStr?: string) {
   return dateStr.replace(/\s/g, '_').replace(/:/g, '-');
 }
 
-export function buildBasePathToGzippedData({
+export function buildPathToGzippedData({
   endTimeParam,
-  filename,
-  startTimeParam,
-  entityId,
+  filenamePrefix,
   entityType,
+  startTimeParam,
 }: {
   endTimeParam?: string;
-  filename: string;
-  startTimeParam?: string;
-  entityId: string;
   entityType: string;
+  filenamePrefix: string;
+  startTimeParam?: string;
 }) {
   return path.join(
     '__mocks__',
     'gzipped',
-    createPathFileFromComponent(startTimeParam),
-    createPathFileFromComponent(endTimeParam),
-    filename,
+    entityType,
+    `${filenamePrefix}__data.json.gz`,
   );
 }
 

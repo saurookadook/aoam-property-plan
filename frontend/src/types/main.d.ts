@@ -12,4 +12,5 @@ export type BoundThis = {
 
 export type FixedLengthArray<T, L extends number> = [T, ...T[]] & { length: L };
 
+export * from './mirage-server';
 export * from './react-custom';
