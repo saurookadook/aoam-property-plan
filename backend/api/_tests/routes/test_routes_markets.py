@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 from _factories.listing.db import ListingDBFactory
 from _factories.listing.entity import ListingEntityFactory
 from _factories.market.db import MarketDBFactory
-
 from models.listing.entity import ListingEntity
 from models.market.entity import MarketEntity
 from models.market.facade import MarketFacade
@@ -18,19 +17,8 @@ def market_facade(test_db_session: Session):
     return MarketFacade(db_session=test_db_session)
 
 
-@pytest.fixture
-def patch_route_db_session(monkeypatch, test_db_session: Session) -> None:
-    class MockDBSessionManager:
-        def scoped_session(self):
-            return test_db_session
-
-    monkeypatch.setattr("api.routes.markets.DBSessionManager", MockDBSessionManager)
-
-
 class TestReadMarketsListRoute:
-    def test_returns_all_markets(
-        self, patch_route_db_session, test_app_client, test_db_session: Session
-    ):
+    def test_returns_all_markets(self, test_app_client, test_db_session: Session):
         market_zipaquira = MarketDBFactory(locality="Zipaquira")
         market_bogota = MarketDBFactory(locality="Bogota")
         market_medellin = MarketDBFactory(locality="Medellin")
@@ -47,7 +35,7 @@ class TestReadMarketsListRoute:
             ]
         }
 
-    def test_returns_no_markets(self, patch_route_db_session, test_app_client):
+    def test_returns_no_markets(self, test_app_client):
         result = test_app_client.get("/api/markets")
 
         assert result.status_code == 200
@@ -56,7 +44,7 @@ class TestReadMarketsListRoute:
 
 class TestReadMarketOverviewRoute:
     def test_returns_market_and_listings(
-        self, patch_route_db_session, test_app_client, test_db_session: Session
+        self, test_app_client, test_db_session: Session
     ):
         market = MarketDBFactory()
         test_db_session.commit()
@@ -80,7 +68,7 @@ class TestReadMarketOverviewRoute:
         }
 
     def test_returns_market_but_no_listings(
-        self, patch_route_db_session, test_app_client, test_db_session: Session
+        self, test_app_client, test_db_session: Session
     ):
         market = MarketDBFactory()
         test_db_session.commit()
@@ -96,10 +84,10 @@ class TestReadMarketOverviewRoute:
         }
 
     def test_raises_http_exception_for_nonexistent_market(
-        self, patch_route_db_session, test_app_client, test_db_session: Session
+        self, test_app_client, test_db_session: Session
     ):
         non_existent_market_id = "01d336ff-c742-4682-80bb-5f7d5cdf8d26"
 
         result = test_app_client.get(f"/api/markets/{non_existent_market_id}")
-        assert result.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-        assert result.json() == {"detail": "Error fetching market overview"}
+        assert result.status_code == status.HTTP_404_NOT_FOUND
+        assert result.json() == {"detail": "Market not found"}

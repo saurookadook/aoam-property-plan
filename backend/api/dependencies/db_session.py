@@ -27,8 +27,8 @@ def db_session_generator() -> DBSessionGenerator:
         DBSessionManager().scoped_session.remove()
 
 
-def api_db_session() -> Session:
-    return DBSessionManager().scoped_session()
+def api_db_session() -> DBSessionGenerator:
+    yield from db_session_generator()
 
 
-DBSessionDependency = Annotated[Session, Depends(api_db_session)]
+API_DB_SessionDependency = Annotated[Session, Depends(api_db_session)]
