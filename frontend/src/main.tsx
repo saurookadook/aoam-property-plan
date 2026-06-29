@@ -1,10 +1,30 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode, type PropsWithChildren } from 'react';
+import { createRoot } from 'react-dom/client';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import '@/index.css';
+import App from '@/app/App';
+import { log } from '@/logger';
+import { AppStateProvider } from '@/store';
+
+function InitApp({ children }: PropsWithChildren) {
+  const enableStrictMode = window.localStorage.getItem('cfStrictMode');
+
+  const ENV_LOG_LEVEL: string = import.meta.env.LOG_LEVEL || 'SILENT';
+  log.setLevel(ENV_LOG_LEVEL.toLowerCase() as log.LogLevelDesc);
+
+  return enableStrictMode != null && enableStrictMode ? (
+    <StrictMode>{children}</StrictMode>
+  ) : (
+    children
+  );
+}
+
+const rootEl = document.getElementById('root') as HTMLElement;
+
+createRoot(rootEl).render(
+  <InitApp>
+    <AppStateProvider>
+      <App />
+    </AppStateProvider>
+  </InitApp>,
+);
