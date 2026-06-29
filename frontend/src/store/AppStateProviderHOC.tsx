@@ -20,13 +20,13 @@ export default function AppStateProviderHOC<
     initialState,
   }: {
     children: React.ReactElement;
-    initialState: State;
+    initialState?: State;
   }) {
     const [combinedReducerFunc, combinedDefaultState] = combinedReducer;
 
     const recursivelyMergedState = deeplyMerge<State>(
       combinedDefaultState,
-      initialState,
+      initialState ?? {},
     );
     const [state, dispatch] = useReducer(combinedReducerFunc, recursivelyMergedState);
 
