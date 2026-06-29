@@ -2,10 +2,10 @@ import type { KeyedObject } from '@/types';
 
 import { isObject } from './typeGuards';
 
-export function deeplyMerge<T extends KeyedObject = KeyedObject>(
+export function deeplyMerge<Result extends KeyedObject = KeyedObject>(
   target: KeyedObject,
-  source: T,
-): T {
+  source: KeyedObject,
+): Result {
   if (!isObject(target)) {
     throw new TypeError("[deeplyMerge] : argument 'target' must be an object!");
   }
@@ -20,7 +20,7 @@ export function deeplyMerge<T extends KeyedObject = KeyedObject>(
     });
   }
 
-  return target as T;
+  return target as Result;
 }
 
 function handleAssignment({
