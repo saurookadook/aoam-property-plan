@@ -1,3 +1,6 @@
+/****************************************************************
+Normalize
+****************************************************************/
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -11,16 +14,48 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+  --initial-bg-color: #242424;
+  --initial-text-color: rgba(255, 255, 255, 0.87);
+
+  --black: #000000;
+  --white: #FFFFFF;
+
+  --butterfly-blue-fill: #38ACEC;
+  --butterfly-blue-fill-0\.5: rgb(56 172 236 / 0.5);
+  --blue-fill: #0059FF;
+  --blue-fill-0\.5: rgb(0 89 255 / 0.5);
+  --blue-darker-fill: #123456;
+  --blue-darker-fill-0\.5: rgb(18 52 86 / 0.5);
+  --yellow-fill: #f9db24;
+  --yellow-fill-0\.5: rgb(249 219 36 / 0.5);
+  --red-fill: #ff0000;
+  --red-fill-0\.5: rgb(255 0 0 / 0.5);
+  --black-fill: #000000;
+  --black-fill-0\.5: rgb(0 0 0 / 0.5);
+
+  --light-gray-edge: rgb(238 238 238 / 0.75);
+  --light-gray-bg: #eeeaea;
+  --light-gray-bg-0\.5: rgb(238 234 234 / 0.75);
+
+  --error: #dc3545;
+  --warning: #ffc107;
+  --info: #0dcaf0;
+  --success: #198754;
+  /* --error: #ff0033; */
+  /* --success: #22bb33; */
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
+  background-color: var(--initial-bg-color);
   color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  color: var(--initial-text-color);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-synthesis: none;
+  font-weight: 400;
+  letter-spacing: 0.18px;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -50,20 +85,22 @@
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+body {
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  margin: 0;
+  min-height: 100vh;
+  min-width: 320px;
+  place-items: center;
 }
 
-body {
-  margin: 0;
+a {
+  color: #646cff;
+  font-weight: 500;
+  text-decoration: inherit;
+
+  &:hover {
+    color: #535bf2;
+  }
 }
 
 h1,
@@ -74,38 +111,146 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 3.2em;
+  /* font-size: 56px; */
   letter-spacing: -1.68px;
+  line-height: 1.1;
   margin: 32px 0;
+
   @media (max-width: 1024px) {
     font-size: 36px;
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
+
   @media (max-width: 1024px) {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
 
+button {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 0.6em 1.2em;
+  transition: border-color 0.25s;
+
+  &:hover {
+    border-color: #646cff;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+dl {
+    margin-block-start: 0rem;
+    margin-block-end: 0rem;
+    text-align: left;
+
+    & dt,
+    & dd {
+        font-size: 1rem;
+    }
+
+    & dt {
+        font-weight: 500;
+    }
+
+    & dd {
+        margin-left: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    dl {
+        & dt,
+        & dd {
+            font-size: 0.875rem;
+        }
+    }
+}
+
 code,
 .counter {
-  font-family: var(--mono);
-  display: inline-flex;
   border-radius: 4px;
   color: var(--text-h);
+  display: inline-flex;
+  font-family: var(--mono);
 }
 
 code {
+  background: var(--code-bg);
   font-size: 15px;
   line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  padding: 1rem;
+  width: 100%;
+}
+
+pre {
+  max-width: 100%;
+  min-width: 50%;
+  text-align: left;
+  width: max-content;
+}
+
+/****************************************************************
+Global
+****************************************************************/
+#root {
+  border-inline: 1px solid var(--border);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 100%;
+  min-height: 100svh;
+  text-align: center;
+  width: 1126px;
+}
+
+.top-nav-bar {
+  z-index: 1000;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    background-color: #ffffff;
+    color: #213547;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
 }
