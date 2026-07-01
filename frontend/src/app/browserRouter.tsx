@@ -1,7 +1,21 @@
-import { createBrowserRouter, redirect, type RouteObject } from 'react-router';
+import {
+  createBrowserRouter,
+  redirect,
+  type LoaderFunctionArgs,
+  type RouteObject,
+} from 'react-router';
+import { QueryClient } from '@tanstack/react-query';
 
 import { Root } from '@/layouts';
 import { Home } from '@/pages';
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 10, // 10 seconds
+    },
+  },
+});
 
 export const navItemsLabels = {
   HOME: 'Home',
@@ -9,6 +23,20 @@ export const navItemsLabels = {
   LISTINGS: 'Listings',
   // ACCOUNT: 'Account',
 };
+
+export const rootLoader =
+  (queryClient: QueryClient) =>
+  async ({ request }: LoaderFunctionArgs) => {
+    if (window != null && window.location?.pathname === '/') {
+      const homeUrl = new URL(request.url);
+      homeUrl.pathname = '/home';
+
+      window.location.assign(homeUrl.toString());
+      return;
+    }
+
+    return;
+  };
 
 /**
  * @note possibilities for implementing protected/public routes
@@ -20,15 +48,7 @@ export const routerConfig: RouteObject[] = [
     path: '/',
     element: <Root />,
     HydrateFallback: () => null,
-    loader: async ({ request }) => {
-      if (window != null && window.location?.pathname === '/') {
-        const homeUrl = new URL(request.url);
-        homeUrl.pathname = '/home';
-
-        return window.location.assign(homeUrl.toString());
-      }
-      return;
-    },
+    loader: rootLoader(queryClient),
     children: [
       {
         path: 'home',
