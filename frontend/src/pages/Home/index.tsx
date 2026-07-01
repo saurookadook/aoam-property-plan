@@ -1,6 +1,26 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+import { LoadingState } from '@/common/components';
+import { FlexColumn } from '@/layouts';
+
+import './styles.scss';
+
+function useTestQuery() {
+  return useQuery({
+    queryKey: ['testQuery'],
+    queryFn: async () => {
+      const testData =
+        JSON.parse(window.localStorage.getItem('testData') ?? 'null') ?? [];
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return { testData };
+    },
+  });
+}
 
 export function Home() {
+  const { data, error, isFetching, status } = useTestQuery();
+
   const [count, setCount] = useState(0);
 
   function handleCounterClick(
@@ -8,10 +28,12 @@ export function Home() {
   ) {
     const newCount = count + 1;
     setCount(newCount);
+    data?.testData.push(newCount);
+    window.localStorage.setItem('testData', JSON.stringify(data?.testData ?? []));
   }
 
   return (
-    <div id="home">
+    <FlexColumn id="home">
       <h2>{`🏡 Home 🏡`}</h2>
 
       <button // force formatting
@@ -19,6 +41,16 @@ export function Home() {
       >
         count is {count}
       </button>
-    </div>
+
+      <FlexColumn>
+        {isFetching ? (
+          <LoadingState />
+        ) : (
+          <pre>
+            <code>{JSON.stringify(data?.testData ?? [], null, 2)}</code>
+          </pre>
+        )}
+      </FlexColumn>
+    </FlexColumn>
   );
 }
