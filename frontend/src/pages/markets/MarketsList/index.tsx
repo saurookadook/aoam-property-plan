@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import type { MarketEntity } from '@/types/markets';
 import { LoadingState } from '@/common/components';
 import { FlexColumn } from '@/layouts';
 
@@ -12,7 +12,7 @@ function useMarketsListQuery() {
     queryFn: async () => {
       const marketsListResponse = await fetch('/api/markets').then((res) => res.json());
 
-      return { marketsList: marketsListResponse.data };
+      return { marketsList: marketsListResponse.data as MarketEntity[] };
     },
   });
 }
@@ -30,9 +30,15 @@ export function MarketsList() {
             <LoadingState />
           </div>
         ) : (
-          <pre>
-            <code>{JSON.stringify(data?.marketsList ?? [], null, 2)}</code>
-          </pre>
+          <div className="markets-list__wrapper">
+            {(data?.marketsList ?? []).map((market) => {
+              return (
+                <pre key={market.locality}>
+                  <code>{JSON.stringify(market, null, 2)}</code>
+                </pre>
+              );
+            })}
+          </div>
         )}
       </FlexColumn>
     </FlexColumn>
