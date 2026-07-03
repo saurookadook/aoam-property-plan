@@ -5,7 +5,17 @@ ENV PNPM_VERSION=11.8.0
 ENV pnpm='corepack pnpm'
 EXPOSE 5173
 WORKDIR /opt/aoam-property-plan/frontend/
-COPY ./frontend/src /opt/aoam-property-plan/frontend/src
+COPY ./frontend/src/app ./src/app
+COPY ./frontend/src/assets ./src/assets
+COPY ./frontend/src/common ./src/common
+COPY ./frontend/src/layouts ./src/layouts
+COPY ./frontend/src/logger ./src/logger
+COPY ./frontend/src/pages ./src/pages
+COPY ./frontend/src/store ./src/store
+COPY ./frontend/src/types ./src/types
+COPY ./frontend/src/index.css \
+    ./src/main.tsx \
+    ./
 COPY ./frontend/index.html \
     ./frontend/package.json \
     ./frontend/pnpm-lock.yaml \
@@ -16,7 +26,7 @@ COPY ./frontend/index.html \
     ./frontend/tsconfig.json \
     ./frontend/tsconfig.node.json \
     ./frontend/tsconfig.test.json \
-    /opt/aoam-property-plan/frontend/
+    ./
 RUN corepack enable
 RUN corepack use pnpm
 
