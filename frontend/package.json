@@ -10,16 +10,15 @@
     "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b",
     "scripts": {
         "dev": "vite",
-        "build:types": "tsc --project ./tsconfig.json",
+        "build:types": "rimraf dist && tsc --project ./tsconfig.json",
         "build": "pnpm build:types && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
         "test": "vitest --watch=false",
         "test:w": "vitest --watchAll",
         "test:cov": "vitest --coverage",
-        "mock-server:build": "vite build --config vite.mock-server.config.ts",
-        "mock-server:start": "node ./dist_mock_server/mockDataServer.js",
-        "mock-server": "pnpm mock-server:build && pnpm mock-server:start",
+        "mock-server:start": "npx tsx ./src/mock-data-server/mockDataServer.ts",
+        "mock-server": "pnpm mock-server:start",
         "storybook:build": "storybook build",
         "storybook:start": "storybook dev -p 6006",
         "storybook": "node storybookEntry.js"
@@ -63,6 +62,7 @@
         "@vitest/browser-playwright": "4.1.9",
         "@vitest/coverage-v8": "4.1.9",
         "autoprefixer": "^10.5.0",
+        "buffer": "^6.0.3",
         "concurrently": "^10.0.3",
         "cors": "^2.8.6",
         "dotenv": "^17.4.2",
@@ -85,9 +85,12 @@
         "sass-embedded": "^1.100.0",
         "storybook": "^10.4.6",
         "tsconfig-paths": "^4.2.0",
+        "tsx": "^4.22.4",
         "typescript": "~6.0.2",
         "typescript-eslint": "^8.59.2",
         "vite": "^8.0.12",
+        "vite-plugin-commonjs": "^0.10.4",
+        "vite-plugin-node-polyfills": "^0.28.0",
         "vitest": "^4.1.9"
     }
 }

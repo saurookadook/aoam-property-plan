@@ -1,11 +1,6 @@
-const concurrently = require('concurrently');
+import concurrently from 'concurrently';
 
 const buildCommands = [
-  {
-    command: 'pnpm mock-server:build',
-    name: 'Build Mock Server',
-    prefixColor: 'blue',
-  },
   {
     command: 'pnpm storybook:build',
     name: 'Build Storybook',
