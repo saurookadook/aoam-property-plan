@@ -20,8 +20,11 @@
         "editor.tabSize": 2
     },
     // ------ CSS
+    "[css]": {
+        "editor.tabSize": 2
+    },
     "[scss]": {
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     },
     // ------ Python
     "[python]": {

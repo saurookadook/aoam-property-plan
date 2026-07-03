@@ -5,8 +5,9 @@ ENV PNPM_VERSION=11.8.0
 ENV pnpm='corepack pnpm'
 EXPOSE 5173
 WORKDIR /opt/aoam-property-plan/frontend/
-COPY ./frontend/src /opt/aoam-property-plan/frontend/src
+COPY ./frontend/src ./src
 COPY ./frontend/index.html \
+    ./frontend/globals.d.ts \
     ./frontend/package.json \
     ./frontend/pnpm-lock.yaml \
     ./frontend/pnpm-workspace.yaml \
@@ -16,7 +17,7 @@ COPY ./frontend/index.html \
     ./frontend/tsconfig.json \
     ./frontend/tsconfig.node.json \
     ./frontend/tsconfig.test.json \
-    /opt/aoam-property-plan/frontend/
+    ./
 RUN corepack enable
 RUN corepack use pnpm
 
@@ -29,8 +30,10 @@ ENTRYPOINT [ "corepack", "pnpm" ]
 CMD [ "dev" ]
 
 FROM frontend-dev-build AS frontend-test
+WORKDIR /opt/aoam-property-plan/frontend/
+COPY ./frontend/__mocks__ ./__mocks__
 COPY ./frontend/vitest.setup.ts \
     ./frontend/vitest.shims.d.ts \
-    /opt/aoam-property-plan/frontend/
+    ./
 ENTRYPOINT [ "corepack", "pnpm" ]
 CMD [ "test" ]

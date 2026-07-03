@@ -1,5 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 
+import { globalStoryDecorators } from './story-decorators';
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -16,6 +18,9 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+  decorators: [
+    ...globalStoryDecorators, // force formatting
+  ],
 };
 
 export default preview;
