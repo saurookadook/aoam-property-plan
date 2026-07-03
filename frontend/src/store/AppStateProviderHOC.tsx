@@ -24,8 +24,9 @@ export default function AppStateProviderHOC<
   }) {
     const [combinedReducerFunc, combinedDefaultState] = combinedReducer;
 
+    const mergedDefaultState = deeplyMerge<State>({}, combinedDefaultState);
     const recursivelyMergedState = deeplyMerge<State>(
-      combinedDefaultState,
+      mergedDefaultState,
       initialState ?? {},
     );
     const [state, dispatch] = useReducer(combinedReducerFunc, recursivelyMergedState);

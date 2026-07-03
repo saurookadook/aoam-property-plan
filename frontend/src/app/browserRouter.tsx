@@ -25,25 +25,28 @@ export const navItemsLabels = {
 };
 
 export const rootLoader =
-  (queryClient: QueryClient) =>
+  (_queryClient: QueryClient) =>
   async ({ request }: LoaderFunctionArgs) => {
-    if (window != null && window.location?.pathname === '/') {
-      const homeUrl = new URL(request.url);
-      homeUrl.pathname = '/home';
-
-      window.location.assign(homeUrl.toString());
-      return;
+    const url = new URL(request.url);
+    if (url.pathname === '/') {
+      url.pathname = '/home';
+      return redirect(url.toString());
     }
 
-    return;
+    return null;
   };
+
+export type AOAMRouteObject = RouteObject & {
+  children?: AOAMRouteObject[];
+  label?: string;
+};
 
 /**
  * @note possibilities for implementing protected/public routes
  * - https://github.com/remix-run/react-router/issues/10637#issuecomment-1802180978
  * - https://medium.com/@umaishassan/private-protected-and-public-routes-in-react-router-v6-e8fb623aa81
  */
-export const routerConfig: RouteObject[] = [
+export const routerConfig: AOAMRouteObject[] = [
   {
     path: '/',
     element: <Root />,
@@ -52,13 +55,11 @@ export const routerConfig: RouteObject[] = [
     children: [
       {
         path: 'home',
-        // @ts-expect-error: I hope this is just temporarily missing
         label: navItemsLabels.HOME,
         element: <Home />,
       },
       {
         path: 'markets',
-        // @ts-expect-error: I hope this is just temporarily missing
         label: navItemsLabels.MARKETS,
         element: <MarketsList />,
       },

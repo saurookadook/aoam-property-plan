@@ -10,12 +10,12 @@ import { log } from '@/logger';
 import { AppStateProvider } from '@/store';
 
 function InitApp({ children }: PropsWithChildren) {
-  const enableStrictMode = window.localStorage.getItem('aoamStrictMode');
+  const enableStrictMode = window.localStorage.getItem('aoamStrictMode') === 'true';
 
-  const ENV_LOG_LEVEL: string = import.meta.env.LOG_LEVEL || 'SILENT';
+  const ENV_LOG_LEVEL: string = import.meta.env.VITE_LOG_LEVEL || 'SILENT';
   log.setLevel(ENV_LOG_LEVEL.toLowerCase() as log.LogLevelDesc);
 
-  return enableStrictMode != null && enableStrictMode ? (
+  return enableStrictMode ? ( // force formatting
     <StrictMode>{children}</StrictMode>
   ) : (
     children
