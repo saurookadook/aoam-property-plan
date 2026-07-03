@@ -26,11 +26,11 @@
                 "./node_modules/@saurookkadookk/*"
             ]
         },
-        // "types": [
-        //     "@testing-library",
-        //     "vitest",
-        //     "jest-dom"
-        // ],
+        "types": [
+            "@testing-library",
+            "vitest",
+            "jest-dom"
+        ],
         // "typeRoots": [
         //     "./node_modules/@types",
         //     "./node_modules/@testing-library",

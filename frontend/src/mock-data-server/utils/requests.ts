@@ -26,12 +26,9 @@ export async function dataRequestHandler(
   logProxy(`[${config.logName} - /api/${config.type}] request: `, request);
 
   const { params } = request;
-  console.log({
-    reqParams: params,
-  });
 
-  const entityType = params.entityType as string;
-  const filenamePrefix = (params.entityID ?? 'all') as string;
+  const entityType = (params.entityType ?? config.entityType) as string;
+  const filenamePrefix = (params.entityID ?? 'list') as string;
   const filePathForRequest = buildPathToGzippedData({
     entityType,
     filenamePrefix,
@@ -40,7 +37,13 @@ export async function dataRequestHandler(
 
   return boundReadGzippedJson(filePathForRequest)
     .then((jsonData) => {
-      mockResponseCache[compositeKey] = create200Response(jsonData);
+      if (!jsonData?.data?.length && config.emptyResultMessage != null) {
+        mockResponseCache[compositeKey] = create400Response(config.emptyResultMessage);
+      } else {
+        // NOTE: this is a little redundant but ¯\_(ツ)_/¯
+        mockResponseCache[compositeKey] = create200Response(jsonData.data);
+      }
+
       return mockResponseCache[compositeKey];
     })
     .catch((error) => {
