@@ -6,7 +6,7 @@ import { dataRequestHandler } from '@/mock-data-server/utils';
 
 const mockResponseCache: MockResponseCache = {};
 
-export const mirageStorybookServer = () =>
+export const createMirageTestServer = () =>
   createServer({
     routes() {
       this.namespace = 'api';
