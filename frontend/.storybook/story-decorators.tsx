@@ -35,13 +35,16 @@ export const QueryClientDecorator: Decorator = (Story) => {
 export const MirageServerDecorator: Decorator = (Story) => {
   const serverRef = useRef<ReturnType<typeof createMirageStorybookServer> | null>(null);
 
-  useEffect(() => {
+  if (serverRef.current == null) {
     serverRef.current = createMirageStorybookServer();
+  }
 
+  useEffect(() => {
     return () => {
       serverRef.current?.shutdown();
+      serverRef.current = null;
     };
-  });
+  }, []);
 
   return <Story />;
 };
