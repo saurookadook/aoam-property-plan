@@ -33,7 +33,7 @@ const getRequestFactory = async ({
     });
 };
 
-export const mirageStorybookServer = () =>
+export const createMirageStorybookServer = () =>
   createServer({
     routes() {
       this.namespace = 'api';

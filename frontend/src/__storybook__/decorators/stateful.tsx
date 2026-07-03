@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Decorator } from '@storybook/react-vite';
 
 import type { AppState } from '@/types';

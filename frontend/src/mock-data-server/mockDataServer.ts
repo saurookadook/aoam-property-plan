@@ -10,6 +10,8 @@ const API_SERVER_PORT = 3030;
 
 const app = express();
 
+const __dirname = path.resolve();
+
 app.use(
   cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
