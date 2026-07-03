@@ -33,6 +33,13 @@ const config: ViteConfig = {
       '@': path.resolve(__dirname, './src/'),
     },
   },
+  server: {
+    allowedHosts: ['aoam.dev'],
+    host: true,
+    watch: {
+      usePolling: true,
+    },
+  },
   test: {
     alias: {
       /* Fixes for module resolutions */
