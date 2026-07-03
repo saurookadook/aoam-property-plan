@@ -7,7 +7,7 @@ import {
 import { QueryClient } from '@tanstack/react-query';
 
 import { Root } from '@/layouts';
-import { Home } from '@/pages';
+import { Home, MarketsList } from '@/pages';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +55,12 @@ export const routerConfig: RouteObject[] = [
         // @ts-expect-error: I hope this is just temporarily missing
         label: navItemsLabels.HOME,
         element: <Home />,
+      },
+      {
+        path: 'markets',
+        // @ts-expect-error: I hope this is just temporarily missing
+        label: navItemsLabels.MARKETS,
+        element: <MarketsList />,
       },
     ],
   },
