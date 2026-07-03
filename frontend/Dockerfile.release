@@ -14,8 +14,8 @@ COPY ./frontend/src/pages ./src/pages
 COPY ./frontend/src/store ./src/store
 COPY ./frontend/src/types ./src/types
 COPY ./frontend/src/index.css \
-    ./src/main.tsx \
-    ./
+    ./frontend/src/main.tsx \
+    ./src/
 COPY ./frontend/index.html \
     ./frontend/package.json \
     ./frontend/pnpm-lock.yaml \
@@ -34,6 +34,6 @@ FROM frontend-release-base AS frontend-release-build
 RUN $pnpm install --frozen-lockfile
 RUN $pnpm build
 
-FROM frontend-release-build AS frontend-app
+FROM frontend-release-build AS frontend-release-app
 ENTRYPOINT [ "corepack", "pnpm" ]
 CMD [ "dev" ]

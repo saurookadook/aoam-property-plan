@@ -209,14 +209,14 @@ frontendPublishApp() {
         # --platform linux/amd64,linux/arm64 \
 }
 
-frontendPublishTest() {
-    docker buildx build \
-        -f frontend/Dockerfile.release \
-        -t "${DOCKER_USERNAME}/aoam-frontend-test:latest" \
-        --target frontend-release-test \
-        --push .
-        # --platform linux/amd64,linux/arm64 \
-}
+# frontendPublishTest() {
+#     docker buildx build \
+#         -f frontend/Dockerfile.release \
+#         -t "${DOCKER_USERNAME}/aoam-frontend-test:latest" \
+#         --target frontend-release-test \
+#         --push .
+#         # --platform linux/amd64,linux/arm64 \
+# }
 
 scriptController() {
     if [ "$1" == "dcr-alembic" ]; then
@@ -365,13 +365,13 @@ scriptController() {
               if [ "$4" == "all" ]; then
                 frontendPublishBase
                 frontendPublishApp
-                frontendPublishTest
+                # frontendPublishTest
               elif [ "$4" == "base" ]; then
                 frontendPublishBase
               elif [ "$4" == "app" ]; then
                 frontendPublishApp
-              elif [ "$4" == "test" ]; then
-                frontendPublishTest
+              # elif [ "$4" == "test" ]; then
+              #   frontendPublishTest
               fi
             elif [ "$3" == "pg" ]; then
                 docker buildx build \
