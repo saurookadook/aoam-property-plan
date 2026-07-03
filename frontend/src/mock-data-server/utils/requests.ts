@@ -25,35 +25,46 @@ export async function dataRequestHandler(
 ) {
   logProxy(`[${config.logName} - /api/${config.type}] request: `, request);
 
-  const { params } = request;
+  try {
+    const { params } = request;
 
-  const entityType = (params.entityType ?? config.entityType) as string;
-  const filenamePrefix = (params.entityID ?? 'list') as string;
-  const filePathForRequest = buildPathToGzippedData({
-    entityType,
-    filenamePrefix,
-  });
-  const compositeKey = buildCompositeKey(config, filenamePrefix);
-
-  return boundReadGzippedJson(filePathForRequest)
-    .then((jsonData) => {
-      if (!jsonData?.data?.length && config.emptyResultMessage != null) {
-        mockResponseCache[compositeKey] = create400Response(config.emptyResultMessage);
-      } else {
-        // NOTE: this is a little redundant but ¯\_(ツ)_/¯
-        mockResponseCache[compositeKey] = create200Response(jsonData.data);
-      }
-
-      return mockResponseCache[compositeKey];
-    })
-    .catch((error) => {
-      console.error(
-        `[${config.logName} - /api/${config.type}] Encountered unexpected error: `,
-        error,
-      );
-      mockResponseCache[compositeKey] = create500Response();
-      return mockResponseCache[compositeKey];
+    const entityType = (params?.entityType ?? config.entityType) as string;
+    const filenamePrefix = (params?.entityID ?? 'list') as string;
+    const filePathForRequest = buildPathToGzippedData({
+      entityType,
+      filenamePrefix,
     });
+    const compositeKey = buildCompositeKey(config, filenamePrefix);
+
+    return boundReadGzippedJson(filePathForRequest)
+      .then((jsonData) => {
+        if (!jsonData?.data?.length && config.emptyResultMessage != null) {
+          mockResponseCache[compositeKey] = create400Response(
+            config.emptyResultMessage,
+          );
+        } else {
+          // NOTE: this is a little redundant but ¯\_(ツ)_/¯
+          mockResponseCache[compositeKey] = create200Response(jsonData.data);
+        }
+
+        return mockResponseCache[compositeKey];
+      })
+      .catch((error) => {
+        console.error(
+          `[${config.logName} - /api/${config.type}] Encountered unexpected error: `,
+          error,
+        );
+        mockResponseCache[compositeKey] = create500Response();
+        return mockResponseCache[compositeKey];
+      });
+  } catch (exception: unknown) {
+    const error = exception instanceof Error ? exception : new Error(String(exception));
+    console.error(
+      `[${config.logName} - /api/${config.type}] Encountered unexpected error: `,
+      error,
+    );
+    return create500Response();
+  }
 }
 
 export function safeGetBodyJson<T>(

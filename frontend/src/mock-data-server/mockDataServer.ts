@@ -25,7 +25,7 @@ app.use(express.static(path.resolve(__dirname, '../../public')));
 
 app.use('/mock-data/api', (req, res, next) => {
   console.log(
-    `[${req.method} ${req.path}] In mock data server: \n`,
+    `[${req.method} ${req.originalUrl}] In mock data server: \n`,
     util.inspect({ reqBody: req.body }, { colors: true, depth: 1 }),
   );
   next();

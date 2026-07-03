@@ -12,24 +12,33 @@ export const createMirageStorybookServer = ({
   enableLogging = DEFAULT_ARGS.enableLogging,
 }: { enableLogging: boolean } = DEFAULT_ARGS) =>
   createServer({
-    environment: 'storybook',
+    // environment: 'storybook',
     logging: enableLogging,
 
     routes() {
-      this.namespace = 'api';
-      this.passthrough();
+      // this.urlPrefix = 'http://localhost:6006/api';
+      // this.namespace = 'api';
 
       for (const endpointType of endpointTypes) {
         const routePath = `${endpointType}`;
+        console.log({
+          routePath,
+        });
 
-        this.get(`/${routePath}`, async (schema, request) => {
+        this.get(`/api/${routePath}/:entityId`, async (schema, request) => {
           return getRequestFactory({ endpointPath: routePath, request });
         });
 
-        this.get(`/${routePath}/:entityId`, async (schema, request) => {
+        this.get(`/api/${routePath}`, async (schema, request) => {
+          console.log({
+            requestUrl: request.url,
+          });
           return getRequestFactory({ endpointPath: routePath, request });
         });
       }
+
+      this.passthrough('http://localhost:3030/**');
+      this.passthrough();
     },
   });
 

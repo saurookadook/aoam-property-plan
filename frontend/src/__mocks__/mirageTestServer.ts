@@ -19,7 +19,6 @@ export const createMirageTestServer = ({
 
     routes() {
       this.namespace = 'api';
-      this.passthrough();
 
       for (const config of endpointConfigs) {
         const routePath = buildRoutePath(config);
@@ -28,5 +27,7 @@ export const createMirageTestServer = ({
           return dataRequestHandler(request, mockResponseCache, config);
         });
       }
+
+      this.passthrough();
     },
   });

@@ -11,9 +11,9 @@ const mockResponseCache: MockResponseCache = {};
 for (const config of endpointConfigs) {
   const routePath = buildRoutePath(config);
 
-  router.get(`/${routePath}`, (req, res) => {
-    // TODO: revisit this :]
-    return dataRequestHandler(req, mockResponseCache, config);
+  router.get(`/${routePath}`, async (req, res) => {
+    const response = await dataRequestHandler(req, mockResponseCache, config);
+    res.json(response);
   });
 }
 
