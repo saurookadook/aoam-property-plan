@@ -4,13 +4,42 @@ const BASE_DATA_SERVER_URL = 'http://localhost:3030/mock-data/api';
 
 const endpointTypes = ['markets'];
 
-const getRequestFactory = async ({
+const DEFAULT_ARGS = {
+  enableLogging: false,
+};
+
+export const createMirageStorybookServer = ({
+  enableLogging = DEFAULT_ARGS.enableLogging,
+}: { enableLogging: boolean } = DEFAULT_ARGS) =>
+  createServer({
+    environment: 'storybook',
+    logging: enableLogging,
+
+    routes() {
+      this.namespace = 'api';
+      this.passthrough();
+
+      for (const endpointType of endpointTypes) {
+        const routePath = `${endpointType}`;
+
+        this.get(`/${routePath}`, async (schema, request) => {
+          return getRequestFactory({ endpointPath: routePath, request });
+        });
+
+        this.get(`/${routePath}/:entityId`, async (schema, request) => {
+          return getRequestFactory({ endpointPath: routePath, request });
+        });
+      }
+    },
+  });
+
+async function getRequestFactory({
   endpointPath,
   request,
 }: {
   endpointPath: string;
   request: MirageRequest;
-}) => {
+}) {
   console.log(`[MOCK - /api/${endpointPath}] request: `, request);
 
   return fetch(`${BASE_DATA_SERVER_URL}/${endpointPath}`, {
@@ -31,24 +60,4 @@ const getRequestFactory = async ({
       );
       return error;
     });
-};
-
-export const createMirageStorybookServer = () =>
-  createServer({
-    routes() {
-      this.namespace = 'api';
-      this.passthrough();
-
-      for (const endpointType of endpointTypes) {
-        const routePath = `${endpointType}`;
-
-        this.get(`/${routePath}`, async (schema, request) => {
-          return getRequestFactory({ endpointPath: routePath, request });
-        });
-
-        this.get(`/${routePath}/:entityId`, async (schema, request) => {
-          return getRequestFactory({ endpointPath: routePath, request });
-        });
-      }
-    },
-  });
+}

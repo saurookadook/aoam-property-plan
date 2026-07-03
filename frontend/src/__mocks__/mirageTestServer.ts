@@ -2,21 +2,27 @@ import { createServer } from 'miragejs';
 
 import type { MockResponseCache } from '@/types';
 import { endpointConfigs } from '@/mock-data-server/constants';
-import { dataRequestHandler } from '@/mock-data-server/utils';
+import { buildRoutePath, dataRequestHandler } from '@/mock-data-server/utils';
 
 const mockResponseCache: MockResponseCache = {};
 
-export const createMirageTestServer = () =>
+const DEFAULT_ARGS = {
+  enableLogging: false,
+};
+
+export const createMirageTestServer = ({
+  enableLogging = DEFAULT_ARGS.enableLogging,
+}: { enableLogging: boolean } = DEFAULT_ARGS) =>
   createServer({
+    environment: 'test',
+    logging: enableLogging,
+
     routes() {
       this.namespace = 'api';
       this.passthrough();
 
       for (const config of endpointConfigs) {
-        const routePath = [
-          config.entityType,
-          config.type !== 'overview' ? ':entityId' : '',
-        ].join('/');
+        const routePath = buildRoutePath(config);
 
         this.get(`/${routePath}`, (schema, request) => {
           return dataRequestHandler(request, mockResponseCache, config);
