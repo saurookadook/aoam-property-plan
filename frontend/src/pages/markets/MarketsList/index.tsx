@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { MarketEntity } from '@/types/markets';
 import { LoadingState } from '@/common/components';
+import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
+import { fetchy } from '@/utils';
 
 import './styles.scss';
 
@@ -10,7 +12,9 @@ function useMarketsListQuery() {
   return useQuery({
     queryKey: ['marketsList'],
     queryFn: async () => {
-      const marketsListResponse = await fetch('/api/markets').then((res) => res.json());
+      const marketsListResponse = await fetchy
+        .get(`${API_SERVER_DOMAIN}/api/markets`) // force formatting
+        .then((res) => res.json());
 
       return { marketsList: marketsListResponse.data as MarketEntity[] };
     },

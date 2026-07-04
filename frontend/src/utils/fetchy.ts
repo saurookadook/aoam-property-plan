@@ -19,7 +19,6 @@ interface Options extends RequestInit {
 
 export const DEFAULT_FETCH_HEADERS = {
   Accept: 'application/json',
-  'Access-Control-Allow-Origin': '*',
   'Content-Type': 'application/json;charset=UTF-8',
 };
 
