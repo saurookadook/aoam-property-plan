@@ -4,7 +4,7 @@ from datetime import date, datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, or_
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
@@ -64,7 +64,12 @@ class ExchangeRateFacade(BaseFacade):
     def update(self, *, payload: dict) -> ExchangeRateEntity:
         update_stmt = (
             update(ExchangeRateDB)
-            .where(ExchangeRateDB.id == payload.get("id"))
+            .where(
+                or_(
+                    ExchangeRateDB.id == payload.get("id"),
+                    ExchangeRateDB.record_date == payload.get("record_date")
+                )
+            )
             .values(**payload)
         ).returning(ExchangeRateDB)
 

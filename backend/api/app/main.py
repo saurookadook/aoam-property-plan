@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_crons import Crons, get_cron_router
@@ -65,18 +66,39 @@ app.include_router(
     # prefix="/api/crons"
 )
 
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=[
-        "healthcheck.railway.app",
-        "aoam-property-plan-production.up.railway.app",
-        # Dev
-        "localhost",
-        "aoam.dev",
-    ],
-)
+headers = ["*"]
+
+hosts = [
+    "healthcheck.railway.app",
+    "aoam-property-plan-production.up.railway.app",
+    "aoam-frontend-app-production.up.railway.app",
+    # Dev
+    "localhost",
+    "aoam.dev",
+]
+
+methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+
+origins = [
+    "https://aoam-frontend-app-production.up.railway.app",
+]
+
 
 # NOTE: middleware executed bottom to top
 app.middleware("http")(add_process_time_header)
+
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=hosts,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=methods,
+    allow_headers=headers,
+)
 
 app.include_router(markets_router)

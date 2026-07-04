@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 from datetime import datetime, timezone
 from typing import Optional, cast
 
@@ -60,7 +61,8 @@ def handle_markets_summaries():
         except (ValueError, requests.RequestException) as e:
             logger.error(
                 f"Error fetching market summary for market with id='{market.id}' "
-                f"and locality='{market.locality}': {e}"
+                f"and locality='{market.locality}': {e}",
+                exc_info=sys.exc_info(),
             )
             continue
 
@@ -86,7 +88,8 @@ def handle_markets_summaries():
         except Exception as e:
             logger.error(
                 f"Error creating/updating market financial report for market with id='{market.id}' "
-                f"and locality='{market.locality}': {e}"
+                f"and locality='{market.locality}': {e}",
+                exc_info=sys.exc_info(),
             )
             local_db_session.rollback()
             continue
@@ -194,7 +197,8 @@ def handle_listings_by_market():
                 except Exception as e:
                     logger.error(
                         f"Error creating/updating listing for market with id='{market.id}' "
-                        f"(locality='{market.locality}'  |  airroi_id='{listing_info['listing_id']}'): {e}"
+                        f"(locality='{market.locality}'  |  airroi_id='{listing_info['listing_id']}'): {e}",
+                        exc_info=sys.exc_info(),
                     )
                     local_db_session.rollback()
                     local_db_session.commit()
@@ -234,7 +238,8 @@ def handle_listings_by_market():
                 except Exception as e:
                     logger.error(
                         f"Error creating/updating listing financial report for market with id='{market.id}' "
-                        f"(locality='{market.locality}'  |  airroi_id='{listing_info['listing_id']}'): {e}"
+                        f"(locality='{market.locality}'  |  airroi_id='{listing_info['listing_id']}'): {e}",
+                        exc_info=sys.exc_info(),
                     )
                     local_db_session.rollback()
                     local_db_session.commit()
@@ -262,7 +267,8 @@ def handle_exchange_rate(
             date_params.append(f"from={start_date_obj}")
         except ValueError as e:
             logger.error(
-                f"Invalid start date format: {start_date}. Expected YYYY-MM-DD."
+                f"Invalid start date format: {start_date}. Expected YYYY-MM-DD.",
+                exc_info=sys.exc_info(),
             )
             pass
     if end_date:
@@ -270,7 +276,10 @@ def handle_exchange_rate(
             end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
             date_params.append(f"to={end_date_obj}")
         except ValueError as e:
-            logger.error(f"Invalid end date format: {end_date}. Expected YYYY-MM-DD.")
+            logger.error(
+                f"Invalid end date format: {end_date}. Expected YYYY-MM-DD.",
+                exc_info=sys.exc_info(),
+            )
             pass
 
     if not date_params:
@@ -288,7 +297,8 @@ def handle_exchange_rate(
         result = response.json()
     except Exception as e:
         logger.error(
-            f"Error fetching exchange rate for date='{current_date}' with params='{date_params}': {e}"
+            f"Error fetching exchange rate for date='{current_date}' with params='{date_params}': {e}",
+            exc_info=sys.exc_info(),
         )
         local_db_session.close()
         DBSessionManager().scoped_session.remove()
@@ -321,7 +331,8 @@ def handle_exchange_rate(
             )
         except Exception as e:
             logger.error(
-                f"Error creating/updating exchange rate record for date='{rate_record['date']}': {e}"
+                f"Error creating/updating exchange rate record for date='{rate_record['date']}': {e}",
+                exc_info=sys.exc_info(),
             )
             local_db_session.rollback()
             continue
