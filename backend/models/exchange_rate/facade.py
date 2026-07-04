@@ -62,15 +62,13 @@ class ExchangeRateFacade(BaseFacade):
         return ExchangeRateEntity.model_validate(exchange_rate_record)
 
     def update(self, *, payload: dict) -> ExchangeRateEntity:
+        where_clause = (
+            ExchangeRateDB.id == payload.get("id")
+            if payload.get("id") is not None
+            else ExchangeRateDB.record_date == payload.get("record_date")
+        )
         update_stmt = (
-            update(ExchangeRateDB)
-            .where(
-                or_(
-                    ExchangeRateDB.id == payload.get("id"),
-                    ExchangeRateDB.record_date == payload.get("record_date")
-                )
-            )
-            .values(**payload)
+            update(ExchangeRateDB).where(where_clause).values(**payload)
         ).returning(ExchangeRateDB)
 
         updated_record = self.db_session.execute(update_stmt).scalar_one()

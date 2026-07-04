@@ -1,19 +1,13 @@
-import https from 'https';
-import http from 'http';
-
 import type { KeyedObject, Nullable } from '@/types';
 
 type FetchyThis = {
   baseURL: string;
   headers: KeyedObject; // TODO
-  httpAgent: Nullable<http.Agent>;
-  httpsAgent: Nullable<https.Agent>;
   options: KeyedObject; // TODO
   privateSetBaseURL: (baseURL: string) => string;
 };
 
 interface Options extends RequestInit {
-  agent: () => FetchyThis['httpAgent'] | FetchyThis['httpsAgent'];
   searchParams?: KeyedObject;
 }
 
@@ -28,8 +22,6 @@ const fetchy = (function () {
     headers: {
       ...DEFAULT_FETCH_HEADERS,
     },
-    httpAgent: null,
-    httpsAgent: null,
     options: {
       agent: null,
       searchParams: {},
@@ -51,8 +43,7 @@ const fetchy = (function () {
    * of the Regular Expression from {@link https://datatracker.ietf.org/doc/html/rfc3986#appendix-B|RFC 3986, Appendix B}
    */
   const isAbsoluteURL = (reqString: string): boolean => {
-    // TODO: this RegEx isn't working :[
-    return /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?/im.test(reqString);
+    return /^(([^:\/?#]+):)?\/\/(([^\/?#]+))$$/im.test(reqString);
   };
 
   /**
@@ -77,24 +68,18 @@ const fetchy = (function () {
       return url;
     }
 
-    let hasFirstParam = url.indexOf('?') === -1;
+    let hasQuery = url.includes('?');
 
-    return Object.entries(searchParams).reduce(function (finalUrl, paramEntry) {
-      if (paramEntry[1] === '') {
+    return Object.entries(searchParams).reduce(function (finalUrl, [key, value]) {
+      if (value === '') {
         return finalUrl;
       }
 
-      const [key, value] = paramEntry;
+      const prefix = hasQuery ? '&' : '?';
+      hasQuery = true;
 
-      if (!hasFirstParam) {
-        finalUrl += `&${key}=${value}`;
-      } else {
-        finalUrl += `?${key}=${value}`;
-        hasFirstParam = true;
-      }
-
-      return finalUrl;
-    }, `${url}`);
+      return `${finalUrl}${prefix}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    }, url);
   }
 
   async function doFetch(urlOrPath: string, options: KeyedObject = {}) {
@@ -123,7 +108,6 @@ const fetchy = (function () {
     const combinedOptions: Options = {
       ..._this.options,
       ...options,
-      agent: isHttps() ? () => _this.httpsAgent : () => _this.httpAgent,
       headers: new Headers({
         ..._this.headers,
         ...headersFromOptions,

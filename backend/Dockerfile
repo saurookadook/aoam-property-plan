@@ -30,7 +30,6 @@ RUN mkdir -p /var/log/aoam-property-plan
 WORKDIR /opt/aoam-property-plan/backend
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend"
-ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 COPY ./backend/_factories ./_factories
 COPY ./backend/_mocks ./_mocks
 COPY ./backend/api ./api
@@ -109,7 +108,6 @@ CMD [ "-s", "--import-mode=append" ]
 
 FROM dev-base AS scraper-dev
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
-ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 USER root
 WORKDIR /opt/aoam-property-plan/backend
