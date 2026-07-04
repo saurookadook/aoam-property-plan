@@ -6,26 +6,14 @@ COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/
 
 FROM install-base AS install-dev
 WORKDIR /opt/aoam-property-plan/backend
-COPY ./backend/_factories ./_factories
-COPY ./backend/_mocks ./_mocks
-COPY ./backend/api ./api
-COPY ./backend/config ./config
-COPY ./backend/constants ./constants
-COPY ./backend/db ./db
-COPY ./backend/models ./models
-COPY ./backend/scripts ./scripts
-COPY ./backend/utils ./utils
 COPY ./backend/.python-version \
-    ./backend/alembic.ini \
-    ./backend/gunicorn_config.py \
     ./backend/pyproject.toml \
     ./backend/README.md \
-    ./backend/pytest.ini \
     ./backend/uv.lock \
     ./
 # COPY ./.python-version ./alembic.ini ./gunicorn_config.py ./pyproject.toml ./pytest.ini ./uv.lock ./
 RUN uv venv --python 3.12
-RUN uv sync --locked
+RUN uv sync --locked --no-install-project
 # RUN useradd --uid 2000 aoam_app
 # RUN chown -R aoam_app:aoam_app ./.venv
 # RUN chown -R aoam_app:aoam_app /home/aoam_app/.cache/uv
@@ -43,6 +31,21 @@ WORKDIR /opt/aoam-property-plan/backend
 ENV PATH="/opt/aoam-property-plan/backend/.venv/bin:$PATH"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend"
 ENV PYTHONPATH="/opt/aoam-property-plan/backend"
+COPY ./backend/_factories ./_factories
+COPY ./backend/_mocks ./_mocks
+COPY ./backend/api ./api
+COPY ./backend/config ./config
+COPY ./backend/constants ./constants
+COPY ./backend/db ./db
+COPY ./backend/models ./models
+COPY ./backend/scripts ./scripts
+COPY ./backend/utils ./utils
+COPY ./backend/alembic.ini \
+    ./backend/gunicorn_config.py \
+    ./backend/README.md \
+    ./backend/pytest.ini \
+    ./
+RUN uv sync --locked
 
 
 
