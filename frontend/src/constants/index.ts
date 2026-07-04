@@ -1,7 +1,6 @@
 export const API_SERVER_DOMAIN = (function () {
   console.log({
     name: 'pre API_SERVER_DOMAIN build',
-    env: import.meta.env,
     VITE_API_SERVER_DOMAIN: import.meta.env.VITE_API_SERVER_DOMAIN,
   });
 

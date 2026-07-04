@@ -101,21 +101,35 @@ const fetchy = (function () {
       _this.privateSetBaseURL(`${protocol}//${host}`);
     }
 
-    // TODO: this feels... inefficient?
-    const headersFromOptions = options.headers || {};
-    delete options.headers;
+    const {
+      headers: headersFromOptions = {}, // force formatting
+      ...optionsWithoutHeaders
+    } = (options ?? {}) as { headers?: KeyedObject };
 
     const combinedOptions: Options = {
       ..._this.options,
-      ...options,
+      ...optionsWithoutHeaders,
       headers: new Headers({
         ..._this.headers,
         ...headersFromOptions,
       }),
     };
 
+    const baseForRelative =
+      _this.baseURL || (isFrontend() ? window.location.origin : '');
+
+    if (!baseForRelative && !isAbsoluteURL(urlOrPath)) {
+      throw new TypeError(
+        'fetchy: baseURL must be set when using a relative urlOrPath',
+      );
+    }
+
+    const resolvedUrlOrPath = isAbsoluteURL(urlOrPath)
+      ? urlOrPath
+      : new URL(urlOrPath, baseForRelative).toString();
+
     const requestUrl = appendSearchParamsToUrl(
-      urlOrPath,
+      resolvedUrlOrPath,
       combinedOptions.searchParams as Nullable<KeyedObject>,
     );
 
