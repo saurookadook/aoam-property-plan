@@ -343,7 +343,14 @@ scriptController() {
         if [ "$2" == "publish" ]; then
             printf '%s\n' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-            if [ "$3" == "backend" ]; then
+            if [ "$3" == "app" ]; then
+                backendPublishBase
+                backendPublishApp
+                backendPublishScripts
+                frontendPublishBase
+                frontendPublishApp
+
+            elif [ "$3" == "backend" ]; then
                 if [ "$4" == "all" ]; then
                     backendPublishBase
                     backendPublishApp
