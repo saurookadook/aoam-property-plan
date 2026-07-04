@@ -11,7 +11,6 @@ COPY ./frontend/package.json \
     ./
 RUN corepack enable
 RUN corepack prepare pnpm@11.9.0 --activate
-RUN corepack use pnpm
 RUN $pnpm install --frozen-lockfile
 
 

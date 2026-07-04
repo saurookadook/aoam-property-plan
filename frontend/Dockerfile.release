@@ -10,8 +10,7 @@ COPY ./frontend/package.json \
     ./frontend/pnpm-workspace.yaml \
     ./
 RUN corepack enable
-RUN corepack prepare pnpm@11.9.0 --activate
-RUN corepack use pnpm
+RUN corepack prepare pnpm@${PNPM_VERSION} --activate
 RUN $pnpm install --frozen-lockfile
 
 
