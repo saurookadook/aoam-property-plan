@@ -1,25 +1,35 @@
 FROM node:22-bullseye AS frontend-release-base
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
-ENV PNPM_VERSION=11.8.0
+ENV PNPM_VERSION=11.9.0
 ENV pnpm='corepack pnpm'
 EXPOSE 5173
+WORKDIR /opt/aoam-property-plan/frontend/
+COPY ./frontend/package.json \
+    ./frontend/pnpm-lock.yaml \
+    ./frontend/pnpm-workspace.yaml \
+    ./
+RUN corepack enable
+RUN corepack prepare pnpm@${PNPM_VERSION} --activate
+RUN $pnpm install --frozen-lockfile
+
+
+FROM frontend-release-base AS frontend-release-build
 WORKDIR /opt/aoam-property-plan/frontend/
 COPY ./frontend/src/app ./src/app
 COPY ./frontend/src/assets ./src/assets
 COPY ./frontend/src/common ./src/common
+COPY ./frontend/src/constants ./src/constants
 COPY ./frontend/src/layouts ./src/layouts
 COPY ./frontend/src/logger ./src/logger
 COPY ./frontend/src/pages ./src/pages
 COPY ./frontend/src/store ./src/store
 COPY ./frontend/src/types ./src/types
+COPY ./frontend/src/utils ./src/utils
 COPY ./frontend/src/index.css \
     ./frontend/src/main.tsx \
     ./src/
 COPY ./frontend/index.html \
-    ./frontend/package.json \
-    ./frontend/pnpm-lock.yaml \
-    ./frontend/pnpm-workspace.yaml \
     ./frontend/postcss.config.js \
     ./frontend/tsconfig.app.json \
     ./frontend/tsconfig.common.json \
@@ -27,13 +37,22 @@ COPY ./frontend/index.html \
     ./frontend/tsconfig.node.json \
     ./frontend/tsconfig.test.json \
     ./
-RUN corepack enable
-RUN corepack use pnpm
-
-FROM frontend-release-base AS frontend-release-build
-RUN $pnpm install --frozen-lockfile
 RUN $pnpm build
 
-FROM frontend-release-build AS frontend-release-app
-ENTRYPOINT [ "corepack", "pnpm" ]
-CMD [ "dev" ]
+
+FROM caddy AS frontend-release-app
+WORKDIR /opt/aoam-property-plan/frontend/
+COPY ./frontend/Caddyfile ./
+RUN caddy fmt Caddyfile --overwrite
+COPY --from=frontend-release-build /opt/aoam-property-plan/frontend/dist ./dist
+CMD [ \
+  "caddy", \
+  "run", \
+  "--config", "Caddyfile", \
+  "--adapter", "caddyfile" \
+]
+
+
+# FROM frontend-release-build AS frontend-release-app
+# ENTRYPOINT [ "corepack", "pnpm" ]
+# CMD [ "dev" ]

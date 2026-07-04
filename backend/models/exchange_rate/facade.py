@@ -4,7 +4,7 @@ from datetime import date, datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, or_
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
@@ -62,10 +62,13 @@ class ExchangeRateFacade(BaseFacade):
         return ExchangeRateEntity.model_validate(exchange_rate_record)
 
     def update(self, *, payload: dict) -> ExchangeRateEntity:
+        where_clause = (
+            ExchangeRateDB.id == payload.get("id")
+            if payload.get("id") is not None
+            else ExchangeRateDB.record_date == payload.get("record_date")
+        )
         update_stmt = (
-            update(ExchangeRateDB)
-            .where(ExchangeRateDB.id == payload.get("id"))
-            .values(**payload)
+            update(ExchangeRateDB).where(where_clause).values(**payload)
         ).returning(ExchangeRateDB)
 
         updated_record = self.db_session.execute(update_stmt).scalar_one()

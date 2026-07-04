@@ -15,6 +15,7 @@ env_vars = EnvVarManager().env_vars
 
 
 def is_prod():
+    root_logger.warning(f"Environment: {env_vars.env}")
     return env_vars.env.lower() in set(["prod", "production"])
 
 
