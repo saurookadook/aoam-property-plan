@@ -11,7 +11,7 @@ COPY ./frontend/package.json \
     ./
 RUN corepack enable
 RUN corepack use pnpm
-RUN $pnpm install
+RUN $pnpm install --frozen-lockfile
 
 
 FROM frontend-dev-base AS frontend-dev-build
