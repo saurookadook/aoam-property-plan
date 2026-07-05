@@ -1,0 +1,15 @@
+.markets-list-data {
+  gap: 2rem;
+  width: auto;
+
+  & .chakra-card {
+    &__root {
+      min-width: 20rem;
+    }
+
+    &__header {
+      font-size: 1.375rem;
+      font-weight: bold;
+    }
+  }
+}

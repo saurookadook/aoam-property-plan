@@ -19,7 +19,10 @@ export function TopNavBar() {
         <NavDrawer />
 
         <RouterLink to="/">
-          <Heading>{`💸 AOAM Property Plan 💸`}</Heading>
+          <Heading
+            as="h1"
+            className="top-nav-bar__title"
+          >{`💸 AOAM Property Plan 💸`}</Heading>
         </RouterLink>
 
         <Spacer />
