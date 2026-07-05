@@ -32,6 +32,7 @@ const config: ViteConfig = {
     alias: {
       '@': path.resolve(__dirname, './src/'),
     },
+    tsconfigPaths: true,
   },
   server: {
     allowedHosts: ['aoam.dev'],
