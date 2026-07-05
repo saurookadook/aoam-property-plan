@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { MarketEntity } from '@/types/markets';
+import type { MarketEntity } from '@/types';
 import { LoadingState } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';

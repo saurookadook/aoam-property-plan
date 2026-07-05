@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { ReactAnchorProps } from '@/types/main';
+import type { ReactAnchorProps } from '@/types';
 
 type AnchorLinkProps = ReactAnchorProps & { href?: string };
 

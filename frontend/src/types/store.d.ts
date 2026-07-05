@@ -1,5 +1,5 @@
 import type { MarketsStateSlice } from '@/store/markets/reducer';
-import { KeyedObject, ValueOf } from '@/types/main';
+import { KeyedObject, ValueOf } from '@/types';
 
 /**********************************************************************
  * Generic State Store Types
