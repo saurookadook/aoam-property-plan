@@ -26,7 +26,7 @@ export function MarketsList() {
 
   return (
     <FlexColumn id="markets-list">
-      <h2>{`📈 Markets List 📈`}</h2>
+      <h2>{`💰 Markets List 💰`}</h2>
 
       <FlexColumn>
         {isFetching ? (

@@ -1,0 +1,30 @@
+.top-nav-bar {
+  border-bottom: 1px solid var(--light-gray-border);
+  margin: 0;
+  // padding: 1rem 0;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  /* NOTE: use -1 for multiple headings? */
+  /* top: -1; */
+  z-index: 1000;
+
+  &,
+  [role='dialog'] {
+    background-color: var(--semi-dark);
+    /* background-color: #4CCBFF; */
+    /* background-color: rgb(76 203 255 / 0.25); */
+
+    border-right: 1px solid var(--light-gray-border);
+    color: rgb(255 255 255 / 0.87);
+  }
+
+  &__inner-wrapper {
+    column-gap: 2rem;
+    justify-content: flex-start;
+  }
+
+  & .chakra-heading {
+    margin-bottom: 0;
+  }
+}

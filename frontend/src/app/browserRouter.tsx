@@ -18,9 +18,10 @@ export const queryClient = new QueryClient({
 });
 
 export const navItemsLabels = {
-  HOME: 'Home',
-  MARKETS: 'Markets',
+  HOME: '🏡 Home',
+  MARKETS: '💰 Markets',
   LISTINGS: 'Listings',
+  LISTINGS_FINANCIAL_REPORTS: '📈 Listings Financial Reports 📈',
   // ACCOUNT: 'Account',
 };
 

@@ -1,44 +1,33 @@
-import { Link } from 'react-router';
+import { Link as RouterLink } from 'react-router';
+import { SunIcon, MoonIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { Button, Heading, Spacer } from '@chakra-ui/react';
 
+import { FlexRow } from '@/layouts';
 import { useAppStore } from '@/store';
-import {
-  navItemsLabels,
-  routerConfig,
-  type AOAMRouteObject,
-} from '@/app/browserRouter';
+import { NavDrawer } from '../NavDrawer';
+
+import './styles.scss';
 
 export function TopNavBar() {
   const { appState } = useAppStore();
-
-  const labelsValues = Object.values(navItemsLabels);
+  const { theme, setTheme } = useTheme();
 
   return (
     <nav className="top-nav-bar">
-      <ul>
-        {routerConfig[0].children?.map((config) => {
-          if (shouldRenderNavItem(config, labelsValues)) {
-            return (
-              <li key={`top-nav-bar-item-${config.path}`}>
-                <Link to={config.path as string}>{config.label}</Link>
-              </li>
-            );
-          }
+      <FlexRow className="top-nav-bar__inner-wrapper">
+        <NavDrawer />
 
-          return null;
-        })}
-      </ul>
+        <RouterLink to="/">
+          <Heading>{`💸 AOAM Property Plan 💸`}</Heading>
+        </RouterLink>
+
+        <Spacer />
+
+        <Button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+          {theme === 'light' ? <SunIcon /> : <MoonIcon />}
+        </Button>
+      </FlexRow>
     </nav>
-  );
-}
-
-function shouldRenderNavItem(
-  config: AOAMRouteObject,
-  labelsValues: string[],
-): config is AOAMRouteObject {
-  return (
-    typeof config.path === 'string' &&
-    'label' in config &&
-    typeof config.label === 'string' &&
-    labelsValues.includes(config.label)
   );
 }
