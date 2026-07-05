@@ -1,11 +1,14 @@
 import { StrictMode, type PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ThemeProvider } from 'next-themes';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import '@/index.css';
 import App from '@/app/App';
 import { queryClient } from '@/app/browserRouter';
+import { stylingSystem } from '@/constants';
 import { log } from '@/logger';
 import { AppStateProvider } from '@/store';
 
@@ -39,15 +42,25 @@ function QueryProviderWrapper({ children }: PropsWithChildren) {
   );
 }
 
+function AppThemeProvider({ children }: PropsWithChildren) {
+  return (
+    <ChakraProvider value={stylingSystem}>
+      <ThemeProvider>{children}</ThemeProvider>
+    </ChakraProvider>
+  );
+}
+
 const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Missing #root element');
 
 createRoot(rootEl).render(
   <InitApp>
     <AppStateProvider>
-      <QueryProviderWrapper>
-        <App />
-      </QueryProviderWrapper>
+      <AppThemeProvider>
+        <QueryProviderWrapper>
+          <App />
+        </QueryProviderWrapper>
+      </AppThemeProvider>
     </AppStateProvider>
   </InitApp>,
 );

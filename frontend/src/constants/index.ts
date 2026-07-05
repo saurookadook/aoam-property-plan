@@ -21,3 +21,5 @@ console.log({
   API_SERVER_DOMAIN,
   VITE_API_SERVER_DOMAIN: import.meta.env.VITE_API_SERVER_DOMAIN,
 });
+
+export * from './theme';
