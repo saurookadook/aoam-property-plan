@@ -1,6 +1,6 @@
 import type { Decorator } from '@storybook/react-vite';
 
-import type { AppState } from '@/types';
+import type { AppState } from '@/store';
 import { createDefaultInitialState } from '@/__mocks__/initialStates';
 import { deeplyMerge } from '@/common/utils';
 import { AppStateProvider } from '@/store';

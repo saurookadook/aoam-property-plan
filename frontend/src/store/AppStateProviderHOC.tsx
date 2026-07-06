@@ -1,27 +1,26 @@
 import React, { useReducer } from 'react';
 
-import type { CombinedStateSliceReducer, KeyedObject } from '@/types';
+import type { AppDispatch, KeyedObject } from '@/types';
 import { deeplyMerge } from '@/common/utils';
+import type { CombinedStateSliceReducer } from '@/store';
 
 export default function AppStateProviderHOC<
-  State extends KeyedObject = KeyedObject, // force formatting
-  ReducerAction = any,
+  State extends KeyedObject, // force formatting
 >({
   StateContext,
   DispatchContext,
   combinedReducer,
 }: {
   StateContext: React.Context<State>;
-  DispatchContext: React.Context<React.Dispatch<ReducerAction>>;
-  combinedReducer: CombinedStateSliceReducer;
+  DispatchContext: React.Context<AppDispatch>;
+  combinedReducer: CombinedStateSliceReducer<State>;
 }) {
   return function AppStateProvider({
     children, // force formatting
     initialState,
-  }: {
-    children: React.ReactElement;
+  }: React.PropsWithChildren<{
     initialState?: State;
-  }) {
+  }>) {
     const [combinedReducerFunc, combinedDefaultState] = combinedReducer;
 
     const mergedDefaultState = deeplyMerge<State>({}, combinedDefaultState);

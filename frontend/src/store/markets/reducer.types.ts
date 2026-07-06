@@ -1,14 +1,12 @@
 import type CombineReducers from '@saurookkadookk/react-utils-combine-reducers';
 
-import type { Nullable } from '@/types';
+import type { MarketEntity, Nullable, ReducerAction } from '@/types';
 
 export type MarketsStateSlice = {
-  marketsList: Nullable<any[]>;
+  marketsList: Nullable<MarketEntity[]>;
 };
 
-export type MarketsAction = CombineReducers.ReducerAction<{
-  marketsList?: MarketsStateSlice['marketsList'];
-}>;
+export type MarketsAction = ReducerAction<Partial<MarketsStateSlice>>;
 
 export type CombinedMarketsStateSlice = {
   marketsList: CombineReducers.ArgsTuple<

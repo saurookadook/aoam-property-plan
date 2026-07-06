@@ -1,4 +1,4 @@
-import type { AppState } from '@/types';
+import type { AppState } from '@/store';
 import AppStateProviderHOC from './AppStateProviderHOC';
 import { AppStateContext, AppDispatchContext } from './context';
 import { default as appStateReducer } from './reducer';
