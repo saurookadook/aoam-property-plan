@@ -1,9 +1,9 @@
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router';
-import { SunIcon, MoonIcon } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Button, Heading, Spacer } from '@chakra-ui/react';
+import { MenuIcon, SunIcon, MoonIcon } from 'lucide-react';
+import { Button, Typography, useColorScheme } from '@mui/material';
 
-import { FlexRow } from '@/layouts';
+import { FlexRow, FlexSpacer } from '@/layouts';
 import { useAppStore } from '@/store';
 import { NavDrawer } from '../NavDrawer';
 
@@ -11,26 +11,41 @@ import './styles.scss';
 
 export function TopNavBar() {
   const { appState } = useAppStore();
-  const { theme, setTheme } = useTheme();
+  const { mode, setMode } = useColorScheme();
+  const [isNavDrawerOpen, setIsNavDrawerOpen] = useState(false);
 
   return (
-    <nav className="top-nav-bar">
-      <FlexRow className="top-nav-bar__inner-wrapper">
-        <NavDrawer />
+    mode != null && (
+      <nav id="top-nav" className="top-nav-bar">
+        <FlexRow className="top-nav-bar__inner-wrapper">
+          <Button
+            onClick={() => {
+              setIsNavDrawerOpen(true);
+            }}
+          >
+            <MenuIcon />
+          </Button>
 
-        <RouterLink to="/">
-          <Heading
-            as="h1"
-            className="top-nav-bar__title"
-          >{`💸 AOAM Property Plan 💸`}</Heading>
-        </RouterLink>
+          <NavDrawer isOpen={isNavDrawerOpen} setIsOpen={setIsNavDrawerOpen} />
 
-        <Spacer />
+          <RouterLink to="/">
+            <Typography
+              className="top-nav-bar__title"
+              variant="h1"
+            >{`💸 AOAM Property Plan 💸`}</Typography>
+          </RouterLink>
 
-        <Button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-          {theme === 'light' ? <SunIcon /> : <MoonIcon />}
-        </Button>
-      </FlexRow>
-    </nav>
+          <FlexSpacer />
+
+          <Button
+            onClick={() => {
+              setMode(mode === 'light' ? 'dark' : 'light');
+            }}
+          >
+            {mode === 'light' ? <SunIcon /> : <MoonIcon />}
+          </Button>
+        </FlexRow>
+      </nav>
+    )
   );
 }

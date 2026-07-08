@@ -1,22 +1,24 @@
-.chakra-drawer {
-  &__title {
+.nav-drawer {
+  & [role='dialog'] {
+    border-right: 1px solid var(--light-gray-border);
+    padding: 2rem;
+  }
+
+  & &__title {
+    font-size: 2rem;
     margin-bottom: 0;
   }
-}
 
-.nav-drawer {
-  &__nav {
-    padding: 1rem 4rem;
+  & ul {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    list-style-type: none;
+    padding-inline-start: 0;
 
-    & ul {
-      align-items: flex-start;
-      display: flex;
-      flex-direction: column;
+    & li a {
       font-size: 1.5rem;
-      justify-content: center;
-      list-style-type: none;
-      padding-inline-start: 0;
-      row-gap: 1rem;
     }
   }
 }

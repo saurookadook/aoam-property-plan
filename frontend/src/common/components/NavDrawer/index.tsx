@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router';
-import { MenuIcon, X as X_Icon } from 'lucide-react';
-import { Box, Drawer, useDisclosure } from '@chakra-ui/react';
+import { X as X_Icon } from 'lucide-react';
+import { Box, Drawer, List, ListItem, ListItemText, Typography } from '@mui/material';
 
 import {
   navItemsLabels,
@@ -9,11 +9,15 @@ import {
   type AOAMRouteObject,
 } from '@/app/browserRouter';
 
-import './styles.scss'
+import './styles.scss';
 
-export function NavDrawer() {
-  const { open: isOpen, onOpen, onClose } = useDisclosure();
-
+export function NavDrawer({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const labelsValues = Object.values(navItemsLabels);
   const navItems = useMemo(() => {
     return (
@@ -24,45 +28,25 @@ export function NavDrawer() {
   }, [labelsValues]);
 
   return (
-    <Drawer.Root // force formatting
-      open={isOpen}
-      placement="start"
-      size="md"
-    >
-      <Drawer.Backdrop />
-      <Drawer.Trigger aria-label="Main navigation button" onClick={onOpen}>
-        <MenuIcon />
-      </Drawer.Trigger>
-      <Drawer.Positioner>
-        <Drawer.Content>
-          <Drawer.CloseTrigger onClick={onClose}>
-            <X_Icon />
-          </Drawer.CloseTrigger>
-
-          <Drawer.Header>
-            <Drawer.Title>{`💸 🤑 💸 Main Navigation 💸 🤑 💸`}</Drawer.Title>
-          </Drawer.Header>
-
-          <Drawer.Body>
-            <Box
-              as="nav" // force formatting
-              className="nav-drawer__nav"
-              display="flex"
-            >
-              <ul>
-                {navItems.map((config) => {
-                  return (
-                    <li key={`nav-drawer-item-${config.path}`}>
-                      <RouterLink to={config.path as string}>{config.label}</RouterLink>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Box>
-          </Drawer.Body>
-        </Drawer.Content>
-      </Drawer.Positioner>
-    </Drawer.Root>
+    <Drawer className="nav-drawer" open={isOpen} onClose={() => setIsOpen(false)}>
+      <Box role="presentation" onClick={() => setIsOpen(false)}>
+        <Typography
+          className="nav-drawer__title"
+          variant="h2"
+        >{`💸 🤑 💸 Main Navigation 💸 🤑 💸`}</Typography>
+        <List>
+          {navItems.map((config) => {
+            return (
+              <ListItem key={`nav-drawer-item-${config.path}`}>
+                <ListItemText>
+                  <RouterLink to={config.path as string}>{config.label}</RouterLink>
+                </ListItemText>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+    </Drawer>
   );
 }
 
