@@ -2,14 +2,25 @@
   gap: 2rem;
   width: auto;
 
-  & .chakra-card {
-    &__root {
+  & .MuiCard {
+    &-root {
+      min-height: 12rem;
       min-width: 20rem;
-    }
+      overflow-x: hidden;
+      padding: 1rem;
 
-    &__header {
-      font-size: 1.375rem;
-      font-weight: bold;
+      & .MuiCardContent-root {
+        text-align: left;
+
+        & h3 {
+          font-size: 1.375rem;
+          font-weight: bold;
+        }
+      }
+
+      & .MuiCardActions-root {
+        padding: 0.5rem 1rem;
+      }
     }
   }
 }

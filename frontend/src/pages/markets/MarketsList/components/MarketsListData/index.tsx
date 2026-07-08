@@ -1,4 +1,4 @@
-import { Card, Text } from '@chakra-ui/react';
+import { Card, CardActions, CardContent, Typography } from '@mui/material';
 
 import type { MarketEntity } from '@/types';
 import { FlexRow } from '@/layouts';
@@ -14,16 +14,20 @@ export function MarketsListData({
     <FlexRow className="markets-list-data">
       {marketsListData.map((market) => {
         return (
-          <Card.Root key={market.locality}>
-            <Card.Header>{market.locality}</Card.Header>
+          <Card key={market.locality}>
+            <CardContent>
+              <Typography variant="h3">{market.locality}</Typography>
 
-            <Card.Body>
-              {market.district != null && <Text>District: {market.district}</Text>}
-              <Text>Region: {market.region}</Text>
-              <Text>Country: {market.country}</Text>
-            </Card.Body>
+              <Typography variant="body2">
+                {market.district != null && (
+                  <Typography>District: {market.district}</Typography>
+                )}
+                <Typography>Region: {market.region}</Typography>
+                <Typography>Country: {market.country}</Typography>
+              </Typography>
+            </CardContent>
 
-            <Card.Footer>
+            <CardActions>
               <details>
                 <summary>Raw Data</summary>
 
@@ -31,8 +35,8 @@ export function MarketsListData({
                   <code>{JSON.stringify(market, null, 2)}</code>
                 </pre>
               </details>
-            </Card.Footer>
-          </Card.Root>
+            </CardActions>
+          </Card>
         );
       })}
     </FlexRow>
