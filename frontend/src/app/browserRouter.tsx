@@ -7,7 +7,7 @@ import {
 import { QueryClient } from '@tanstack/react-query';
 
 import { Root } from '@/layouts';
-import { Home, MarketsList } from '@/pages';
+import { Home, MarketOverview, MarketsList, marketOverviewLoader } from '@/pages';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +63,11 @@ export const routerConfig: AOAMRouteObject[] = [
         path: 'markets',
         label: navItemsLabels.MARKETS,
         element: <MarketsList />,
+      },
+      {
+        path: 'markets/:marketId',
+        element: <MarketOverview />,
+        loader: marketOverviewLoader(queryClient),
       },
     ],
   },

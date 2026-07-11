@@ -1,3 +1,4 @@
+import { Link as RouterLink } from 'react-router';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
 
 import type { MarketEntity } from '@/types';
@@ -14,11 +15,16 @@ export function MarketsListData({
     <FlexRow className="markets-list-data">
       {marketsListData.map((market) => {
         return (
-          <Card key={market.locality}>
+          <Card key={market.locality} className="markets-list-data__data-item">
             <CardContent>
-              <Typography variant="h3">{market.locality}</Typography>
+              <Typography variant="h3">
+                <RouterLink to={`/markets/${market.id}`}>{market.locality}</RouterLink>
+              </Typography>
 
-              <Typography variant="body2">
+              <Typography
+                className="markets-list-data__data-item__details-wrapper"
+                variant="body2"
+              >
                 {market.district != null && (
                   <Typography component="span">District: {market.district}</Typography>
                 )}
