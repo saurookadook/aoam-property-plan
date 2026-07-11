@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import '@/index.css';
+import '@/index.scss';
 import App from '@/app/App';
 import { queryClient } from '@/app/browserRouter';
 import { muiTheme } from '@/constants';
