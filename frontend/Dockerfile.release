@@ -26,7 +26,7 @@ COPY ./frontend/src/pages ./src/pages
 COPY ./frontend/src/store ./src/store
 COPY ./frontend/src/types ./src/types
 COPY ./frontend/src/utils ./src/utils
-COPY ./frontend/src/index.css \
+COPY ./frontend/src/index.scss \
     ./frontend/src/main.tsx \
     ./src/
 COPY ./frontend/index.html \
