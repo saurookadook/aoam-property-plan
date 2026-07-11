@@ -20,10 +20,10 @@ export function MarketsListData({
 
               <Typography variant="body2">
                 {market.district != null && (
-                  <Typography>District: {market.district}</Typography>
+                  <Typography component="span">District: {market.district}</Typography>
                 )}
-                <Typography>Region: {market.region}</Typography>
-                <Typography>Country: {market.country}</Typography>
+                <Typography component="span">Region: {market.region}</Typography>
+                <Typography component="span">Country: {market.country}</Typography>
               </Typography>
             </CardContent>
 
