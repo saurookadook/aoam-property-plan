@@ -1,16 +1,12 @@
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
-import {
-  QueryClient,
-  queryOptions,
-  useQuery,
-  useSuspenseQuery,
-} from '@tanstack/react-query';
+import { QueryClient, queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import type { MarketEntity } from '@/types';
+import type { ListingEntity, MarketEntity } from '@/types';
 import { LoadingState } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
 import { fetchy } from '@/utils';
+import { MarketOverviewData } from './components';
 
 import './styles.scss';
 
@@ -22,7 +18,12 @@ export const marketOverviewQuery = (marketId: string) =>
         .get(`${API_SERVER_DOMAIN}/api/markets/${marketId}`) // force formatting
         .then((res) => res.json());
 
-      return { marketOverview: marketOverviewResponse.data as MarketEntity };
+      return {
+        marketOverview: marketOverviewResponse.data as {
+          listings: ListingEntity[];
+          market: MarketEntity;
+        },
+      };
     },
   });
 
@@ -45,19 +46,23 @@ export function MarketOverview() {
     marketOverviewQuery(marketId),
   );
 
-  return (
-    <FlexColumn id="market-overview">
-      <h2>{`Market Overview: ${marketId}`}</h2>
+  console.log({
+    component: 'MarketOverview',
+    data,
+  });
 
-      <FlexColumn className="markets-list__wrapper">
+  return (
+    <FlexColumn className="market-overview" id="market-overview">
+      <FlexColumn className="market-overview__wrapper">
         {isFetching ? (
           <div className="loading-state__wrapper">
             <LoadingState />
           </div>
         ) : (
-          <pre>
-            <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>
+          <MarketOverviewData
+            listings={data?.marketOverview?.listings ?? []}
+            market={data?.marketOverview?.market ?? ({} as MarketEntity)}
+          />
         )}
       </FlexColumn>
     </FlexColumn>
