@@ -1,19 +1,27 @@
-import * as muiColors from '@mui/material/colors';
-import { createTheme } from '@mui/material/styles';
+import { colors as muiColors, createTheme } from '@mui/material';
 
 /**
- * For more on Themes, @see {@link https://mui.com/material-ui/customization/theming/ | Theming}
+ * For more on Themes, @see {@link https://mui.com/material-ui/customization/theming/ | MUI Theming}
  */
 export const muiTheme = createTheme({
+  cssVariables: {
+    colorSchemeSelector: 'class',
+  },
   colorSchemes: {
+    light: true,
     dark: true,
   },
   palette: {
+    mode: 'dark',
     primary: {
-      main: muiColors.blueGrey[500],
+      light: muiColors.cyan[100],
+      main: muiColors.cyan[300],
+      dark: muiColors.cyan[500],
     },
     secondary: {
-      main: muiColors.cyan[500],
+      light: muiColors.cyan[500],
+      main: muiColors.cyan[700],
+      dark: muiColors.cyan[900],
     },
   },
 });

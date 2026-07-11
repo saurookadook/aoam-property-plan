@@ -12,7 +12,7 @@ import { Home, MarketsList } from '@/pages';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 10, // 10 seconds
+      staleTime: 1000 * 60 * 15, // 15 minutes
     },
   },
 });

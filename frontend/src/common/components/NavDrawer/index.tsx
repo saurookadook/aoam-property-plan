@@ -28,7 +28,7 @@ export function NavDrawer({
   }, [labelsValues]);
 
   return (
-    <Drawer className="nav-drawer" open={isOpen} onClose={() => setIsOpen(false)}>
+    <Drawer className="nav-drawer" open={isOpen}>
       <Box role="presentation" onClick={() => setIsOpen(false)}>
         <Typography
           className="nav-drawer__title"

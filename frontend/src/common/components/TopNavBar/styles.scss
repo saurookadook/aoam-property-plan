@@ -1,6 +1,7 @@
 #top-nav {
   &.top-nav-bar {
-    border-bottom: 1px solid var(--light-gray-border);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
     margin: 0;
     padding: 1rem 2rem;
     position: sticky;
@@ -12,12 +13,8 @@
     &,
     [role='dialog'] {
       /* TODO: add 'light' theme alternatives */
-      background-color: var(--semi-dark);
-      /* background-color: #4CCBFF; */
-      /* background-color: rgb(76 203 255 / 0.25); */
-
-      border-right: 1px solid var(--light-gray-border);
-      color: rgb(255 255 255 / 0.87);
+      border-right-style: solid;
+      border-right-width: 1px;
     }
 
     &__inner-wrapper {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router';
 import { MenuIcon, SunIcon, MoonIcon } from 'lucide-react';
-import { Button, Typography, useColorScheme } from '@mui/material';
+import { Box, Button, Typography, useColorScheme } from '@mui/material';
 
 import { FlexRow, FlexSpacer } from '@/layouts';
 import { useAppStore } from '@/store';
@@ -16,7 +16,7 @@ export function TopNavBar() {
 
   return (
     mode != null && (
-      <nav id="top-nav" className="top-nav-bar">
+      <Box component="nav" id="top-nav" className="top-nav-bar">
         <FlexRow className="top-nav-bar__inner-wrapper">
           <Button
             onClick={() => {
@@ -45,7 +45,7 @@ export function TopNavBar() {
             {mode === 'light' ? <SunIcon /> : <MoonIcon />}
           </Button>
         </FlexRow>
-      </nav>
+      </Box>
     )
   );
 }

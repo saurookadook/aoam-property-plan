@@ -1,6 +1,7 @@
 .nav-drawer {
   & [role='dialog'] {
-    border-right: 1px solid var(--light-gray-border);
+    border-right-style: solid;
+    border-right-width: 1px;
     padding: 2rem;
   }
 
