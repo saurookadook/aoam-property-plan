@@ -1,1 +1,3 @@
-export * from '@/constants/endpointConfigs';
+import { endpointConfigs } from '../../constants/endpointConfigs';
+
+export { endpointConfigs };
