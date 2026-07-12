@@ -4,11 +4,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Decorator } from '@storybook/react-vite';
 
 import { createMirageStorybookServer } from '../src/__storybook__/mirageStorybookServer';
+import { AppThemeProvider } from '../src/providers';
 
-import '../src/index.css';
+import '../src/index.scss';
 import '../src/app/App.scss';
 
-export const MemoryRouterDecorator: Decorator = (Story) => {
+export const MemoryRouterDecorator: Decorator = (Story, context) => {
+  if (context.parameters.reactRouter != null) {
+    return <Story />;
+  }
+
   return (
     <MemoryRouter>
       <Story />
@@ -32,6 +37,14 @@ export const QueryClientDecorator: Decorator = (Story) => {
   );
 };
 
+export const AppThemeProviderDecorator: Decorator = (Story) => {
+  return (
+    <AppThemeProvider>
+      <Story />
+    </AppThemeProvider>
+  );
+};
+
 export const MirageServerDecorator: Decorator = (Story) => {
   const serverRef = useRef<ReturnType<typeof createMirageStorybookServer> | null>(null);
 
@@ -52,5 +65,6 @@ export const MirageServerDecorator: Decorator = (Story) => {
 export const globalStoryDecorators: Decorator[] = [
   MemoryRouterDecorator,
   QueryClientDecorator,
+  AppThemeProviderDecorator,
   MirageServerDecorator, // force formatting
 ];
