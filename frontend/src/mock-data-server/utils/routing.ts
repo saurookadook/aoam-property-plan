@@ -4,7 +4,7 @@ export function buildRoutePath(config: EndpointConfig): string {
   const resolvedTypeComponent = (function () {
     switch (config.type) {
       case 'overview':
-        return ':entityId';
+        return `:${config.entityIdPathParam ?? 'entityId'}`;
       case 'list':
       default:
         return '';
