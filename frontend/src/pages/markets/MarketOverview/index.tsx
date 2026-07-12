@@ -46,11 +46,6 @@ export function MarketOverview() {
     marketOverviewQuery(marketId),
   );
 
-  console.log({
-    component: 'MarketOverview',
-    data,
-  });
-
   return (
     <FlexColumn className="market-overview" id="market-overview">
       <FlexColumn className="market-overview__wrapper">

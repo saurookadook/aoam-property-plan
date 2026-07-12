@@ -25,19 +25,32 @@ export function MarketOverviewData({
     <FlexColumn className="market-overview-data">
       <Card key={market.locality} className="market-overview-data__data-item">
         <CardContent>
-          <Typography variant="h2">
-            <RouterLink to={`/markets/${market.id}`}>{market.locality}</RouterLink>
-          </Typography>
+          <Typography variant="h2">{market.locality}</Typography>
 
           <Typography
             className="market-overview-data__data-item__details-wrapper"
             variant="body2"
           >
             {market.district != null && (
-              <Typography component="span">District: {market.district}</Typography>
+              <Typography
+                className="market-overview-data__data-item__district"
+                component="span"
+              >
+                District: {market.district}
+              </Typography>
             )}
-            <Typography component="span">Region: {market.region}</Typography>
-            <Typography component="span">Country: {market.country}</Typography>
+            <Typography
+              className="market-overview-data__data-item__region"
+              component="span"
+            >
+              Region: {market.region}
+            </Typography>
+            <Typography
+              className="market-overview-data__data-item__country"
+              component="span"
+            >
+              Country: {market.country}
+            </Typography>
           </Typography>
         </CardContent>
       </Card>
@@ -48,8 +61,9 @@ export function MarketOverviewData({
         {listings.map((listing) => {
           return (
             <div key={listing.id} className="market-overview-data__listing-tile">
-              <Paper>{`${listing.id} (${listing.property_type})`}</Paper>
+              <Paper className="market-overview-data__listing-tile__paper">{`${listing.id} (${listing.property_type})`}</Paper>
               <img
+                className="market-overview-data__listing-tile__image"
                 srcSet={listing.cover_photo_url}
                 src={listing.cover_photo_url}
                 loading="lazy"
