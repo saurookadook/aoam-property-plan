@@ -22,6 +22,7 @@ COPY ./frontend/src/common ./src/common
 COPY ./frontend/src/constants ./src/constants
 COPY ./frontend/src/layouts ./src/layouts
 COPY ./frontend/src/logger ./src/logger
+COPY ./frontend/src/providers ./src/providers
 COPY ./frontend/src/pages ./src/pages
 COPY ./frontend/src/store ./src/store
 COPY ./frontend/src/types ./src/types
