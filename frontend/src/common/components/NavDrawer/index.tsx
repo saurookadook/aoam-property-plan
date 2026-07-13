@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router';
 import { X as X_Icon } from 'lucide-react';
 import { Box, Drawer, List, ListItem, ListItemText, Typography } from '@mui/material';
@@ -27,9 +27,18 @@ export function NavDrawer({
     );
   }, [labelsValues]);
 
+  const handleClose = useCallback(() => {
+    return setIsOpen(false);
+  }, []);
+
   return (
-    <Drawer className="nav-drawer" open={isOpen}>
-      <Box role="presentation" onClick={() => setIsOpen(false)}>
+    <Drawer
+      className="nav-drawer"
+      onClose={handleClose}
+      open={isOpen}
+      variant="temporary"
+    >
+      <Box role="presentation" onClick={handleClose}>
         <Typography
           className="nav-drawer__title"
           variant="h2"
