@@ -71,6 +71,20 @@ class ListingFacade(BaseFacade):
 
         return ListingEntity.model_validate(listing)
 
+    def get_all(self) -> list[ListingEntity]:
+        listing_records = (
+            self.db_session.execute(
+                select(*_LISTING_COLUMNS).order_by(ListingDB.airroi_id.asc())
+            )
+            .mappings()
+            .all()
+        )
+
+        return [
+            ListingEntity.model_validate(listing_record)
+            for listing_record in listing_records
+        ]
+
     def get_all_by_market_id(self, market_id: UUID | str) -> list[ListingEntity]:
         market = MarketFacade(db_session=self.db_session).get_one_by_id(market_id)
 
