@@ -17,18 +17,17 @@ listings_router = APIRouter(prefix="/api")
     response_model=ListingsListResponse,
 )
 def read_listings_list(api_db_session: API_DB_SessionDependency):
-    with api_db_session as db_session:
-        try:
-            listings = ListingFacade(db_session=db_session).get_all()
-        except Exception as e:
-            error_detail = "Error fetching listings"
-            logger.error(f"{error_detail}: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=error_detail,
-            ) from e
+    try:
+        listings = ListingFacade(db_session=api_db_session).get_all()
+    except Exception as e:
+        error_detail = "Error fetching listings"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
 
-        return {"data": listings}
+    return {"data": listings}
 
 
 @listings_router.get(
@@ -36,20 +35,19 @@ def read_listings_list(api_db_session: API_DB_SessionDependency):
     response_model=ListingResponse,
 )
 def read_listing(listing_id: str, api_db_session: API_DB_SessionDependency):
-    with api_db_session as db_session:
-        try:
-            listing = ListingFacade(db_session=db_session).get_one_by_id(listing_id)
-        except ListingFacade.NoResultFound as e:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Listing not found",
-            ) from e
-        except Exception as e:
-            error_detail = "Error fetching listing"
-            logger.error(f"{error_detail}: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=error_detail,
-            ) from e
+    try:
+        listing = ListingFacade(db_session=api_db_session).get_one_by_id(listing_id)
+    except ListingFacade.NoResultFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Listing not found",
+        ) from e
+    except Exception as e:
+        error_detail = "Error fetching listing"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
 
-        return {"data": listing}
+    return {"data": listing}
