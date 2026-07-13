@@ -15,7 +15,7 @@ export function MarketsListData({
     <FlexRow className="markets-list-data">
       {marketsListData.map((market) => {
         return (
-          <Card key={market.locality} className="markets-list-data__data-item">
+          <Card key={market.id} className="markets-list-data__data-item">
             <CardContent>
               <Typography variant="h3">
                 <RouterLink to={`/markets/${market.id}`}>{market.locality}</RouterLink>

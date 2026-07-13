@@ -23,10 +23,10 @@ export async function dataRequestHandler(
   mockResponseCache: MockResponseCache,
   config: EndpointConfig,
 ) {
-  logProxy(
-    `[${config.logName} - /api/${config.type}] request: `,
-    // request
-  );
+  logProxy(`[${config.logName} - /api/${config.type}] request: `, {
+    params: request.params,
+    url: request.url,
+  });
 
   try {
     const { params } = request;

@@ -23,6 +23,27 @@ const configLogLevel =
 type ViteConfig = UserConfig & { test: InlineConfig; logLevel?: LogLevel };
 
 const config: ViteConfig = {
+  build: {
+    rolldownOptions: {
+      output: {
+        /** @see {@link https://rolldown.rs/reference/OutputOptions.codeSplitting | codeSplitting} */
+        codeSplitting: {
+          groups: [
+            {
+              name: 'react-vendor',
+              test: /node_modules[\\/]react/,
+              priority: 20,
+            },
+            {
+              name: 'vendor',
+              test: /node_modules[\\/](?!react)/,
+              priority: 10,
+            },
+          ],
+        },
+      },
+    },
+  },
   css: {
     postcss: path.resolve(__dirname, './postcss.config.js'),
   },
@@ -32,7 +53,6 @@ const config: ViteConfig = {
     alias: {
       '@': path.resolve(__dirname, './src/'),
     },
-    tsconfigPaths: true,
   },
   server: {
     allowedHosts: ['aoam.dev'],

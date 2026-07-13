@@ -63,6 +63,7 @@ export function MarketOverviewData({
             <div key={listing.id} className="market-overview-data__listing-tile">
               <Paper className="market-overview-data__listing-tile__paper">{`${listing.id} (${listing.property_type})`}</Paper>
               <img
+                alt={`${listing.property_type} in ${listing.location}`}
                 className="market-overview-data__listing-tile__image"
                 srcSet={listing.cover_photo_url}
                 src={listing.cover_photo_url}

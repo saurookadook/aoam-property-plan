@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router';
 import { MenuIcon, SunIcon, MoonIcon } from 'lucide-react';
 import { Box, Button, Typography, useColorScheme } from '@mui/material';
@@ -14,11 +14,16 @@ export function TopNavBar() {
   const { mode, setMode } = useColorScheme();
   const [isNavDrawerOpen, setIsNavDrawerOpen] = useState(false);
 
+  const oppositeMode = useMemo(() => {
+    return getOppositeColor(mode);
+  }, [mode]);
+
   return (
     mode != null && (
       <Box component="nav" id="top-nav" className="top-nav-bar">
         <FlexRow className="top-nav-bar__inner-wrapper">
           <Button
+            aria-label="Open navigation menu"
             onClick={() => {
               setIsNavDrawerOpen(true);
             }}
@@ -38,14 +43,25 @@ export function TopNavBar() {
           <FlexSpacer />
 
           <Button
+            aria-label={`Switch to ${oppositeMode} mode`}
             onClick={() => {
-              setMode(mode === 'light' ? 'dark' : 'light');
+              setMode(oppositeMode);
             }}
           >
-            {mode === 'light' ? <SunIcon /> : <MoonIcon />}
+            {isLightMode(mode) ? <SunIcon /> : <MoonIcon />}
           </Button>
         </FlexRow>
       </Box>
     )
   );
+}
+
+type ModeString = 'light' | 'dark' | 'system';
+
+function getOppositeColor(modeString?: ModeString) {
+  return isLightMode(modeString) ? 'dark' : 'light';
+}
+
+function isLightMode(modeString?: ModeString): boolean {
+  return modeString === 'light';
 }
