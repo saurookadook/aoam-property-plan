@@ -1,44 +1,67 @@
-import { Link } from 'react-router';
+import { useMemo, useState } from 'react';
+import { Link as RouterLink } from 'react-router';
+import { MenuIcon, SunIcon, MoonIcon } from 'lucide-react';
+import { Box, Button, Typography, useColorScheme } from '@mui/material';
 
+import { FlexRow, FlexSpacer } from '@/layouts';
 import { useAppStore } from '@/store';
-import {
-  navItemsLabels,
-  routerConfig,
-  type AOAMRouteObject,
-} from '@/app/browserRouter';
+import { NavDrawer } from '../NavDrawer';
+
+import './styles.scss';
 
 export function TopNavBar() {
   const { appState } = useAppStore();
+  const { mode, setMode } = useColorScheme();
+  const [isNavDrawerOpen, setIsNavDrawerOpen] = useState(false);
 
-  const labelsValues = Object.values(navItemsLabels);
+  const oppositeMode = useMemo(() => {
+    return getOppositeColor(mode);
+  }, [mode]);
 
   return (
-    <nav className="top-nav-bar">
-      <ul>
-        {routerConfig[0].children?.map((config) => {
-          if (shouldRenderNavItem(config, labelsValues)) {
-            return (
-              <li key={`top-nav-bar-item-${config.path}`}>
-                <Link to={config.path as string}>{config.label}</Link>
-              </li>
-            );
-          }
+    mode != null && (
+      <Box component="nav" id="top-nav" className="top-nav-bar">
+        <FlexRow className="top-nav-bar__inner-wrapper">
+          <Button
+            aria-label="Open navigation menu"
+            onClick={() => {
+              setIsNavDrawerOpen(true);
+            }}
+          >
+            <MenuIcon />
+          </Button>
 
-          return null;
-        })}
-      </ul>
-    </nav>
+          <NavDrawer isOpen={isNavDrawerOpen} setIsOpen={setIsNavDrawerOpen} />
+
+          <RouterLink to="/">
+            <Typography
+              className="top-nav-bar__title"
+              variant="h1"
+            >{`💸 AOAM Property Plan 💸`}</Typography>
+          </RouterLink>
+
+          <FlexSpacer />
+
+          <Button
+            aria-label={`Switch to ${oppositeMode} mode`}
+            onClick={() => {
+              setMode(oppositeMode);
+            }}
+          >
+            {isLightMode(mode) ? <SunIcon /> : <MoonIcon />}
+          </Button>
+        </FlexRow>
+      </Box>
+    )
   );
 }
 
-function shouldRenderNavItem(
-  config: AOAMRouteObject,
-  labelsValues: string[],
-): config is AOAMRouteObject {
-  return (
-    typeof config.path === 'string' &&
-    'label' in config &&
-    typeof config.label === 'string' &&
-    labelsValues.includes(config.label)
-  );
+type ModeString = 'light' | 'dark' | 'system';
+
+function getOppositeColor(modeString?: ModeString) {
+  return isLightMode(modeString) ? 'dark' : 'light';
+}
+
+function isLightMode(modeString?: ModeString): boolean {
+  return modeString === 'light';
 }

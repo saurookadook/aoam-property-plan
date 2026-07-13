@@ -7,6 +7,7 @@ export type EndpointConfig = {
   emptyResult: EmptyResult;
   emptyResultMessage?: string;
   entityId?: string;
+  entityIdPathParam?: string;
   entityType?: string;
   errorMessage: string;
   filenamePrefix?: string;

@@ -1,12 +1,10 @@
 import { StrictMode, type PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import '@/index.css';
+import '@/index.scss';
 import App from '@/app/App';
-import { queryClient } from '@/app/browserRouter';
 import { log } from '@/logger';
+import { AppThemeProvider, QueryProviderWrapper } from '@/providers';
 import { AppStateProvider } from '@/store';
 
 function InitApp({ children }: PropsWithChildren) {
@@ -22,32 +20,17 @@ function InitApp({ children }: PropsWithChildren) {
   );
 }
 
-function QueryProviderWrapper({ children }: PropsWithChildren) {
-  const rqDevToolsEnabled = window.localStorage.getItem('rqDevToolsEnabled');
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-
-      {rqDevToolsEnabled != null && rqDevToolsEnabled === 'true' && (
-        <ReactQueryDevtools
-          buttonPosition="bottom-right"
-          // initialIsOpen={false}
-        />
-      )}
-    </QueryClientProvider>
-  );
-}
-
 const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Missing #root element');
 
 createRoot(rootEl).render(
   <InitApp>
     <AppStateProvider>
-      <QueryProviderWrapper>
-        <App />
-      </QueryProviderWrapper>
+      <AppThemeProvider>
+        <QueryProviderWrapper>
+          <App />
+        </QueryProviderWrapper>
+      </AppThemeProvider>
     </AppStateProvider>
   </InitApp>,
 );

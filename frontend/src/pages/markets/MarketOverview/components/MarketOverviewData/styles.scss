@@ -1,0 +1,25 @@
+.market-overview-data {
+  gap: 2rem;
+
+  & &__data-item {
+    text-align: left;
+    width: 100%;
+
+    &__details-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  & &__listing-tile {
+    // max-height: 10rem;
+
+    & img {
+      display: block;
+      height: max-content;
+      object-fit: contain;
+      width: 100%;
+    }
+  }
+}

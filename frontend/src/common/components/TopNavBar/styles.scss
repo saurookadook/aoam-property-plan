@@ -1,0 +1,37 @@
+#top-nav {
+  background-color: var(--mui-palette-background-paper);
+  background-image: var(--mui-overlays-1);
+  box-shadow: var(--mui-shadows-1);
+
+  &.top-nav-bar {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin: 0;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    /* NOTE: use -1 for multiple headings? */
+    /* top: -1; */
+    z-index: 1000;
+
+    & {
+      & [role='dialog'] {
+        /* TODO: add 'light' theme alternatives */
+        border-right-style: solid;
+        border-right-width: 1px;
+      }
+
+      &__inner-wrapper {
+        column-gap: 2rem;
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  & .top-nav-bar {
+    &__title {
+      font-size: 1.75rem;
+      margin: 0;
+    }
+  }
+}

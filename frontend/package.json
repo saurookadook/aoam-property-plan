@@ -24,6 +24,10 @@
         "storybook": "node storybookEntry.js"
     },
     "dependencies": {
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.1",
+        "@mui/lab": "9.0.0-beta.6",
+        "@mui/material": "^9.2.0",
         "@saurookkadookk/react-utils-combine-reducers": "^1.0.0",
         "@tanstack/react-query": "^5.101.2",
         "@tanstack/react-query-devtools": "^5.101.2",
@@ -31,6 +35,7 @@
         "d3": "^7.9.0",
         "leaflet": "^1.9.4",
         "loglevel": "^1.9.2",
+        "lucide-react": "^1.23.0",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
         "react-leaflet": "^5.0.0",
@@ -84,6 +89,7 @@
         "sass": "^1.101.0",
         "sass-embedded": "^1.100.0",
         "storybook": "^10.4.6",
+        "storybook-addon-remix-react-router": "^6.1.0",
         "tsconfig-paths": "^4.2.0",
         "tsx": "^4.22.4",
         "typescript": "~6.0.2",

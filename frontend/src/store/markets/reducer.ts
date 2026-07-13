@@ -20,6 +20,6 @@ const marketsList: CombinedMarketsStateSlice['marketsList'] = [
   null,
 ];
 
-export * from './reducer.types';
+export type * from './reducer.types';
 
 export default combineReducers({ marketsList });

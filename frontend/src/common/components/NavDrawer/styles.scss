@@ -1,0 +1,25 @@
+.nav-drawer {
+  & [role='dialog'] {
+    border-right-style: solid;
+    border-right-width: 1px;
+    padding: 2rem;
+  }
+
+  & &__title {
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+
+  & ul {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    list-style-type: none;
+    padding-inline-start: 0;
+
+    & li a {
+      font-size: 1.5rem;
+    }
+  }
+}

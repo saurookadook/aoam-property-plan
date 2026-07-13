@@ -7,20 +7,21 @@ import {
 import { QueryClient } from '@tanstack/react-query';
 
 import { Root } from '@/layouts';
-import { Home, MarketsList } from '@/pages';
+import { Home, MarketOverview, MarketsList, marketOverviewLoader } from '@/pages';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 10, // 10 seconds
+      staleTime: 1000 * 60 * 15, // 15 minutes
     },
   },
 });
 
 export const navItemsLabels = {
-  HOME: 'Home',
-  MARKETS: 'Markets',
+  HOME: '🏡 Home',
+  MARKETS: '💰 Markets',
   LISTINGS: 'Listings',
+  LISTINGS_FINANCIAL_REPORTS: '📈 Listings Financial Reports 📈',
   // ACCOUNT: 'Account',
 };
 
@@ -62,6 +63,11 @@ export const routerConfig: AOAMRouteObject[] = [
         path: 'markets',
         label: navItemsLabels.MARKETS,
         element: <MarketsList />,
+      },
+      {
+        path: 'markets/:marketId',
+        element: <MarketOverview />,
+        loader: marketOverviewLoader(queryClient),
       },
     ],
   },

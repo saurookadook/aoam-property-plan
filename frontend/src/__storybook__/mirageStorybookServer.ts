@@ -1,8 +1,9 @@
 import { createServer, type Request as MirageRequest } from 'miragejs';
 
-const BASE_DATA_SERVER_URL = 'http://localhost:3030/mock-data/api';
+import type { EndpointConfig } from '@/types';
+import { endpointConfigs } from '@/constants';
 
-const endpointTypes = ['markets'];
+const BASE_DATA_SERVER_URL = 'http://localhost:3030/mock-data/api';
 
 const DEFAULT_ARGS = {
   enableLogging: false,
@@ -12,28 +13,31 @@ export const createMirageStorybookServer = ({
   enableLogging = DEFAULT_ARGS.enableLogging,
 }: { enableLogging: boolean } = DEFAULT_ARGS) =>
   createServer({
-    // environment: 'storybook',
     logging: enableLogging,
 
     routes() {
-      // this.urlPrefix = 'http://localhost:6006/api';
-      // this.namespace = 'api';
+      this.urlPrefix = 'http://localhost:6006/api';
+      this.namespace = 'api';
 
-      for (const endpointType of endpointTypes) {
-        const routePath = `${endpointType}`;
-        console.log({
-          routePath,
-        });
-
-        this.get(`/api/${routePath}/:entityId`, async (schema, request) => {
-          return getRequestFactory({ endpointPath: routePath, request });
-        });
+      for (const config of endpointConfigs) {
+        const routePath = buildMirageStorybookRoutePath(config);
+        // console.log({
+        //   routePath,
+        // });
 
         this.get(`/api/${routePath}`, async (schema, request) => {
-          console.log({
-            requestUrl: request.url,
-          });
-          return getRequestFactory({ endpointPath: routePath, request });
+          const endpointPathWithParams = Object.entries(request.params).reduce(
+            (path, [paramKey, paramValue]) =>
+              path.replace(`:${paramKey}`, String(paramValue)),
+            routePath,
+          );
+          // console.log({
+          //   requestUrl: request.url,
+          //   requestParams: request.params,
+          //   routePath,
+          //   endpointPath: endpointPathWithParams,
+          // });
+          return getRequestFactory({ endpointPath: endpointPathWithParams, request });
         });
       }
 
@@ -69,4 +73,23 @@ async function getRequestFactory({
       );
       return error;
     });
+}
+
+function buildMirageStorybookRoutePath(config: EndpointConfig): string {
+  const resolvedTypeComponent = (function () {
+    switch (config.type) {
+      case 'overview':
+        return `:${config.entityIdPathParam ?? 'entityId'}`;
+      case 'list':
+      default:
+        return '';
+    }
+  })();
+
+  return [
+    config.entityType, // force formatting
+    resolvedTypeComponent,
+  ]
+    .filter((pathComponent) => !!pathComponent)
+    .join('/');
 }

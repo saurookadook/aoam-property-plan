@@ -23,7 +23,10 @@ export async function dataRequestHandler(
   mockResponseCache: MockResponseCache,
   config: EndpointConfig,
 ) {
-  logProxy(`[${config.logName} - /api/${config.type}] request: `, request);
+  logProxy(`[${config.logName} - /api/${config.type}] request: `, {
+    params: request.params,
+    url: request.url,
+  });
 
   try {
     const { params } = request;
@@ -35,6 +38,13 @@ export async function dataRequestHandler(
       filenamePrefix,
     });
     const compositeKey = buildCompositeKey(config, filenamePrefix);
+    logProxy(`[${config.logName} - /api/${config.type}] before reading file: `, {
+      compositeKey,
+      entityType,
+      filenamePrefix,
+      filePathForRequest,
+      params,
+    });
 
     return boundReadGzippedJson(filePathForRequest)
       .then((jsonData) => {

@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { MarketEntity } from '@/types/markets';
+import type { MarketEntity } from '@/types';
 import { LoadingState } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
 import { fetchy } from '@/utils';
+import { MarketsListData } from './components';
 
 import './styles.scss';
 
@@ -26,23 +27,15 @@ export function MarketsList() {
 
   return (
     <FlexColumn id="markets-list">
-      <h2>{`📈 Markets List 📈`}</h2>
+      <h2>{`💰 Markets List 💰`}</h2>
 
-      <FlexColumn>
+      <FlexColumn className="markets-list__wrapper">
         {isFetching ? (
           <div className="loading-state__wrapper">
             <LoadingState />
           </div>
         ) : (
-          <div className="markets-list__wrapper">
-            {(data?.marketsList ?? []).map((market) => {
-              return (
-                <pre key={market.locality}>
-                  <code>{JSON.stringify(market, null, 2)}</code>
-                </pre>
-              );
-            })}
-          </div>
+          <MarketsListData marketsListData={data?.marketsList ?? []} />
         )}
       </FlexColumn>
     </FlexColumn>

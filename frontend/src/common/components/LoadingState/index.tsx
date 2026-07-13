@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-import type { ReactDivProps } from '@/types/main';
+import type { ReactDivProps } from '@/types';
 
 import './styles.scss';
 

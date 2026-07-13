@@ -1,4 +1,4 @@
-import type { AppState } from '@/types';
+import type { AppState } from '@/store';
 import { deeplyMerge } from '@/common/utils';
 
 export function createDefaultInitialState(overrides: Partial<AppState> = {}): AppState {
