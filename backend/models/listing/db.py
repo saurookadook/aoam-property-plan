@@ -8,11 +8,11 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db.base_db import BaseDB
+from models.listing_financial_report.db import ListingFinancialReportDB
 from models.mixins import TimestampsDB
 
 
 class ListingDB(BaseDB, TimestampsDB):
-    from models.listing_financial_report.db import ListingFinancialReportDB
 
     airroi_id: Mapped[int] = mapped_column(
         postgresql.BIGINT, nullable=False, unique=True

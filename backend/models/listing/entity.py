@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, Optional, Sequence
+from typing import Any, Optional, Sequence
 from uuid import UUID
 
 from pydantic import Field, field_validator, model_validator
@@ -45,7 +45,8 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
         cls, data: ListingDB | dict[str, Any]
     ) -> dict[str, Any]:
         if isinstance(data, ListingDB):
-            input_data = data.__dict__
+            input_data = dict(data.__dict__)
+            input_data.pop("_sa_instance_state", None)
             input_data["listing_financial_reports"] = data.listing_financial_reports
         else:
             input_data = data
