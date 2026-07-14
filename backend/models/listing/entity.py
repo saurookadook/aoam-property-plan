@@ -23,10 +23,6 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     property_type: str
     source_url: Optional[str]
 
-    # NOTE: defaults to an empty list since most queries (e.g. `ListingFacade`
-    # column-based selects) don't populate this relationship. This also
-    # ensures endpoints like `read_market_overview` don't leak financial
-    # report data unless it's explicitly fetched and set.
     listing_financial_reports: list[ListingFinancialReportEntity] = Field(
         default_factory=list
     )
@@ -55,13 +51,9 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
             input_data = data
 
         if not isinstance(input_data.get("location"), str):
-            # input_data['location'] = cls.parse_location(input_data['location'])
+            # NOTE: WKT POINT order is `(longitude latitude)`
             input_data["location"] = (
-                f"POINT({input_data['latitude']} {input_data['longitude']})"
+                f"POINT({input_data['longitude']} {input_data['latitude']})"
             )
-        # lfr_data = input_data.get("listing_financial_reports", [])
-        # if lfr_data and not isinstance(lfr_input_data[0], ListingFinancialReportEntity):
-        #     input_data["listing_financial_reports"] = [
-        #         ListingFinancialReportEntity.model_validate(lfr) for lfr in lfr_data
-        #     ]
+
         return input_data
