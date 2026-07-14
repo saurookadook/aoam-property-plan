@@ -6,10 +6,12 @@ import pytest
 
 from _factories.listing.db import ListingDBFactory
 from _factories.listing.entity import ListingEntityFactory
+from _factories.listing_financial_report.db import ListingFinancialReportDBFactory
 from _factories.market.db import MarketDBFactory
 from _factories.market.entity import MarketEntityFactory
 from models.listing.entity import ListingEntity
 from models.listing.facade import ListingFacade
+from models.listing_financial_report.entity import ListingFinancialReportEntity
 from models.market.facade import MarketFacade
 
 
@@ -39,6 +41,84 @@ class TestListingFacade:
         with pytest.raises(ListingFacade.NoResultFound):
             non_existent_id = UUID("988d0b5d-d4a5-4808-a94d-2d9df1df7588")
             listing_facade.get_one_by_id(non_existent_id)
+
+    def test_get_one_by_id_includes_financial_reports(
+        self, listing_facade, listing_record, expected_listing_dict, test_db_session
+    ):
+        financial_report_records = [
+            ListingFinancialReportDBFactory(listing_id=listing_record.id)
+            for _ in range(2)
+        ]
+        test_db_session.commit()
+
+        result = listing_facade.get_one_by_id(
+            listing_record.id, include_financial_reports=True
+        )
+
+        assert self._compare_result_with_expected(result, expected_listing_dict)
+        assert len(result.listing_financial_reports) == 2
+        expected_reports = [
+            ListingFinancialReportEntity.model_validate(record)
+            for record in financial_report_records
+        ]
+        assert sorted(result.listing_financial_reports, key=lambda r: r.id) == sorted(
+            expected_reports, key=lambda r: r.id
+        )
+
+    def test_get_one_by_id_no_financial_reports_by_default(
+        self, listing_facade, listing_record, test_db_session
+    ):
+        ListingFinancialReportDBFactory(listing_id=listing_record.id)
+        test_db_session.commit()
+
+        result = listing_facade.get_one_by_id(listing_record.id)
+
+        assert result.listing_financial_reports == []
+
+    def test_get_one_by_airroi_id(
+        self, listing_facade, listing_record, expected_listing_dict
+    ):
+        result = listing_facade.get_one_by_airroi_id(listing_record.airroi_id)
+
+        assert self._compare_result_with_expected(result, expected_listing_dict)
+
+    def test_get_one_by_airroi_id_no_result(self, listing_facade):
+        with pytest.raises(ListingFacade.NoResultFound):
+            non_existent_airroi_id = 9999999
+            listing_facade.get_one_by_airroi_id(non_existent_airroi_id)
+
+    def test_get_one_by_airroi_id_includes_financial_reports(
+        self, listing_facade, listing_record, expected_listing_dict, test_db_session
+    ):
+        financial_report_records = [
+            ListingFinancialReportDBFactory(listing_id=listing_record.id)
+            for _ in range(2)
+        ]
+        test_db_session.commit()
+
+        result = listing_facade.get_one_by_airroi_id(
+            listing_record.airroi_id, include_financial_reports=True
+        )
+
+        assert self._compare_result_with_expected(result, expected_listing_dict)
+        assert len(result.listing_financial_reports) == 2
+        expected_reports = [
+            ListingFinancialReportEntity.model_validate(record)
+            for record in financial_report_records
+        ]
+        assert sorted(result.listing_financial_reports, key=lambda r: r.id) == sorted(
+            expected_reports, key=lambda r: r.id
+        )
+
+    def test_get_one_by_airroi_id_no_financial_reports_by_default(
+        self, listing_facade, listing_record, test_db_session
+    ):
+        ListingFinancialReportDBFactory(listing_id=listing_record.id)
+        test_db_session.commit()
+
+        result = listing_facade.get_one_by_airroi_id(listing_record.airroi_id)
+
+        assert result.listing_financial_reports == []
 
     def test_get_all_by_market_id(self, listing_facade: ListingFacade, test_db_session):
         expected_market = MarketEntityFactory()
