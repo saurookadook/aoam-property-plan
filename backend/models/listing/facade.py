@@ -31,6 +31,12 @@ _LISTING_COLUMNS = (
 )
 
 
+# Relationship fields on `ListingEntity` that don't map to a column on
+# `ListingDB` and therefore must be stripped before building insert/update
+# statements against the table directly.
+_NON_COLUMN_ENTITY_FIELDS = ("listing_financial_reports",)
+
+
 class ListingFacade(BaseFacade):
     class NoResultFound(Exception):
         pass
@@ -39,14 +45,18 @@ class ListingFacade(BaseFacade):
         super().__init__(*args, **kwargs)
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def get_one_by_id(self, id: UUID | str) -> ListingEntity:
+    def get_one_by_id(
+        self, id: UUID | str, *, include_financial_reports: bool = False
+    ) -> ListingEntity:
+        select_clause = self._build_select_clause(
+            include_financial_reports=include_financial_reports
+        )
         try:
+            stmt = self.db_session.execute(select_clause.where(ListingDB.id == id))
             listing = (
-                self.db_session.execute(
-                    select(*_LISTING_COLUMNS).where(ListingDB.id == id)
-                )
-                .mappings()
-                .one()
+                stmt.scalar_one()
+                if include_financial_reports
+                else stmt.mappings().one()
             )
         except NoResultFound:
             raise ListingFacade.NoResultFound(
@@ -55,14 +65,20 @@ class ListingFacade(BaseFacade):
 
         return ListingEntity.model_validate(listing)
 
-    def get_one_by_airroi_id(self, airroi_id: int) -> ListingEntity:
+    def get_one_by_airroi_id(
+        self, airroi_id: int, *, include_financial_reports: bool = False
+    ) -> ListingEntity:
+        select_clause = self._build_select_clause(
+            include_financial_reports=include_financial_reports
+        )
         try:
+            stmt = self.db_session.execute(
+                select_clause.where(ListingDB.airroi_id == airroi_id)
+            )
             listing = (
-                self.db_session.execute(
-                    select(*_LISTING_COLUMNS).where(ListingDB.airroi_id == airroi_id)
-                )
-                .mappings()
-                .one()
+                stmt.scalar_one()
+                if include_financial_reports
+                else stmt.mappings().one()
             )
         except NoResultFound:
             raise ListingFacade.NoResultFound(
@@ -74,7 +90,7 @@ class ListingFacade(BaseFacade):
     def get_all(self) -> list[ListingEntity]:
         listing_records = (
             self.db_session.execute(
-                select(*_LISTING_COLUMNS).order_by(ListingDB.airroi_id.asc())
+                self._build_select_clause().order_by(ListingDB.airroi_id.asc())
             )
             .mappings()
             .all()
@@ -90,7 +106,7 @@ class ListingFacade(BaseFacade):
 
         listing_records = (
             self.db_session.execute(
-                select(*_LISTING_COLUMNS).where(ListingDB.market_id == market.id)
+                self._build_select_clause().where(ListingDB.market_id == market.id)
             )
             .mappings()
             .all()
@@ -107,8 +123,14 @@ class ListingFacade(BaseFacade):
         )
 
         if maybe_one:
-            return self.update(payload={**maybe_one.model_dump(), **payload})
+            return self.update(
+                payload={
+                    **maybe_one.model_dump(exclude=set(_NON_COLUMN_ENTITY_FIELDS)),
+                    **payload,
+                }
+            )
 
+        payload = self._strip_non_column_fields(payload)
         insert_stmt = insert(ListingDB).values(**payload)
 
         full_stmt = insert_stmt.on_conflict_do_update(
@@ -126,6 +148,7 @@ class ListingFacade(BaseFacade):
         return self.get_one_by_airroi_id(airroi_id=airroi_id)
 
     def update(self, *, payload: dict[str, Any]) -> ListingEntity:
+        payload = self._strip_non_column_fields(payload)
         update_stmt = (
             update(ListingDB)
             .where(
@@ -142,6 +165,20 @@ class ListingFacade(BaseFacade):
 
         # TODO: this seems inefficient...
         return self.get_one_by_airroi_id(airroi_id=airroi_id)
+
+    def _build_select_clause(self, *, include_financial_reports: bool = False):
+        return (
+            select(ListingDB)
+            if include_financial_reports
+            else select(*_LISTING_COLUMNS)
+        )
+
+    def _strip_non_column_fields(self, payload: dict[str, Any]) -> dict[str, Any]:
+        return {
+            key: value
+            for key, value in payload.items()
+            if key not in _NON_COLUMN_ENTITY_FIELDS
+        }
 
     def _find_one_if_exists(
         self, *, id: Optional[Union[UUID, str]] = None, airroi_id: Optional[int] = None

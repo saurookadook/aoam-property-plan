@@ -1,18 +1,25 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db.base_db import BaseDB
-from models.listing.db import ListingDB
 from models.mixins import TimestampsDB
+
+if TYPE_CHECKING:
+    from models.listing.db import ListingDB
 
 
 class ListingFinancialReportDB(BaseDB, TimestampsDB):
     listing_id: Mapped[UUID] = mapped_column(ForeignKey("listings.id"), nullable=False)
+    listing: Mapped["ListingDB"] = relationship(
+        "ListingDB", back_populates="listing_financial_reports"
+    )
+
     # adr_cop: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=False)
     # adr_usd: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     # annual_revenue_cop: Mapped[float] = mapped_column(

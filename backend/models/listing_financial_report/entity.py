@@ -4,11 +4,14 @@ from typing import Optional
 from uuid import UUID
 
 from models.base.entity import BaseEntityModel
+
+# from models.listing.entity import ListingEntity
 from models.mixins import TimestampsEntityMixin
 
 
 class ListingFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     listing_id: UUID
+    # listing: Optional[ListingEntity] = None
     # adr_cop: float
     # adr_usd: Optional[float]
     # annual_revenue_cop: float
