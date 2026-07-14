@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from _factories.listing.db import ListingDBFactory
 from _factories.listing.entity import ListingEntityFactory
+from _factories.listing_financial_report.db import ListingFinancialReportDBFactory
 from _factories.market.db import MarketDBFactory
 from models.listing.entity import ListingEntity
 from models.market.entity import MarketEntity
@@ -82,6 +83,26 @@ class TestReadMarketOverviewRoute:
                 "listings": [],
             }
         }
+
+    def test_excludes_listing_financial_reports(
+        self, test_app_client, test_db_session: Session
+    ):
+        market = MarketDBFactory()
+        test_db_session.commit()
+
+        listing = ListingEntityFactory(market_id=market.id)
+        listing_record = ListingDBFactory(**listing.model_dump())
+        test_db_session.commit()
+
+        ListingFinancialReportDBFactory(listing_id=listing_record.id)
+        test_db_session.commit()
+
+        result = test_app_client.get(f"/api/markets/{market.id}")
+
+        assert result.status_code == 200
+        listings_data = result.json()["data"]["listings"]
+        assert len(listings_data) == 1
+        assert listings_data[0]["listing_financial_reports"] == []
 
     def test_raises_http_exception_for_nonexistent_market(
         self, test_app_client, test_db_session: Session

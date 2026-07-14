@@ -36,7 +36,9 @@ def read_listings_list(api_db_session: API_DB_SessionDependency):
 )
 def read_listing(listing_id: str, api_db_session: API_DB_SessionDependency):
     try:
-        listing = ListingFacade(db_session=api_db_session).get_one_by_id(listing_id)
+        listing = ListingFacade(db_session=api_db_session).get_one_by_id(
+            listing_id, include_financial_reports=True
+        )
     except ListingFacade.NoResultFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
