@@ -180,12 +180,18 @@ def handle_listings_by_market():
                     listing_record = listing_facade.create_or_update(
                         payload={
                             "airroi_id": listing_info["listing_id"],
+                            "amenities": property_details.get("amenities", []),
+                            "baths": property_details.get("baths", None),
+                            "beds": property_details.get("beds", None),
                             "bedrooms": property_details["bedrooms"],
                             "cover_photo_url": listing_info["cover_photo_url"],
+                            "description": listing_info.get("description", None),
                             "latitude": listing_lat,
                             "location": f"POINT({listing_lng} {listing_lat})",
                             "longitude": listing_lng,
                             "market_id": market.id,
+                            "name": listing_info.get("listing_name", None),
+                            "photo_urls": listing_info.get("photo_urls", []),
                             "property_type": listing_info["listing_type"],
                         }
                     )
