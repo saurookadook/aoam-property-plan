@@ -8,7 +8,6 @@ FROM backend-install-base AS backend-install-release
 WORKDIR /opt/aoam-property-plan/backend
 COPY ./backend/.python-version \
     ./backend/pyproject.toml \
-    ./backend/README.md \
     ./backend/uv.lock \
     ./
 RUN uv venv --python 3.12

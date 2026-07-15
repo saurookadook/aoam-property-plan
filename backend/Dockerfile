@@ -8,7 +8,6 @@ FROM install-base AS install-dev
 WORKDIR /opt/aoam-property-plan/backend
 COPY ./backend/.python-version \
     ./backend/pyproject.toml \
-    ./backend/README.md \
     ./backend/uv.lock \
     ./
 # COPY ./.python-version ./alembic.ini ./gunicorn_config.py ./pyproject.toml ./pytest.ini ./uv.lock ./
