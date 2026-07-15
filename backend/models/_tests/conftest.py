@@ -62,11 +62,21 @@ def expected_listing_dict(test_market_record):
     return dict(
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
         airroi_id=2341532,
+        amenities=["Wifi", "Pool", "Kitchen"],
+        baths=2,
+        beds=3,
         bedrooms=3,
+        cover_photo_url="https://example.com/listing/12345/cover.jpg",
+        description="A lovely test listing.",
         latitude=lat,
         location=f"POINT({lng} {lat})",
         longitude=lng,
         market_id=test_market_record.id,
+        name="Test Listing",
+        photo_urls=[
+            "https://example.com/listing/12345/photo1.jpg",
+            "https://example.com/listing/12345/photo2.jpg",
+        ],
         property_type="Apartment",
         source_url="https://example.com/listing/12345",
     )
