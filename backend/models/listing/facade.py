@@ -144,6 +144,9 @@ class ListingFacade(BaseFacade):
         airroi_id = self.db_session.execute(full_stmt).scalar_one()
         self.db_session.flush()
 
+        if airroi_id is None:
+            raise ValueError("Failed to retrieve 'airroi_id' after insert/update")
+
         # TODO: this seems inefficient...
         return self.get_one_by_airroi_id(airroi_id=airroi_id)
 
@@ -162,6 +165,9 @@ class ListingFacade(BaseFacade):
 
         airroi_id = self.db_session.execute(update_stmt).scalar_one()
         self.db_session.flush()
+
+        if airroi_id is None:
+            raise ValueError("Failed to retrieve 'airroi_id' after update")
 
         # TODO: this seems inefficient...
         return self.get_one_by_airroi_id(airroi_id=airroi_id)
