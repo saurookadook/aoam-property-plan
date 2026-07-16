@@ -63,7 +63,7 @@ def expected_listing_dict(test_market_record):
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
         airroi_id=2341532,
         amenities=["Wifi", "Pool", "Kitchen"],
-        baths=2,
+        baths=2.5,
         beds=3,
         bedrooms=3,
         cover_photo_url="https://example.com/listing/12345/cover.jpg",

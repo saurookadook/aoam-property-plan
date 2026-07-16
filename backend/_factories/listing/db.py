@@ -33,7 +33,9 @@ class ListingDBFactory(
             factory.Faker("word"),
         ]
     )
-    baths = factory.Faker("random_int", min=1, max=5)
+    baths = factory.Faker(
+        "pyfloat", positive=True, min_value=1, max_value=5, right_digits=1
+    )
     beds = factory.Faker("random_int", min=1, max=10)
     bedrooms = factory.Faker("random_int", min=1, max=10)
     cover_photo_url = factory.Faker("url")

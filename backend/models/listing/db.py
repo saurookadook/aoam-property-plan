@@ -20,7 +20,7 @@ class ListingDB(BaseDB, TimestampsDB):
     amenities: Mapped[list[str]] = mapped_column(
         postgresql.ARRAY(postgresql.TEXT), server_default="{}"
     )
-    baths: Mapped[Optional[int]] = mapped_column(postgresql.REAL, nullable=True)
+    baths: Mapped[Optional[float]] = mapped_column(postgresql.REAL, nullable=True)
     beds: Mapped[Optional[int]] = mapped_column(postgresql.INTEGER, nullable=True)
     bedrooms: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
     cover_photo_url: Mapped[Optional[str]] = mapped_column(

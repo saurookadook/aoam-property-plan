@@ -15,7 +15,7 @@ from models.mixins import TimestampsEntityMixin
 class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
     airroi_id: int
     amenities: list[str] = Field(default_factory=list)
-    baths: Optional[int]
+    baths: Optional[float]
     beds: Optional[int]
     bedrooms: int
     cover_photo_url: Optional[str]
