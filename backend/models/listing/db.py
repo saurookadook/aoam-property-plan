@@ -14,11 +14,11 @@ from models.mixins import TimestampsDB
 
 
 class ListingDB(BaseDB, TimestampsDB):
-    airroi_id: Mapped[Optional[int]] = mapped_column(
+    airroi_id: Mapped[int] = mapped_column(
         postgresql.BIGINT, nullable=False, unique=True
     )
     amenities: Mapped[list[str]] = mapped_column(
-        postgresql.ARRAY(postgresql.TEXT), server_default="{}"
+        postgresql.ARRAY(postgresql.TEXT), nullable=False, server_default="{}"
     )
     baths: Mapped[Optional[float]] = mapped_column(postgresql.REAL, nullable=True)
     beds: Mapped[Optional[int]] = mapped_column(postgresql.INTEGER, nullable=True)
@@ -39,7 +39,7 @@ class ListingDB(BaseDB, TimestampsDB):
     )
     name: Mapped[Optional[str]] = mapped_column(postgresql.TEXT, nullable=True)
     photo_urls: Mapped[list[str]] = mapped_column(
-        postgresql.ARRAY(postgresql.TEXT), server_default="{}"
+        postgresql.ARRAY(postgresql.TEXT), nullable=False, server_default="{}"
     )
     property_type: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     source_url: Mapped[Optional[str]] = mapped_column(postgresql.TEXT, nullable=True)

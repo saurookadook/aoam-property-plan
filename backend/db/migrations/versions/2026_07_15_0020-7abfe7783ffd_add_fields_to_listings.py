@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column(
             "amenities",
             postgresql.ARRAY(sa.TEXT()),
-            server_default="{}",
+            server_default=sa.text("'{}'::text[]"),
             nullable=False,
         ),
     )
@@ -40,7 +40,7 @@ def upgrade() -> None:
         sa.Column(
             "photo_urls",
             postgresql.ARRAY(sa.TEXT()),
-            server_default="{}",
+            server_default=sa.text("'{}'::text[]"),
             nullable=False,
         ),
     )
