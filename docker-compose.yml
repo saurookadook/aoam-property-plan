@@ -76,6 +76,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      - ./_research:/opt/aoam-property-plan/_research
       - ./backend/api:/opt/aoam-property-plan/backend/api
       - ./backend/config:/opt/aoam-property-plan/backend/config
       - ./backend/constants:/opt/aoam-property-plan/backend/constants
