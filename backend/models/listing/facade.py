@@ -17,13 +17,19 @@ from models.market.facade import MarketFacade
 _LISTING_COLUMNS = (
     ListingDB.id,
     ListingDB.airroi_id,
+    ListingDB.amenities,
+    ListingDB.baths,
+    ListingDB.beds,
     ListingDB.bedrooms,
     ListingDB.cover_photo_url,
+    ListingDB.description,
     ListingDB.latitude,
     # TODO: cleaner way to handle this conversion?
     func.ST_AsText(ListingDB.location).label("location"),
     ListingDB.longitude,
     ListingDB.market_id,
+    ListingDB.name,
+    ListingDB.photo_urls,
     ListingDB.property_type,
     ListingDB.source_url,
     ListingDB.created_at,
@@ -144,6 +150,9 @@ class ListingFacade(BaseFacade):
         airroi_id = self.db_session.execute(full_stmt).scalar_one()
         self.db_session.flush()
 
+        if airroi_id is None:
+            raise ValueError("Failed to retrieve 'airroi_id' after insert/update")
+
         # TODO: this seems inefficient...
         return self.get_one_by_airroi_id(airroi_id=airroi_id)
 
@@ -162,6 +171,9 @@ class ListingFacade(BaseFacade):
 
         airroi_id = self.db_session.execute(update_stmt).scalar_one()
         self.db_session.flush()
+
+        if airroi_id is None:
+            raise ValueError("Failed to retrieve 'airroi_id' after update")
 
         # TODO: this seems inefficient...
         return self.get_one_by_airroi_id(airroi_id=airroi_id)

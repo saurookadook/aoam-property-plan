@@ -27,13 +27,20 @@ def test_listing_db(expected_listing_dict, mock_utcnow, test_db_session):
 
     assert result.id == expected_listing_dict["id"]
     assert result.airroi_id == expected_listing_dict["airroi_id"]
+    assert result.amenities == expected_listing_dict["amenities"]
+    assert result.baths == expected_listing_dict["baths"]
+    assert result.beds == expected_listing_dict["beds"]
     assert result.bedrooms == expected_listing_dict["bedrooms"]
+    assert result.cover_photo_url == expected_listing_dict["cover_photo_url"]
+    assert result.description == expected_listing_dict["description"]
     assert result.latitude == expected_listing_dict["latitude"]
     assert isinstance(result.location, WKBElement)
     # NOTE: Revisit this when you figure out how the hell to interact with thes columns lol
     # assert result.location == expected_listing_dict["location"]
     assert result.longitude == expected_listing_dict["longitude"]
     assert result.market_id == expected_listing_dict["market_id"]
+    assert result.name == expected_listing_dict["name"]
+    assert result.photo_urls == expected_listing_dict["photo_urls"]
     assert result.property_type == expected_listing_dict["property_type"]
     assert result.source_url == expected_listing_dict["source_url"]
     assert isinstance(result.created_at, datetime)

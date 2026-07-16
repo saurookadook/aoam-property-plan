@@ -147,14 +147,26 @@ class TestHandleListingsByMarket:
                     )
 
                     assert listing_record.airroi_id == int(listing_info["listing_id"])
+                    assert listing_record.amenities == property_details.get(
+                        "amenities", []
+                    )
+                    assert listing_record.baths == property_details.get("baths", None)
+                    assert listing_record.beds == property_details.get("beds", None)
                     assert listing_record.bedrooms == property_details["bedrooms"]
                     assert (
                         listing_record.cover_photo_url
                         == listing_info["cover_photo_url"]
                     )
+                    assert listing_record.description == listing_info.get(
+                        "description", None
+                    )
                     assert listing_record.latitude == location_info["latitude"]
                     assert listing_record.longitude == location_info["longitude"]
                     assert listing_record.market_id == market.id
+                    assert listing_record.name == listing_info.get("listing_name", None)
+                    assert listing_record.photo_urls == listing_info.get(
+                        "photo_urls", []
+                    )
                     assert listing_record.property_type == listing_info["listing_type"]
 
                     listing_financial_report_record_by_list = (

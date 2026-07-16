@@ -8,7 +8,6 @@ FROM backend-install-base AS backend-install-release
 WORKDIR /opt/aoam-property-plan/backend
 COPY ./backend/.python-version \
     ./backend/pyproject.toml \
-    ./backend/README.md \
     ./backend/uv.lock \
     ./
 RUN uv venv --python 3.12
@@ -40,6 +39,7 @@ COPY ./backend/scripts ./scripts
 COPY ./backend/utils ./utils
 COPY ./backend/alembic.ini \
     ./backend/gunicorn_config.py \
+    ./backend/README.md \
     ./
 RUN uv sync --locked --no-dev
 RUN echo "/opt/aoam-property-plan/backend" > .venv/lib/python3.12/site-packages/project.pth
