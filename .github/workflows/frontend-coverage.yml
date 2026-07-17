@@ -1,0 +1,49 @@
+name: Frontend Test
+
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ["ubuntu-latest"]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Node 22.
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: 🖊️ 📔 Test Coverage
+        # TODO: need one that runs vitest :']
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: pnpm
+          test-script: "pnpm test:coverage"
+          working-directory: "frontend"
+
+      - name: 💥 Delete 'ui-badges' branch
+        run: git push origin --delete ui-badges || echo "Branch 'ui-badges' does not exist, skipping deletion."
+
+      - name: 🏷️ Create 'ui-badges' branch
+        run: git checkout -b ui-badges
+
+      - name: ⚙️ Generating Coverage Badges
+        uses: jpb06/coverage-badges-action@v1.4.10
+        with:
+          badges-icon: vitest
+          badges-labels-prefix: "Frontend Test Coverage: "
+          branches: main
+          coverage-summary-path: frontend/coverage/coverage-summary.json
+          target-branch: ui-badges
+
+      - name: ⬆️ Push 'ui-badges' branch
+        run: git push origin ui-badges

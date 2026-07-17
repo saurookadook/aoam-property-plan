@@ -1,0 +1,78 @@
+name: Backend Test Coverage
+
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ["ubuntu-latest"]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: 🐳 Build Images
+        run: |
+          cp .env.example .env
+          docker compose build backend-scripts backend-test nginx pg_database
+
+      - name: 🐘 Set up Database
+        run: |
+          docker compose up -d pg_database
+          # Wait for the database to be ready before proceeding
+          docker compose exec pg_database sh -c "until pg_isready -U postgres; do sleep 1; done"
+          ./scripts/admin.sh db create-test
+
+      - name: 🖊️ Run tests
+        run: |
+          docker compose run --rm --remove-orphans backend-test | tee /tmp/pytest-coverage.txt
+
+      - name: 📝 Coverage Comment
+        uses: MishaKav/pytest-coverage-comment@v1
+        with:
+          default-branch: main
+          junitxml-path: /tmp/pytest-junit.xml
+          pytest-coverage-path: /tmp/pytest-coverage.txt
+
+      - name: 💥 Delete 'py-badges' branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: git push origin --delete py-badges || echo "Branch 'py-badges' does not exist, skipping deletion."
+
+      - name: 🏷️ Create 'py-badges' branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: git checkout -b py-badges
+
+      - name: Copy '.coverage' from Docker container
+        run: |
+          docker cp $(docker ps -qf "name=backend-test"):/tmp/coverage.xml ./backend/coverage.xml
+
+      - name: ⚙️ Generating Coverage Badges
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python3 -m pip install -U setuptools genbadge genbadge[coverage]
+          echo "PWD is: \"${PWD}\""
+          echo "ls -la is: `ls -la`"
+          genbadge coverage \
+            -n "Backend Test Coverage: " \
+            -i ./backend/coverage.xml \
+            -o ./badges/backend/coverage.svg
+
+      - name: ⬆️ Push 'py-badges' branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ./badges/backend/coverage.svg
+          git commit -m "Update backend coverage badge" || echo "No changes to commit"
+          git push origin py-badges
