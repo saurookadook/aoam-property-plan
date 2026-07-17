@@ -7,7 +7,14 @@ import {
 import { QueryClient } from '@tanstack/react-query';
 
 import { Root } from '@/layouts';
-import { Home, MarketOverview, MarketsList, marketOverviewLoader } from '@/pages';
+import {
+  Home,
+  ListingOverview,
+  MarketOverview,
+  MarketsList,
+  listingOverviewLoader,
+  marketOverviewLoader,
+} from '@/pages';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,6 +75,11 @@ export const routerConfig: AOAMRouteObject[] = [
         path: 'markets/:marketId',
         element: <MarketOverview />,
         loader: marketOverviewLoader(queryClient),
+      },
+      {
+        path: 'listings/:listingId',
+        element: <ListingOverview />,
+        loader: listingOverviewLoader(queryClient),
       },
     ],
   },
