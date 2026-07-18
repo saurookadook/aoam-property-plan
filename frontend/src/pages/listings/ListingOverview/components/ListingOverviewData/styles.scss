@@ -1,4 +1,6 @@
 .listing-overview-data {
+  gap: 1rem;
+
   &__top-row {
     gap: 1.5rem;
   }
@@ -9,8 +11,8 @@
 
   &__map {
     &.map-card {
-      min-height: 24rem;
-      min-width: 30rem;
+      min-height: 28.5rem;
+      min-width: 40rem;
       position: relative;
     }
 
@@ -23,5 +25,5 @@
 }
 
 #listing-overview-map {
-  height: 24rem;
+  height: 28.5rem;
 }

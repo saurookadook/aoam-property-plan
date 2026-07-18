@@ -1,5 +1,6 @@
 import { Link as RouterLink } from 'react-router';
 import classNames from 'classnames';
+import DOMPurify from 'dompurify';
 import { Masonry } from '@mui/lab';
 import {
   Card,
@@ -24,11 +25,11 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
 
   return (
     <FlexColumn className="listing-overview-data">
+      <Typography variant="h2">{listing?.name ?? 'Name missing 🤷‍♂️'}</Typography>
+
       <FlexRow className="listing-overview-data__top-row">
         <Card className="listing-overview-data__data-item">
           <CardContent>
-            <Typography variant="h2">{listing?.name ?? 'Name missing 🤷‍♂️'}</Typography>
-
             <Typography
               className="listing-overview-data__data-item__details-wrapper"
               variant="body2"
@@ -36,9 +37,12 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
               <Typography
                 className="listing-overview-data__data-item__description"
                 component="span"
-              >
-                {listing?.description ?? 'No description 🤷‍♂️'}
-              </Typography>
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    listing?.description ?? 'No description 🤷‍♂️',
+                  ),
+                }}
+              />
             </Typography>
           </CardContent>
         </Card>
