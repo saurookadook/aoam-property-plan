@@ -1,0 +1,27 @@
+.listing-overview-data {
+  &__top-row {
+    gap: 1.5rem;
+  }
+
+  &__data-item {
+    /**/
+  }
+
+  &__map {
+    &.map-card {
+      min-height: 24rem;
+      min-width: 30rem;
+      position: relative;
+    }
+
+    & .MuiContent-root,
+    & .leaflet-container {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+#listing-overview-map {
+  height: 24rem;
+}
