@@ -28,7 +28,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof ListingOverview>;
 
-export const CalimaEntireHome: Story = {
+export const CalimaTreehouseWithName: Story = {
+  parameters: {
+    reactRouter: reactRouterParameters({
+      location: {
+        pathParams: { listingId: '2d5175ef-d2e1-42e5-ad06-b5d5518f7964' },
+      },
+    }),
+  },
+};
+
+export const CalimaEntireHomeNoName: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       location: {

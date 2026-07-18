@@ -10,6 +10,17 @@ export const endpointConfigs: EndpointConfig[] = [
     ...baseEndpointConfig,
     type: 'overview',
     emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error fetching listing overview',
+    entityIdPathParam: 'listingId',
+    entityType: 'listings',
+    // filenamePrefix: 'all',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'overview',
+    emptyResult: {
       data: {
         market: null,
         listings: [],

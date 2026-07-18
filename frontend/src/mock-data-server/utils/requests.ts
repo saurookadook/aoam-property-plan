@@ -48,6 +48,15 @@ export async function dataRequestHandler(
 
     return boundReadGzippedJson(filePathForRequest)
       .then((jsonData) => {
+        logProxy(`[${config.logName} - /api/${config.type}] after reading file: `, {
+          compositeKey,
+          entityType,
+          filenamePrefix,
+          filePathForRequest,
+          params,
+          jsonData,
+        });
+
         if (!jsonData?.data?.length && config.emptyResultMessage != null) {
           mockResponseCache[compositeKey] = create400Response(
             config.emptyResultMessage,
