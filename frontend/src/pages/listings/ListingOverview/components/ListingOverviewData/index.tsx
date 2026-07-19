@@ -4,6 +4,7 @@ import type { ListingEntity } from '@/types';
 import { FlexColumn, FlexRow } from '@/layouts';
 import { ListingDetailsCard } from '../ListingDetailsCard';
 import { ListingDescriptionCard } from '../ListingDescriptionCard';
+import { ListingFinancialReportsTable } from '../ListingFinancialReportsTable';
 import { ListingMapCard } from '../ListingMapCard';
 import { ListingPhotosCarousel } from '../ListingPhotosCarousel';
 
@@ -29,6 +30,12 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
         <ListingMapCard
           latitude={listing.latitude} // force formatting
           longitude={listing.longitude}
+        />
+      </FlexRow>
+
+      <FlexRow className="listing-overview-data__bottom-row">
+        <ListingFinancialReportsTable
+          financialReports={listing.listing_financial_reports}
         />
       </FlexRow>
     </FlexColumn>
