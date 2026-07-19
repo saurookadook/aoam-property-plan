@@ -1,5 +1,10 @@
 .listing-overview-data {
+  height: 100%;
   gap: 1rem;
+
+  &__details {
+    flex-grow: 1;
+  }
 
   &__top-row {
     gap: 1.5rem;
@@ -7,6 +12,9 @@
 
   &__data-item {
     /**/
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   &__map {
