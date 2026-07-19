@@ -1,37 +1,26 @@
 .listing-overview-data {
   height: 100%;
-  gap: 1rem;
+  gap: 2rem;
 
-  &__details {
-    flex-grow: 1;
+  &__top-row,
+  &__middle-row {
+    gap: 1.5rem;
+    width: 100%;
   }
 
   &__top-row {
-    gap: 1.5rem;
+    max-height: calc(27rem + 2.75rem);
   }
 
   &__data-item {
-    /**/
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
 
-  &__map {
-    &.map-card {
-      min-height: 28.5rem;
-      min-width: 40rem;
-      position: relative;
-    }
-
-    & .MuiContent-root,
-    & .leaflet-container {
-      height: 100%;
-      width: 100%;
+    &__item-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
   }
-}
-
-#listing-overview-map {
-  height: 28.5rem;
 }

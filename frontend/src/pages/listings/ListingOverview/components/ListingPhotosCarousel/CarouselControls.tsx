@@ -24,9 +24,9 @@ export function CarouselControls({
         <NextButton disabled={nextBtnDisabled} onClick={onNextButtonClick} />
       </div>
 
-      <div className="embla__dots">
+      <div className="embla__photos-counter">
         {emblaApi.scrollSnapList().length > 0 && (
-          <span>{`${selectedIndex} / ${totalPhotos}`}</span>
+          <span>{`${selectedIndex + 1} / ${totalPhotos}`}</span>
         )}
       </div>
     </div>

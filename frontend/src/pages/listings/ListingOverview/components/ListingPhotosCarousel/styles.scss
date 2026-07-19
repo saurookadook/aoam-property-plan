@@ -18,7 +18,6 @@
 
   &__slide {
     flex-basis: var(--slide-size);
-    // flex-direction: row;
     flex-grow: 0;
     flex-shrink: 0;
     min-width: 0;
@@ -28,7 +27,7 @@
     &__image,
     &__number {
       align-items: center;
-      border: 0.2rem solid var(--mui-palette-primary-main);
+      border: 0.125rem solid var(--mui-palette-primary-main);
       border-radius: 1rem;
       display: flex;
       font-weight: 600;
@@ -44,7 +43,7 @@
     gap: 1.2em;
     grid-template-columns: auto 1fr;
     justify-content: space-between;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 
   &__buttons {
@@ -54,7 +53,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  &__dots {
+  &__photos-counter {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
