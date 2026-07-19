@@ -43,7 +43,7 @@ describe('MarketOverview', () => {
 
   it('should render correctly', async () => {
     const { container } = renderWithContext(
-      <MarketOverviewWithRouterAndQueryProvider marketId="f68ec319-eab2-40d9-949e-c4d1eda49544" />,
+      <MarketOverviewWithRouterAndQueryProvider marketId="7e1960b2-a442-410d-96ba-d302e3ad684b" />,
       AppStateProvider,
     );
 
