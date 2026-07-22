@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Typography } from '@mui/material';
 
 import type { ListingEntity } from '@/types';
@@ -15,7 +16,9 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
     <FlexColumn className="listing-overview-data">
       <Typography variant="h2">{listing.name ?? 'Name missing 🤷‍♂️'}</Typography>
 
-      <FlexRow className="listing-overview-data__top-row">
+      <FlexRow
+        className={classNames('listing-overview-data__top-row', 'overview-data-row')}
+      >
         <ListingPhotosCarousel
           className="listing-overview-data__photos-carousel"
           listing={listing}
@@ -24,7 +27,9 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
         <ListingDetailsCard listing={listing} />
       </FlexRow>
 
-      <FlexRow className="listing-overview-data__middle-row">
+      <FlexRow
+        className={classNames('listing-overview-data__middle-row', 'overview-data-row')}
+      >
         <ListingDescriptionCard description={listing.description} />
 
         <ListingMapCard
@@ -33,7 +38,9 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
         />
       </FlexRow>
 
-      <FlexRow className="listing-overview-data__bottom-row">
+      <FlexRow
+        className={classNames('listing-overview-data__bottom-row', 'overview-data-row')}
+      >
         <ListingFinancialReportsTable
           financialReports={listing.listing_financial_reports}
         />

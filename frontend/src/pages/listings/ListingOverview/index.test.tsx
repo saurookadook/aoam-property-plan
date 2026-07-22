@@ -60,21 +60,13 @@ describe('ListingOverview', () => {
       expect(listingOverviewDataEl).toBeVisible();
     });
 
-    const listingOverviewDataCard = listingOverviewDataEl!.querySelector(
-      '.listing-overview-data__data-item',
-    ) as HTMLElement;
-
-    expect(listingOverviewDataCard).toBeVisible();
-    const localityHeading = within(listingOverviewDataCard).getByRole('heading', {
+    const listingNameEl = within(listingOverviewDataEl!).getByRole('heading', {
       level: 2,
     });
-    expect(localityHeading).toBeVisible();
-    expect(localityHeading).not.toBeEmptyDOMElement();
+    expect(listingNameEl).toBeVisible();
+    expect(listingNameEl).not.toBeEmptyDOMElement();
 
-    const descriptionSpan = listingOverviewDataCard.querySelector(
-        `.listing-overview-data__data-item__description`,
-      ) as HTMLElement;
-      expect(descriptionSpan).toBeVisible();
-      expect(descriptionSpan).not.toBeEmptyDOMElement();
+    const rowEls = listingOverviewDataEl!.querySelectorAll('.overview-data-row');
+    expect(rowEls.length).toStrictEqual(3);
   });
 });
