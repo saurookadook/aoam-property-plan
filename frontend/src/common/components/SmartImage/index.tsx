@@ -30,7 +30,7 @@ export function SmartImage({
             isLoaded ? 'loaded' : 'hidden',
           )}
           loading="lazy"
-          onError={() => setTimeout(() => setHasError(true), 5000)}
+          onError={() => setHasError(true)}
           onLoad={() => setIsLoaded(true)}
           srcSet={src}
           src={src}
