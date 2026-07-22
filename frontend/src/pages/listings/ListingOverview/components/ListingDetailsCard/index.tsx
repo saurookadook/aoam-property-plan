@@ -58,17 +58,26 @@ export function ListingDetailsCard({ listing }: { listing: ListingEntity }) {
                 'amenities-list',
               )}
             >
-              {uniqueAmenities.map((amenity) => {
-                return (
-                  <Typography
-                    key={amenity}
-                    className="listing-overview-data__data-item__amenity"
-                    variant="body2"
-                  >
-                    {amenity}
-                  </Typography>
-                );
-              })}
+              {uniqueAmenities.length > 0 ? (
+                uniqueAmenities.map((amenity) => {
+                  return (
+                    <Typography
+                      key={amenity}
+                      className="listing-overview-data__data-item__amenity"
+                      variant="body2"
+                    >
+                      {amenity}
+                    </Typography>
+                  );
+                })
+              ) : (
+                <Typography
+                  className="listing-overview-data__data-item__no-amenities"
+                  variant="body2"
+                >
+                  No amenities listed 😕
+                </Typography>
+              )}
             </dd>
           </dl>
         </CardContent>
