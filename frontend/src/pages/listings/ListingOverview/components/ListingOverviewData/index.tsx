@@ -32,10 +32,7 @@ export function ListingOverviewData({ listing }: { listing: ListingEntity }) {
       >
         <ListingDescriptionCard description={listing.description} />
 
-        <ListingMapCard
-          latitude={listing.latitude} // force formatting
-          longitude={listing.longitude}
-        />
+        <ListingMapCard listing={listing} />
       </FlexRow>
 
       <FlexRow

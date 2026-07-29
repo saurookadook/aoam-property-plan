@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { EmblaAPI } from '@/types';
 
@@ -7,6 +7,8 @@ export const usePhotosCarousel = (emblaApi: EmblaAPI) => {
   const [nextBtnDisabled, setNextBtnDisabled] = useState<boolean>(true);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const initializedRef = useRef<boolean>(false);
 
   const onPrevButtonClick = useCallback(() => {
     if (emblaApi == null) return;
@@ -33,12 +35,25 @@ export const usePhotosCarousel = (emblaApi: EmblaAPI) => {
   useEffect(() => {
     if (emblaApi == null) return;
 
-    // onInit(emblaApi);
-    // onSelect(emblaApi);
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      onInit(emblaApi);
+      onSelect(emblaApi);
+    }
+
+    emblaApi.on('init', onInit);
+    emblaApi.on('init', onSelect);
 
     emblaApi.on('reInit', onInit);
     emblaApi.on('reInit', onSelect);
     emblaApi.on('select', onSelect);
+
+    return () => {
+      emblaApi.off('reInit', onInit);
+      emblaApi.off('reInit', onSelect);
+      emblaApi.off('select', onSelect);
+      initializedRef.current = false;
+    };
   }, [emblaApi, onInit, onSelect]);
 
   return {

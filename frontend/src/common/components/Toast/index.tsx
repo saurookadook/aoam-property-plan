@@ -12,7 +12,7 @@ export function Toast({
   error: Error | null;
   status: 'error' | 'pending' | 'success';
 }) {
-  const [snackbarOpen, setSnackbarOpen] = useState(status === 'error');
+  const [snackbarOpen, setSnackbarOpen] = useState(true);
 
   const handleSnackbarClose = useCallback(() => {
     setSnackbarOpen(false);

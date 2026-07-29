@@ -1,20 +1,20 @@
 import classNames from 'classnames';
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, type CardProps } from '@mui/material';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+
+import type { ListingEntity } from '@/types';
 
 import './styles.scss';
 
 export function ListingMapCard({
   className,
-  latitude,
-  longitude,
+  listing,
   ...props
 }: {
   className?: string;
-  latitude: number;
-  longitude: number;
-}) {
-  const latLngPosition: [number, number] = [latitude, longitude];
+  listing: ListingEntity;
+} & CardProps) {
+  const latLngPosition: [number, number] = [listing.latitude, listing.longitude];
 
   return (
     <Card
@@ -35,7 +35,9 @@ export function ListingMapCard({
 
           <Marker position={latLngPosition}>
             <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
+              {`${listing.name} (${listing.property_type})`}
+              <br />
+              {`Lat: ${listing.latitude}, Long: ${listing.longitude}`}
             </Popup>
           </Marker>
         </MapContainer>

@@ -16,7 +16,7 @@ export default defineConfig([
     'node_modules',
   ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -24,7 +24,15 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+      },
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        // projectServices: true,
+        project: './tsconfig.app.json',
+      },
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -37,6 +45,7 @@ export default defineConfig([
           ignoreRestSiblings: true,
         },
       ],
+      'react-refresh/only-export-components': 'warn',
     },
   },
   ...storybook.configs['flat/recommended'],

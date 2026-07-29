@@ -66,6 +66,7 @@ async function getRequestFactory({
     .then((response) => response.json())
     .then((jsonResponse) => jsonResponse)
     .catch((error) => {
+      // eslint-disable-next-line no-debugger
       debugger;
       console.error(
         `[MOCK - /api/${endpointPath}] Encountered unexpected error: `,

@@ -1,8 +1,8 @@
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 import { QueryClient, queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import type { ListingEntity, MarketEntity } from '@/types';
-import { LoadingState } from '@/common/components';
+import type { ListingEntity } from '@/types';
+import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
 import { fetchy } from '@/utils';
@@ -51,11 +51,17 @@ export function ListingOverview() {
             <LoadingState />
           </div>
         ) : (
-          <ListingOverviewData
-            listing={data?.listingOverview ?? ({} as ListingEntity)}
-          />
+          <ListingOverviewData listing={data.listingOverview} />
         )}
       </FlexColumn>
+
+      {!isFetching && error != null && (
+        <Toast
+          alertSeverity={status} // force formatting
+          error={error}
+          status={status}
+        />
+      )}
     </FlexColumn>
   );
 }

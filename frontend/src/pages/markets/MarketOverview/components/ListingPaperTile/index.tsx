@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router';
-import classNames from 'classnames';
-import { Paper, Skeleton, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 
 import type { ListingEntity } from '@/types';
 import { SmartImage } from '@/common/components';

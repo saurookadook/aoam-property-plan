@@ -23,6 +23,7 @@ export const PrevButton = ({
         className,
         disabled && 'embla__button--disabled',
       )}
+      disabled={disabled}
       type="button"
       aria-label="Scroll to previous"
     >
@@ -46,6 +47,7 @@ export const NextButton = ({
         className,
         disabled && 'embla__button--disabled',
       )}
+      disabled={disabled}
       type="button"
       aria-label="Scroll to next"
     >
