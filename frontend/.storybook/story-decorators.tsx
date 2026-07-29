@@ -6,6 +6,7 @@ import type { Decorator } from '@storybook/react-vite';
 import { createMirageStorybookServer } from '../src/__storybook__/mirageStorybookServer';
 import { AppThemeProvider } from '../src/providers';
 
+import 'leaflet/dist/leaflet.css';
 import '../src/index.scss';
 import '../src/app/App.scss';
 

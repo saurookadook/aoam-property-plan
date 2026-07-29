@@ -12,6 +12,7 @@ export type BoundThis = {
 
 export type FixedLengthArray<T, L extends number> = [T, ...T[]] & { length: L };
 
+export * from './custom-embla';
 export * from './entity';
 export * from './listings';
 export * from './markets';

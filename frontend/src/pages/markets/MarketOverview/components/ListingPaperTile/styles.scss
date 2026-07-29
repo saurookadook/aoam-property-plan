@@ -1,0 +1,20 @@
+.listing-paper-tile {
+  --min-image-height: 10rem;
+  --smart-image-min-height: var(--min-image-height);
+
+  min-height: var(--min-image-height);
+
+  &__label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  &__link {
+    display: inline-block;
+  }
+
+  &__image,
+  & .MuiSkeleton-root {
+    min-height: var(--min-image-height);
+  }
+}

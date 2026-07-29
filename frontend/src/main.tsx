@@ -1,6 +1,7 @@
 import { StrictMode, type PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import 'leaflet/dist/leaflet.css';
 import '@/index.scss';
 import App from '@/app/App';
 import { log } from '@/logger';

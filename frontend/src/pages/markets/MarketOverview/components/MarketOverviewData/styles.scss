@@ -11,15 +11,4 @@
       gap: 0.5rem;
     }
   }
-
-  & &__listing-tile {
-    // max-height: 10rem;
-
-    & img {
-      display: block;
-      height: max-content;
-      object-fit: contain;
-      width: 100%;
-    }
-  }
 }

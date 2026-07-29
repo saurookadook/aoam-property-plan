@@ -9,9 +9,14 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'build', // force formatting
+    'coverage',
+    'dist',
+    'node_modules',
+  ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -19,7 +24,28 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+      },
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        // projectServices: true,
+        project: './tsconfig.app.json',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      'react-refresh/only-export-components': 'warn',
     },
   },
   ...storybook.configs['flat/recommended'],

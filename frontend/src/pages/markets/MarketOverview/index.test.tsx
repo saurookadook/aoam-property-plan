@@ -43,7 +43,7 @@ describe('MarketOverview', () => {
 
   it('should render correctly', async () => {
     const { container } = renderWithContext(
-      <MarketOverviewWithRouterAndQueryProvider marketId="f68ec319-eab2-40d9-949e-c4d1eda49544" />,
+      <MarketOverviewWithRouterAndQueryProvider marketId="7e1960b2-a442-410d-96ba-d302e3ad684b" />,
       AppStateProvider,
     );
 
@@ -76,17 +76,18 @@ describe('MarketOverview', () => {
     }
 
     const listingTiles = marketOverviewDataEl!.querySelectorAll(
-      '.market-overview-data__listing-tile',
+      '.market-overview-data .listing-paper-tile',
     );
     expect(listingTiles.length).toBeGreaterThan(0);
     listingTiles.forEach((tile) => {
       expect(tile).toBeVisible();
-      const paper = tile.querySelector('.market-overview-data__listing-tile__paper');
-      expect(paper).toBeVisible();
-      expect(paper).not.toBeEmptyDOMElement();
+
+      const label = tile.querySelector('.listing-paper-tile__label');
+      expect(label).toBeVisible();
+      expect(label).not.toBeEmptyDOMElement();
 
       const img = tile.querySelector(
-        'img.market-overview-data__listing-tile__image',
+        'img.listing-paper-tile__image',
       ) as HTMLImageElement;
       expect(img).toBeVisible();
       expect(img.src).not.toStrictEqual('');

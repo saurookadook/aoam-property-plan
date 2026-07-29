@@ -1,0 +1,28 @@
+.listing-overview-data {
+  &__details {
+    &,
+    & .listing-overview-data__data-item {
+      align-self: stretch;
+    }
+
+    & .listing-overview-data__data-item {
+      height: 100%;
+    }
+  }
+
+  &__data-item {
+    & dl {
+      dt {
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+    }
+
+    &__item-wrapper {
+      &.amenities-list {
+        column-count: 3;
+        display: block;
+      }
+    }
+  }
+}

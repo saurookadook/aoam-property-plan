@@ -1,16 +1,9 @@
-import { Link as RouterLink } from 'react-router';
 import { Masonry } from '@mui/lab';
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, Divider, Typography } from '@mui/material';
 
 import type { ListingEntity, MarketEntity } from '@/types';
 import { FlexColumn } from '@/layouts';
+import { ListingPaperTile } from '../ListingPaperTile';
 
 import './styles.scss';
 
@@ -60,16 +53,10 @@ export function MarketOverviewData({
       <Masonry className="market-overview-data__masonry" columns={4} spacing={2}>
         {listings.map((listing) => {
           return (
-            <div key={listing.id} className="market-overview-data__listing-tile">
-              <Paper className="market-overview-data__listing-tile__paper">{`${listing.id} (${listing.property_type})`}</Paper>
-              <img
-                alt={`${listing.property_type} in ${listing.location}`}
-                className="market-overview-data__listing-tile__image"
-                srcSet={listing.cover_photo_url}
-                src={listing.cover_photo_url}
-                loading="lazy"
-              />
-            </div>
+            <ListingPaperTile
+              key={listing.id} // force formatting
+              listing={listing}
+            />
           );
         })}
       </Masonry>

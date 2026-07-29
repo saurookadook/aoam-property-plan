@@ -1,0 +1,27 @@
+.listing-overview-data {
+  height: 100%;
+  gap: 2rem;
+
+  &__top-row,
+  &__middle-row,
+  &__bottom-row {
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  &__top-row {
+    max-height: calc(27rem + 2.75rem);
+  }
+
+  &__data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__item-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+}

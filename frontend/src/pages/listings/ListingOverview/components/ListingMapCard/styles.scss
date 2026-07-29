@@ -1,0 +1,19 @@
+#listing-overview-map {
+  height: 28.5rem;
+}
+
+.listing-overview-data {
+  &__map {
+    &.map-card {
+      min-height: 28.5rem;
+      min-width: 40rem;
+      position: relative;
+    }
+
+    & .MuiContent-root,
+    & .leaflet-container {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}

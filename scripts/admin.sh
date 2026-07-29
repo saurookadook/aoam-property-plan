@@ -341,8 +341,13 @@ scriptController() {
         echo "======================================================================================"
         echo ""
         if [ "$2" == "publish" ]; then
-            DOCKER_USERNAME="$(op read ${DOCKER_USERNAME_OP_PATH})"
-            DOCKER_PASSWORD="$(op read ${DOCKER_PASSWORD_OP_PATH})"
+            if [ -z "$DOCKER_USERNAME_OP_PATH" ] || [ -z "$DOCKER_PASSWORD_OP_PATH" ]; then
+                echo "Missing DOCKER_USERNAME_OP_PATH and/or DOCKER_PASSWORD_OP_PATH" >&2
+                exit 1
+            fi
+
+            DOCKER_USERNAME="$(op read "$DOCKER_USERNAME_OP_PATH")"
+            DOCKER_PASSWORD="$(op read "$DOCKER_PASSWORD_OP_PATH")"
             printf '%s\n' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
             if [ "$3" == "app" ]; then

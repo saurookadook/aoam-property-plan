@@ -42,7 +42,7 @@ export const Pance: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       location: {
-        pathParams: { marketId: '02f7996b-7111-48c0-beb9-c4fe14986859' },
+        pathParams: { marketId: '45841a54-2ee0-4736-9b78-8e9b34f4a1eb' },
       },
     }),
   },
@@ -52,7 +52,7 @@ export const Salento: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       location: {
-        pathParams: { marketId: 'f68ec319-eab2-40d9-949e-c4d1eda49544' },
+        pathParams: { marketId: '63413e5b-db94-419a-bd74-033d35f9ece8' },
       },
     }),
   },

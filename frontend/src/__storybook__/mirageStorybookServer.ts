@@ -16,7 +16,7 @@ export const createMirageStorybookServer = ({
     logging: enableLogging,
 
     routes() {
-      this.urlPrefix = 'http://localhost:6006/api';
+      this.urlPrefix = 'http://localhost:6006';
       this.namespace = 'api';
 
       for (const config of endpointConfigs) {
@@ -25,7 +25,7 @@ export const createMirageStorybookServer = ({
         //   routePath,
         // });
 
-        this.get(`/api/${routePath}`, async (schema, request) => {
+        this.get(`/${routePath}`, async (schema, request) => {
           const endpointPathWithParams = Object.entries(request.params).reduce(
             (path, [paramKey, paramValue]) =>
               path.replace(`:${paramKey}`, String(paramValue)),
@@ -66,6 +66,7 @@ async function getRequestFactory({
     .then((response) => response.json())
     .then((jsonResponse) => jsonResponse)
     .catch((error) => {
+      // eslint-disable-next-line no-debugger
       debugger;
       console.error(
         `[MOCK - /api/${endpointPath}] Encountered unexpected error: `,
