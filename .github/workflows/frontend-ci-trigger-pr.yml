@@ -8,5 +8,5 @@ on:
       - "frontend/**"
 
 jobs:
-  build:
+  test:
     uses: ./.github/workflows/frontend-test.yml

@@ -14,5 +14,5 @@ on:
       - "frontend/*.ts"
 
 jobs:
-  build:
+  test:
     uses: ./.github/workflows/frontend-test.yml
