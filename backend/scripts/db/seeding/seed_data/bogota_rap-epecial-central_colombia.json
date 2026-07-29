@@ -1,0 +1,16 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "RAP (Especial) Central",
+        "locality": "Bogota Capital District - Municipality",
+        "district": "Bogota"
+    },
+    "occupancy": 0.4,
+    "average_daily_rate": 189320.6,
+    "rev_par": 79066.1,
+    "revenue": 1.68715809E7,
+    "booking_lead_time": 20.7,
+    "length_of_stay": 6.0,
+    "min_nights": 6.3,
+    "active_listings_count": 6375.8
+}
