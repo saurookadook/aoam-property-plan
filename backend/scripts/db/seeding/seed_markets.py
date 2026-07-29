@@ -35,7 +35,7 @@ def seed_db_with_markets():
         with open(json_summary, "r") as f:
             try:
                 market_data = json.load(f)
-                ri(market_data, sort=True)
+                ri(market_data, sort=True, title="'market_data' from JSON file")
                 market_details = market_data.get("market")
 
                 market_dict = dict(
@@ -55,17 +55,25 @@ def seed_db_with_markets():
                     )
                 ).scalar_one_or_none()
 
+                ri(maybe_one, sort=True, title="'maybe_one' from 'market_data'")
+
                 if maybe_one is not None:
                     market_dict["id"] = maybe_one.id
 
                 market_record = market_facade.create_or_update(payload=market_dict)
                 local_db_session.commit()
 
-                maybe_one_report = local_db_session.execute(
-                    select(MarketFinancialReportDB).where(
-                        MarketFinancialReportDB.market_id == market_record.id
+                ri(market_record, sort=True, title="'market_record' from 'market_data'")
+
+                maybe_one_report = (
+                    local_db_session.execute(
+                        select(MarketFinancialReportDB).where(
+                            MarketFinancialReportDB.market_id == market_record.id
+                        )
                     )
-                ).scalar_one_or_none()
+                    .scalars()
+                    .first()
+                )
 
                 if maybe_one_report is not None:
                     root_logger.info(
