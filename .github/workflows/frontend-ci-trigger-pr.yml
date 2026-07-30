@@ -9,4 +9,7 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/frontend-test.yml
