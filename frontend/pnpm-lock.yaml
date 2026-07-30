@@ -20,6 +20,9 @@ importers:
       '@mui/material':
         specifier: ^9.2.0
         version: 9.2.0(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@saurookkadookk/node-utils':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@saurookkadookk/react-utils-combine-reducers':
         specifier: ^1.0.0
         version: 1.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -1601,6 +1604,10 @@ packages:
     peerDependenciesMeta:
       rollup:
         optional: true
+
+  '@saurookkadookk/node-utils@0.1.0':
+    resolution: {integrity: sha512-7WbzxzjlWleWOmxL/rOxmky072ZkPA2fS8Q+HGbDFl5JJRtPQytS92Utd4MivRTmI2pCxotwSfRxlFYitjPztQ==}
+    engines: {node: '>=22.10.0', pnpm: '>=11.8.0'}
 
   '@saurookkadookk/react-utils-combine-reducers@1.0.0':
     resolution: {integrity: sha512-DuHjT6yFa9K3iVovECDtovDt1BB8jrubRY5R3kvq4jT+qYfmAMCJwO9JtkfBcJPNZuqwvRCPtr7eDlqyOw1upw==}
@@ -5836,6 +5843,8 @@ snapshots:
       '@types/estree': 1.0.9
       estree-walker: 2.0.2
       picomatch: 4.0.4
+
+  '@saurookkadookk/node-utils@0.1.0': {}
 
   '@saurookkadookk/react-utils-combine-reducers@1.0.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
