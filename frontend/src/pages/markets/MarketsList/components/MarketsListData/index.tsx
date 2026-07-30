@@ -12,7 +12,7 @@ export function MarketsListData({
   marketsListData: MarketEntity[];
 }) {
   return (
-    <FlexRow className="markets-list-data">
+    <FlexRow id="markets-list-data" className="markets-list-data">
       {marketsListData.map((market) => {
         return (
           <Card key={market.id} className="markets-list-data__data-item">

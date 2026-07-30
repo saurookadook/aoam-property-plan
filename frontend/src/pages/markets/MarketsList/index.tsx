@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import type { MarketEntity } from '@/types';
-import { LoadingState } from '@/common/components';
+import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
 import { fetchy } from '@/utils';
@@ -26,7 +26,7 @@ export function MarketsList() {
   const { data, error, isFetching, status } = useMarketsListQuery();
 
   return (
-    <FlexColumn id="markets-list">
+    <FlexColumn id="markets-list" className="markets-list">
       <h2>{`💰 Markets List 💰`}</h2>
 
       <FlexColumn className="markets-list__wrapper">
@@ -38,6 +38,14 @@ export function MarketsList() {
           <MarketsListData marketsListData={data?.marketsList ?? []} />
         )}
       </FlexColumn>
+
+      {!isFetching && error != null && (
+        <Toast
+          alertSeverity={status} // force formatting
+          error={error}
+          status={status}
+        />
+      )}
     </FlexColumn>
   );
 }
