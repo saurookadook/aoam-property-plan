@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import deque
+from datetime import date, datetime, timezone
 from uuid import UUID
 
 import pytest
@@ -25,12 +27,6 @@ class TestListingFacade:
         listing = ListingDBFactory(**expected_listing_dict)
         test_db_session.commit()
         return listing
-
-    def _compare_result_with_expected(self, result: ListingEntity, expected_dict: dict):
-        for key, value in expected_dict.items():
-            assert getattr(result, key) == value
-
-        return True
 
     def test_get_one_by_id(self, listing_facade, listing_record, expected_listing_dict):
         result = listing_facade.get_one_by_id(listing_record.id)
@@ -157,6 +153,59 @@ class TestListingFacade:
         with pytest.raises(MarketFacade.NoResultFound):
             listing_facade.get_all_by_market_id(non_existent_market_id)
 
+    def test_get_newest(self, listing_facade: ListingFacade, test_db_session):
+        expected_market = MarketEntityFactory()
+        other_market = MarketEntityFactory()
+        MarketDBFactory(**expected_market.model_dump())
+        MarketDBFactory(**other_market.model_dump())
+        test_db_session.commit()
+
+        today = date.today()
+        today_now = datetime(
+            year=today.year,
+            month=today.month,
+            day=today.day,
+            hour=13,
+            minute=30,
+            tzinfo=timezone.utc,
+        )
+
+        expected_listings: deque[ListingEntity] = deque()
+        for i in range(10):
+            market_id = None
+
+            if i % 2 == 0:
+                market_id = expected_market.id
+            if i % 3 == 0:
+                market_id = other_market.id
+
+            listing = ListingEntityFactory(
+                created_at=today_now.replace(minute=today_now.minute + i, second=i),
+                market_id=market_id,
+                updated_at=today_now.replace(
+                    minute=today_now.minute + i + 1, second=1 + i
+                ),
+            )
+            ListingDBFactory(**listing.model_dump())
+
+            if (i % 2 == 0 or i % 3 == 0) and listing.market_id is not None:
+                expected_listings.appendleft(listing)
+            if len(expected_listings) > 5:
+                expected_listings.pop()
+        test_db_session.commit()
+
+        results = listing_facade.get_newest()
+
+        assert len(results) == 5
+        for expected_listing, listing_result in zip(expected_listings, results):
+            assert expected_listing is not None
+            assert expected_listing.cover_photo_url == listing_result.cover_photo_url
+            assert expected_listing.created_at == listing_result.created_at
+            assert expected_listing.id == listing_result.id
+            assert expected_listing.market_id == listing_result.market_id
+            assert expected_listing.name == listing_result.name
+            assert expected_listing.updated_at == listing_result.updated_at
+
     def test_create_or_update_creates_new_record(
         self, listing_facade, expected_listing_dict
     ):
@@ -186,3 +235,9 @@ class TestListingFacade:
 
         assert self._compare_result_with_expected(result, updated_payload)
         assert result.bedrooms != expected_listing_dict["bedrooms"]
+
+    def _compare_result_with_expected(self, result: ListingEntity, expected_dict: dict):
+        for key, value in expected_dict.items():
+            assert getattr(result, key) == value
+
+        return True
