@@ -1,0 +1,50 @@
+name: 'Node.js Setup'
+description: 'Set up Node.js and install npm dependencies'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Install pnpm'
+      uses: pnpm/action-setup@v4
+      with:
+        version: 11.9.0
+
+    - name: 'Set up Node.js Version'
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: './frontend/.nvmrc'
+        cache: 'pnpm'
+        cache-dependency-path: './frontend/pnpm-lock.yaml'
+
+    - name: Install Dependencies
+      shell: bash
+      working-directory: ./frontend
+      run: |
+        set +e
+        for attempt in 1 2 3; do
+          echo "pnpm ci attempt $attempt"
+          pnpm ci --frozen-lockfile --ignore-scripts 2>&1
+          rc=$?
+          # pnpm can exit 0 despite crashing; check both exit code and that
+          # a known package actually landed in node_modules.
+          if [[ $rc -eq 0 && -d node_modules/typescript ]]; then
+            echo "pnpm ci succeeded on attempt $attempt"
+            break
+          fi
+
+          echo "pnpm ci failed on attempt $attempt"
+          rm -rf node_modules
+          pnpm store prune
+        done
+
+        set -e
+        # Final verification
+        if [[ ! -d node_modules/typescript ]]; then
+          echo "ERROR: pnpm ci failed to install dependencies after 3 attempts" >&2
+          exit 1
+        fi
+
+    - name: Maybe run post-install scripts
+      shell: bash
+      working-directory: ./frontend
+      run: pnpm rebuild && pnpm run --if-present prepare
