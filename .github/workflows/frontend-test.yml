@@ -7,7 +7,7 @@ on:
   workflow_call:
 
 jobs:
-  build:
+  test:
     runs-on: ["ubuntu-latest"]
     timeout-minutes: 15
     steps:
@@ -16,16 +16,17 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Set up Node 22.
-        uses: actions/setup-node@v3
+      - name: "Set up Node version and dependencies"
+        uses: ./.github/actions/node-setup
+
+      - name: "🖊️ Run tests"
+        working-directory: ./frontend
+        run: pnpm test:cov
+
+      - name: "📊 Report Coverage"
+        uses: davelosert/vitest-coverage-report-action@v2
+        # Ensure the report always runs even if tests fail
+        if: always()
         with:
-          node-version: 22
-
-      - name: 🐳 Build Images
-        run: |
-          cp .env.example .env
-          docker compose build frontend-test
-
-      - name: 🖊️ Run tests
-        run: |
-          docker compose run --rm --remove-orphans frontend-test
+          json-summary-path: ./coverage/coverage-summary.json
+          working-directory: ./frontend

@@ -69,6 +69,11 @@ const config: ViteConfig = {
         './node_modules/@saurookkadookk/react-utils-render-with-context/dist/esm',
       ),
     },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary', 'json'],
+      reportOnFailure: true, // to get coverage reports even if tests fail
+    },
     environment: 'jsdom',
     include: [
       '**/*.{test,spec}.{js,jsx,ts,tsx}', // force formatting

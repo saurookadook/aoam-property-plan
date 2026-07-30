@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
+import { deeplyMerge } from '@saurookkadookk/node-utils';
 
 import type { AppDispatch, KeyedObject } from '@/types';
-import { deeplyMerge } from '@/common/utils';
 import type { CombinedStateSliceReducer } from '@/store';
 
 export default function AppStateProviderHOC<
@@ -23,12 +23,12 @@ export default function AppStateProviderHOC<
   }>) {
     const [combinedReducerFunc, combinedDefaultState] = combinedReducer;
 
-    const mergedDefaultState = deeplyMerge<State>({}, combinedDefaultState);
-    const recursivelyMergedState = deeplyMerge<State>(
-      mergedDefaultState,
+    const mergedDefaultState = deeplyMerge(
+      {},
+      combinedDefaultState,
       initialState ?? {},
-    );
-    const [state, dispatch] = useReducer(combinedReducerFunc, recursivelyMergedState);
+    ) as State;
+    const [state, dispatch] = useReducer(combinedReducerFunc, mergedDefaultState);
 
     return (
       <StateContext.Provider value={state}>

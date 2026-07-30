@@ -1,5 +1,6 @@
+import { deeplyMerge } from '@saurookkadookk/node-utils';
+
 import type { AppState } from '@/store';
-import { deeplyMerge } from '@/common/utils';
 
 export function createDefaultInitialState(overrides: Partial<AppState> = {}): AppState {
   return deeplyMerge<AppState>(

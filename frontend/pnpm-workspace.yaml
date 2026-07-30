@@ -2,3 +2,5 @@ allowBuilds:
   '@parcel/watcher': true
   esbuild: true
   storybook-addon-remix-react-router: true
+minimumReleaseAgeExclude:
+  - '@saurookkadookk/node-utils@0.1.0'
