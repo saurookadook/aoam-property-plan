@@ -1,7 +1,9 @@
 #markets-list {
   gap: 2rem;
 
-  & h2 {
-    font-size: 2rem;
+  & .markets-list {
+    & h2 {
+      font-size: 2rem;
+    }
   }
 }
