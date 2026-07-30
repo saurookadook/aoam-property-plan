@@ -29,6 +29,7 @@ jobs:
         if: always()
         with:
           json-summary-path: ./coverage/coverage-summary.json
+          working-directory: ./frontend
 
       # - name: Set up Node 22.
       #   uses: actions/setup-node@v3
