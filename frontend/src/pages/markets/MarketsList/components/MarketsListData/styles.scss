@@ -16,6 +16,7 @@
 
     & .MuiCard {
       &-root {
+        align-self: stretch;
         min-height: 12rem;
         min-width: 20rem;
         overflow-x: hidden;
