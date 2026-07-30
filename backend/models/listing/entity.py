@@ -64,3 +64,9 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
             )
 
         return input_data
+
+
+class NewestListingEntity(BaseEntityModel, TimestampsEntityMixin):
+    cover_photo_url: Optional[str] = None
+    market_id: UUID
+    name: str
