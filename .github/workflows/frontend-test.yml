@@ -30,17 +30,3 @@ jobs:
         with:
           json-summary-path: ./coverage/coverage-summary.json
           working-directory: ./frontend
-
-      # - name: Set up Node 22.
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 22
-
-      # - name: 🐳 Build Images
-      #   run: |
-      #     cp .env.example .env
-      #     docker compose build frontend-test
-
-      # - name: 🖊️ Run tests
-      #   run: |
-      #     docker compose run --rm --remove-orphans frontend-test
