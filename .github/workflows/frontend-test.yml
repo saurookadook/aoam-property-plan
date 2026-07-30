@@ -17,7 +17,7 @@ jobs:
           ref: ${{ github.head_ref || github.ref_name }}
 
       - name: "Set up Node version and dependencies"
-        uses: ./.github/actions/package-setup
+        uses: ./.github/actions/node-setup
 
       - name: "🖊️ Run tests"
         working-directory: ./frontend
