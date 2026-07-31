@@ -107,36 +107,6 @@ class ListingFacade(BaseFacade):
             for listing_record in listing_records
         ]
 
-    def get_newest(self) -> list[NewestListingEntity]:
-        listing_records = (
-            self.db_session.execute(
-                select(
-                    ListingDB.created_at,
-                    ListingDB.cover_photo_url,
-                    ListingDB.id,
-                    ListingDB.market_id,
-                    ListingDB.name,
-                    ListingDB.updated_at,
-                )
-                .where(
-                    and_(
-                        ListingDB.created_at.isnot(None),
-                        ListingDB.market_id.isnot(None),
-                        ListingDB.name.isnot(None),
-                    )
-                )
-                .order_by(ListingDB.created_at.desc())
-                .limit(5)
-            )
-            .mappings()
-            .all()
-        )
-
-        return [
-            NewestListingEntity.model_validate(listing_record)
-            for listing_record in listing_records
-        ]
-
     def get_all_by_market_id(self, market_id: UUID | str) -> list[ListingEntity]:
         market = MarketFacade(db_session=self.db_session).get_one_by_id(market_id)
 
