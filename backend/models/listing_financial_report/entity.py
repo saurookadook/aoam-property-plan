@@ -25,6 +25,7 @@ class ListingFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     rating_communication: Optional[float]
     rating_location: Optional[float]
     rating_value: Optional[float]
+    # trailing twelve months (ttm)
     ttm_revenue: Optional[float]
     ttm_avg_rate: Optional[float]
     ttm_occupancy_rate: Optional[float]
@@ -37,6 +38,7 @@ class ListingFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     ttm_days_reserved: Optional[float]
     ttm_avg_min_nights: Optional[float]
     ttm_avg_length_of_stay: Optional[float]
+    # last 90 days (l90d)
     l90d_revenue: Optional[float]
     l90d_avg_rate: Optional[float]
     l90d_occupancy_rate: Optional[float]
