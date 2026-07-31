@@ -11,7 +11,7 @@ from _factories.listing.entity import ListingEntityFactory
 from _factories.listing_financial_report.db import ListingFinancialReportDBFactory
 from _factories.market.db import MarketDBFactory
 from _factories.market.entity import MarketEntityFactory
-from models.listing.entity import ListingEntity
+from models.listing.entity import ListingEntity, NewestListingEntity
 from models.listing.facade import ListingFacade
 from models.listing_financial_report.entity import ListingFinancialReportEntity
 from models.market.facade import MarketFacade
