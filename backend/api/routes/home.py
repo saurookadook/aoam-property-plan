@@ -10,10 +10,10 @@ from utils.logging.init import init_logging
 
 logger = init_logging(__file__)
 
-listings_router = APIRouter(prefix="/api")
+home_router = APIRouter(prefix="/api")
 
 
-@listings_router.get(
+@home_router.get(
     "/home/listings/newest",
     response_model=NewestListingsResponse,
 )
@@ -31,7 +31,7 @@ def read_home_newest_listings(api_db_session: API_DB_SessionDependency):
     return {"data": listings}
 
 
-@listings_router.get(
+@home_router.get(
     "/home/listings/highest-earners",
     response_model=HighestEarningListingsResponse,
 )
