@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { LoadingState } from '@/common/components';
 import { FlexColumn } from '@/layouts';
+import { TrendsRow } from './components';
 
 import './styles.scss';
 
@@ -35,6 +36,8 @@ export function Home() {
   return (
     <FlexColumn id="home">
       <h2>{`🏡 Home 🏡`}</h2>
+
+      <TrendsRow />
 
       <button // force formatting
         onClick={handleCounterClick}
