@@ -76,7 +76,7 @@ class HighestEarningListingEntity(BaseEntityModel, TimestampsEntityMixin):
     cover_photo_url: Optional[str] = None
     market_id: UUID
     name: str
-    # ----- from `listing_financial_reports``
+    # ----- from `listing_financial_reports`
     # trailing twelve months (ttm)
     ttm_revenue: float
     # ----- from `markets``
