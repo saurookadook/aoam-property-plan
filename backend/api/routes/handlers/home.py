@@ -71,4 +71,4 @@ def get_highest_earners(db_session: Session) -> list[HighestEarningListingEntity
         .all()
     )
 
-    return [HighestEarningListingEntity(**row) for row in results]
+return [HighestEarningListingEntity.model_validate(row) for row in results]
