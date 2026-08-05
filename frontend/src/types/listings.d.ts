@@ -54,3 +54,22 @@ export type ListingFinancialReportEntity = BaseEntity & {
   l90d_avg_min_nights?: number;
   l90d_avg_length_of_stay?: number;
 };
+
+export type HighestEarningListingEntity = BaseEntity & {
+  cover_photo_url?: string;
+  market_id: string;
+  name: string;
+  // ----- from `listing_financial_reports`
+  // trailing twelve months (ttm)
+  ttm_revenue: number;
+  // ----- from `markets`
+  country: string;
+  locality: string;
+  region: string;
+};
+
+export type NewestListingEntity = BaseEntity & {
+  cover_photo_url: string;
+  market_id: string;
+  name: string;
+};
