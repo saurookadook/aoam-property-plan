@@ -1,6 +1,6 @@
 import type { EmblaAPI } from '@/types';
+import { useCarouselEvents } from '@/common/utils/hooks';
 import { NextButton, PrevButton } from './ArrowButtons';
-import { usePhotosCarousel } from './usePhotosCarousel';
 
 export function CarouselControls({
   emblaApi,
@@ -15,7 +15,7 @@ export function CarouselControls({
     nextBtnDisabled,
     prevBtnDisabled,
     selectedIndex,
-  } = usePhotosCarousel(emblaApi);
+  } = useCarouselEvents(emblaApi);
 
   return (
     <div className="embla__controls">
