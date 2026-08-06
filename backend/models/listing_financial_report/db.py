@@ -37,6 +37,7 @@ class ListingFinancialReportDB(BaseDB, TimestampsDB):
     rating_location: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     rating_value: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
     # Performance Metrics
+    # trailing twelve months (ttm)
     ttm_revenue: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     ttm_avg_rate: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     ttm_occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
@@ -55,6 +56,7 @@ class ListingFinancialReportDB(BaseDB, TimestampsDB):
     ttm_avg_length_of_stay: Mapped[float] = mapped_column(
         postgresql.REAL, nullable=True
     )
+    # last 90 days (l90d)
     l90d_revenue: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     l90d_avg_rate: Mapped[float] = mapped_column(postgresql.NUMERIC, nullable=True)
     l90d_occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=True)
