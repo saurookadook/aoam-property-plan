@@ -32,7 +32,6 @@ def get_highest_earners(db_session: Session) -> list[HighestEarningListingEntity
 
     subq = (
         select(
-            distinct(ListingDB.name),
             ListingDB.created_at,
             ListingDB.cover_photo_url,
             ListingDB.id,
@@ -45,7 +44,15 @@ def get_highest_earners(db_session: Session) -> list[HighestEarningListingEntity
             ListingFinancialReportDB,
             ListingFinancialReportDB.listing_id == ListingDB.id,
         )
-        .order_by(ListingDB.name)
+        .where(
+            and_(
+                ListingDB.market_id.isnot(None),
+                ListingDB.name.isnot(None),
+                ListingFinancialReportDB.ttm_revenue.isnot(None),
+            )
+        )
+        .distinct(ListingDB.id)
+        .order_by(ListingDB.id, ListingFinancialReportDB.ttm_revenue.desc())
         .subquery()
     )
 
@@ -71,4 +78,4 @@ def get_highest_earners(db_session: Session) -> list[HighestEarningListingEntity
         .all()
     )
 
-return [HighestEarningListingEntity.model_validate(row) for row in results]
+    return [HighestEarningListingEntity.model_validate(row) for row in results]
