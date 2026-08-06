@@ -107,4 +107,10 @@ def markets_data() -> list[dict[str, str | None]]:
             "locality": "Salento",
             "district": None,
         },
+        {
+            "country": "Colombia",
+            "region": "RAP (Especial) Central",
+            "locality": "Bogota Capital District - Municipality",
+            "district": "Bogota",
+        },
     ]

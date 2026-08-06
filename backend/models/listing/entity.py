@@ -64,3 +64,22 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
             )
 
         return input_data
+
+
+class NewestListingEntity(BaseEntityModel, TimestampsEntityMixin):
+    cover_photo_url: Optional[str] = None
+    market_id: UUID
+    name: str
+
+
+class HighestEarningListingEntity(BaseEntityModel, TimestampsEntityMixin):
+    cover_photo_url: Optional[str] = None
+    market_id: UUID
+    name: str
+    # ----- from `listing_financial_reports`
+    # trailing twelve months (ttm)
+    ttm_revenue: float
+    # ----- from `markets``
+    country: str
+    locality: str
+    region: str
