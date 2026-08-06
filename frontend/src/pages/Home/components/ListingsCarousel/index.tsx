@@ -1,12 +1,13 @@
 import classNames from 'classnames';
 import useEmblaCarousel from 'embla-carousel-react';
 
-import type { NewestListingEntity } from '@/types';
+import type { HighestEarningListingEntity, NewestListingEntity } from '@/types';
+import { CarouselControls } from './CarouselControls';
 
-function ListingsCarousel({
-  newestListings,
+export function ListingsCarousel({
+  listingsItems,
 }: {
-  newestListings: NewestListingEntity[];
+  listingsItems: Array<HighestEarningListingEntity | NewestListingEntity>;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 
@@ -14,7 +15,7 @@ function ListingsCarousel({
     <div className={classNames('embla', 'newest-listings-carousel')}>
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
-          {newestListings.map((listing) => (
+          {listingsItems.map((listing) => (
             <div className="embla__slide" key={listing.id}>
               <img src={listing.cover_photo_url} alt={listing.name} />
             </div>
@@ -22,12 +23,12 @@ function ListingsCarousel({
         </div>
       </div>
 
-      {/* {emblaApi != null && (
+      {emblaApi != null && (
         <CarouselControls
           emblaApi={emblaApi} // force formatting
-          totalPhotos={listing.photo_urls.length}
+          totalListings={listingsItems.length}
         />
-      )} */}
+      )}
     </div>
   );
 }

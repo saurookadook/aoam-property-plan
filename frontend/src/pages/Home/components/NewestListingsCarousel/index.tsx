@@ -5,6 +5,7 @@ import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
 import { fetchy } from '@/utils';
+import { ListingsCarousel } from '../ListingsCarousel';
 
 export const newestListingsCarouselQuery = () =>
   queryOptions({
@@ -32,9 +33,7 @@ export function NewestListingsCarousel() {
           <LoadingState />
         </div>
       ) : (
-        <pre>
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
+        <ListingsCarousel listingsItems={data?.newestListings ?? []} />
       )}
 
       {!isFetching && error != null && (
