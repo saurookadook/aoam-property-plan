@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { EmblaAPI } from '@/types';
 
-export const usePhotosCarousel = (emblaApi: EmblaAPI) => {
+export function usePhotosCarousel(emblaApi: EmblaAPI) {
   const [prevBtnDisabled, setPrevBtnDisabled] = useState<boolean>(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState<boolean>(true);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -64,4 +64,4 @@ export const usePhotosCarousel = (emblaApi: EmblaAPI) => {
     selectedIndex,
     scrollSnaps,
   };
-};
+}
