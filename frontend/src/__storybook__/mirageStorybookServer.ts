@@ -21,9 +21,9 @@ export const createMirageStorybookServer = ({
 
       for (const config of endpointConfigs) {
         const routePath = buildMirageStorybookRoutePath(config);
-        // console.log({
-        //   routePath,
-        // });
+        console.log({
+          routePath,
+        });
 
         this.get(`/${routePath}`, async (schema, request) => {
           const endpointPathWithParams = Object.entries(request.params).reduce(
@@ -31,12 +31,12 @@ export const createMirageStorybookServer = ({
               path.replace(`:${paramKey}`, String(paramValue)),
             routePath,
           );
-          // console.log({
-          //   requestUrl: request.url,
-          //   requestParams: request.params,
-          //   routePath,
-          //   endpointPath: endpointPathWithParams,
-          // });
+          console.log({
+            requestUrl: request.url,
+            requestParams: request.params,
+            routePath,
+            endpointPath: endpointPathWithParams,
+          });
           return getRequestFactory({ endpointPath: endpointPathWithParams, request });
         });
       }
@@ -77,10 +77,12 @@ async function getRequestFactory({
 }
 
 function buildMirageStorybookRoutePath(config: EndpointConfig): string {
+  if (config.fullPath != null) {
+    return config.fullPath;
+  }
+
   const resolvedTypeComponent = (function () {
     switch (config.type) {
-      case 'home':
-        return config.fullPath as string;
       case 'overview':
         return `:${config.entityIdPathParam ?? 'entityId'}`;
       case 'list':
