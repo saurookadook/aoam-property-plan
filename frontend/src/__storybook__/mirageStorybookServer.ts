@@ -79,6 +79,8 @@ async function getRequestFactory({
 function buildMirageStorybookRoutePath(config: EndpointConfig): string {
   const resolvedTypeComponent = (function () {
     switch (config.type) {
+      case 'home':
+        return config.fullPath as string;
       case 'overview':
         return `:${config.entityIdPathParam ?? 'entityId'}`;
       case 'list':

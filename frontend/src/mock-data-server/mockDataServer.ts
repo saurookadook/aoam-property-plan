@@ -1,6 +1,5 @@
 import path from 'path';
 import util from 'util';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import cors from 'cors';
 import express from 'express';
 

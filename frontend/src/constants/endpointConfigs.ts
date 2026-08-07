@@ -8,6 +8,28 @@ export const baseEndpointConfig = {
 export const endpointConfigs: EndpointConfig[] = [
   {
     ...baseEndpointConfig,
+    type: 'home',
+    emptyResult: {
+      data: [],
+    },
+    errorMessage: 'Error fetching listing overview',
+    entityType: 'listings',
+    filenamePrefix: 'highest-earners',
+    fullPath: 'home/listings/highest-earners',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'home',
+    emptyResult: {
+      data: [],
+    },
+    errorMessage: 'Error fetching listing overview',
+    entityType: 'listings',
+    filenamePrefix: 'newest',
+    fullPath: 'home/listings/newest',
+  },
+  {
+    ...baseEndpointConfig,
     type: 'overview',
     emptyResult: {
       data: null,
