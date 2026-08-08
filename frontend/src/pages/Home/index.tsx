@@ -34,10 +34,10 @@ export function Home() {
   }
 
   return (
-    <FlexColumn id="home">
+    <FlexColumn id="home" className="home">
       <h2>{`🏡 Home 🏡`}</h2>
 
-      <TrendsRow />
+      <TrendsRow className="home__top-row" />
 
       <button // force formatting
         onClick={handleCounterClick}

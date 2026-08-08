@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import type { NewestListingEntity } from '@/types';
@@ -27,7 +28,7 @@ export function NewestListingsCarousel() {
   );
 
   return (
-    <FlexColumn>
+    <FlexColumn className={classNames('home-carousel')}>
       {isFetching ? (
         <div className="loading-state__wrapper">
           <LoadingState />

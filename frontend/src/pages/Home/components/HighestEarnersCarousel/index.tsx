@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import type { HighestEarningListingEntity } from '@/types';
@@ -28,7 +29,7 @@ export function HighestEarnersCarousel() {
   );
 
   return (
-    <FlexColumn>
+    <FlexColumn className={classNames('home-carousel')}>
       {isFetching ? (
         <div className="loading-state__wrapper">
           <LoadingState />
