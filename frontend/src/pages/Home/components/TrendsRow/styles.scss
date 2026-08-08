@@ -1,5 +1,17 @@
 #trends-row {
+  align-items: stretch;
+  gap: 1.5rem;
+  justify-content: center;
+  overflow: visible;
+  width: 100%;
+
   & .home-carousel {
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    justify-content: flex-start;
     max-width: 45vw;
+    min-width: 0;
+    overflow: visible;
   }
 }
