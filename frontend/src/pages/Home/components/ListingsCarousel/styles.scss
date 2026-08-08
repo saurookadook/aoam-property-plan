@@ -1,9 +1,9 @@
 .listings-carousel {
-  &.embla {
-    --slide-height: 20rem;
-    --slide-spacing: 1rem;
-    --slide-size: 100%;
+  --slide-height: 12.5rem;
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
 
+  & .embla {
     &__viewport {
       overflow: hidden;
     }
@@ -22,8 +22,8 @@
       padding-left: var(--slide-spacing);
       transform: translate3d(0, 0, 0);
 
-      &,
-      // &__image,
+      // &__header,
+      &__image,
       &__number {
         align-items: center;
         border: 0.125rem solid var(--mui-palette-primary-main);

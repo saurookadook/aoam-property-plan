@@ -14,17 +14,26 @@ export function ListingsCarousel({
   className?: string;
   listingsItems: Array<HighestEarningListingEntity | NewestListingEntity>;
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', loop: false });
 
   return (
-    <div className={classNames('embla', 'listings-carousel', className)}>
+    <div className={classNames('listings-carousel', className)}>
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {listingsItems.map((listing) => (
             <Card className="embla__slide" key={listing.id}>
-              <CardHeader>{listing.name}</CardHeader>
-              <CardContent>
-                <img src={listing.cover_photo_url} alt={listing.name} />
+              <CardHeader className="embla__slide__header">
+                <Typography variant="h6" component="h3">
+                  {listing.name}
+                </Typography>
+              </CardHeader>
+
+              <CardContent className="embla__slide__content">
+                <img
+                  className="embla__slide__image"
+                  src={listing.cover_photo_url}
+                  alt={listing.name}
+                />
               </CardContent>
             </Card>
           ))}
