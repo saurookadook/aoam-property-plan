@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { StoryLayout } from '@/__storybook__/constants';
-import { queryClient } from '@/app/browserRouter';
 import { Home } from './index';
 
 const meta = {
-  title: 'pages/Home',
+  title: 'pages/home/Home',
   component: Home,
   parameters: {
     layout: StoryLayout.centered,
