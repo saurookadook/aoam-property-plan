@@ -1,0 +1,41 @@
+.embla-listing-card {
+  &__slide {
+    box-sizing: border-box;
+    flex-basis: var(--slide-size);
+    flex-grow: 0;
+    flex-shrink: 0;
+    min-height: 0;
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+    transform: translate3d(0, 0, 0);
+
+    &__header {
+      padding: 0.5rem 1rem;
+
+      & .MuiCardHeader-title {
+        font-size: 1rem;
+      }
+    }
+
+    &__content {
+      align-items: center;
+      // border: 0.125rem solid var(--mui-palette-primary-main);
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      font-size: 4rem;
+      height: calc(var(--slide-height) - 5rem);
+      justify-content: center;
+      user-select: none;
+    }
+
+    &__image {
+      border: transparent;
+      border-radius: 0rem;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: cover;
+    }
+  }
+}

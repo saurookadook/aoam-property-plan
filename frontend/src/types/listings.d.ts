@@ -1,3 +1,4 @@
+import type { KeyedObject } from '@saurookkadookk/node-utils';
 import type { BaseEntity } from './entity';
 
 export type ListingEntity = BaseEntity & {
@@ -55,7 +56,7 @@ export type ListingFinancialReportEntity = BaseEntity & {
   l90d_avg_length_of_stay?: number;
 };
 
-export type HighestEarningListingEntity = BaseEntity & {
+export interface HighestEarningListingEntity extends KeyedObject, BaseEntity {
   cover_photo_url?: string;
   market_id: string;
   name: string;
@@ -66,10 +67,10 @@ export type HighestEarningListingEntity = BaseEntity & {
   country: string;
   locality: string;
   region: string;
-};
+}
 
-export type NewestListingEntity = BaseEntity & {
+export interface NewestListingEntity extends KeyedObject, BaseEntity {
   cover_photo_url: string;
   market_id: string;
   name: string;
-};
+}
