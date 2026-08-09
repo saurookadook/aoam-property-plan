@@ -35,7 +35,10 @@ export function HighestEarnersCarousel() {
           <LoadingState />
         </div>
       ) : (
-        <ListingsCarousel listingsItems={data?.highestEarnersListings ?? []} />
+        <ListingsCarousel
+          carouselTitle="Highest Earners"
+          listingsItems={data?.highestEarnersListings ?? []}
+        />
       )}
 
       {!isFetching && error != null && (

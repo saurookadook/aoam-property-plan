@@ -34,7 +34,10 @@ export function NewestListingsCarousel() {
           <LoadingState />
         </div>
       ) : (
-        <ListingsCarousel listingsItems={data?.newestListings ?? []} />
+        <ListingsCarousel
+          carouselTitle="Newest"
+          listingsItems={data?.newestListings ?? []}
+        />
       )}
 
       {!isFetching && error != null && (

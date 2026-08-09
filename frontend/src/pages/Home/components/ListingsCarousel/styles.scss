@@ -1,8 +1,9 @@
 .listings-carousel {
-  --slide-height: 12.5rem;
+  --slide-height: 27rem;
   --slide-spacing: 1rem;
   --slide-size: 100%;
 
+  row-gap: 0.5rem;
   width: 100%;
 
   & .embla {
@@ -13,6 +14,8 @@
     }
 
     &__viewport {
+      border: 0.125rem solid var(--mui-palette-primary-main);
+      border-radius: 0.5rem;
       height: var(--slide-height);
       overflow: hidden;
     }
@@ -23,39 +26,6 @@
       height: 100%;
       margin-left: calc(var(--slide-spacing) * -1);
       touch-action: pan-x pinch-zoom;
-    }
-
-    &__slide {
-      box-sizing: border-box;
-      flex-basis: var(--slide-size);
-      flex-grow: 0;
-      flex-shrink: 0;
-      min-height: 0;
-      min-width: 0;
-      padding-left: var(--slide-spacing);
-      transform: translate3d(0, 0, 0);
-
-      &,
-      // &__header,
-      // &__image,
-      &__number {
-        align-items: center;
-        border: 0.125rem solid var(--mui-palette-primary-main);
-        border-radius: 1rem;
-        display: flex;
-        flex-direction: column;
-        font-weight: 600;
-        font-size: 4rem;
-        height: var(--slide-height);
-        justify-content: center;
-        user-select: none;
-      }
-
-      &__image {
-        max-height: 100%;
-        max-width: 100%;
-        object-fit: cover;
-      }
     }
 
     &__controls {
