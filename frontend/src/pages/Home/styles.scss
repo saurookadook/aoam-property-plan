@@ -1,4 +1,5 @@
 #home {
+  gap: 2rem;
   width: 100%;
 
   .home {
@@ -8,11 +9,7 @@
     }
 
     &__top-row {
-      background-color: var(--mui-palette-background-paper);
-      background-image: var(--mui-overlays-1);
-      box-shadow: var(--mui-shadows-1);
       max-height: calc(27rem + 2.75rem);
-      padding: 1rem;
     }
   }
 }
