@@ -164,7 +164,7 @@ async function boundReadGzippedJson(filePath: string): Promise<KeyedObject> {
 }
 
 function logProxy(...args: any[]) {
-  // if (process.env.ENABLE_MOCK_SERVER_LOGGING !== 'true') return;
+  if (process.env.ENABLE_MOCK_SERVER_LOGGING !== 'true') return;
 
   console.log(...args);
 }
