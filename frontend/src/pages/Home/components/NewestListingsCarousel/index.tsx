@@ -12,9 +12,13 @@ export const newestListingsCarouselQuery = () =>
   queryOptions({
     queryKey: ['newestListingsCarousel'],
     queryFn: async () => {
-      const newestListingsResponse = await fetchy
-        .get(`${API_SERVER_DOMAIN}/api/home/listings/newest`) // force formatting
-        .then((res) => res.json());
+      const response = await fetchy.get(
+        `${API_SERVER_DOMAIN}/api/home/listings/newest`,
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch newest listings (${response.status})`);
+      }
+      const newestListingsResponse = await response.json();
 
       return {
         newestListings: newestListingsResponse.data as NewestListingEntity[],
