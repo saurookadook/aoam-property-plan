@@ -12,9 +12,13 @@ export const highestEarnersListingsCarouselQuery = () =>
   queryOptions({
     queryKey: ['highestEarnersListingsCarousel'],
     queryFn: async () => {
-      const highestEarnersListingsResponse = await fetchy
-        .get(`${API_SERVER_DOMAIN}/api/home/listings/highest-earners`) // force formatting
-        .then((res) => res.json());
+      const response = await fetchy.get(
+        `${API_SERVER_DOMAIN}/api/home/listings/highest-earners`,
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch highest earners (${response.status})`);
+      }
+      const highestEarnersListingsResponse = await response.json();
 
       return {
         highestEarnersListings:
