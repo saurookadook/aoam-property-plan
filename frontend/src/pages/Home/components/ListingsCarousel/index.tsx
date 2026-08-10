@@ -31,20 +31,12 @@ export function ListingsCarousel({
       <div className="listings-carousel__wrapper">
         <div className="embla__viewport" ref={emblaRef}>
           <div className="embla__container">
-            {listingsItems.map((listing, index) => {
-              console.log({
-                className,
-                index,
-                listing,
-              });
-
-              return (
-                <ListingCarouselCard
-                  key={listing.id} // force formatting
-                  listing={listing}
-                />
-              );
-            })}
+            {listingsItems.map((listing) => (
+              <ListingCarouselCard
+                key={listing.id} // force formatting
+                listing={listing}
+              />
+            ))}
           </div>
         </div>
 
