@@ -30,7 +30,10 @@ export function ListingCarouselCard({
     let text = `Market: ${marketText}`;
 
     if ('ttm_revenue' in listing) {
-      text += ` | TTM Revenue: ${listing.ttm_revenue.toLocaleString('en-US', { currency: 'COP' })}`;
+      text += ` | TTM Revenue: ${listing.ttm_revenue.toLocaleString('en-US', {
+        currency: 'COP',
+        style: 'currency',
+      })}`;
     }
 
     return text;
