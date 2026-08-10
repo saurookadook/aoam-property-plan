@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from '@mui/material';
 import { isNonEmptyString } from '@saurookkadookk/node-utils';
 
 import type { HighestEarningListingEntity, NewestListingEntity } from '@/types';
+import { SmartImage } from '@/common/components';
 
 import './styles.scss';
 
@@ -48,11 +49,15 @@ export function ListingCarouselCard({
         />
 
         <CardContent className="embla-listing-card__slide__content">
-          <img
-            className="embla-listing-card__slide__image"
-            src={listing.cover_photo_url}
-            alt={listing.name}
-          />
+          {listing.cover_photo_url != null ? (
+            <SmartImage
+              className="embla-listing-card__slide__image"
+              src={listing.cover_photo_url}
+              alt={listing.name}
+            />
+          ) : (
+            <div>{`<BROKEN-IMAGE-PLACEHOLDER>`}</div>
+          )}
         </CardContent>
       </RouterLink>
     </Card>
