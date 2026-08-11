@@ -24,11 +24,11 @@ chmod +x scripts/admin.sh
 
 #### Backend
 
-See [Setup instruction](/backend/README.md#setup) for `backend` sevice.
+See [Setup instructions](/backend/README.md#setup) for `backend` sevice.
 
 #### Frontend
 
-See [Setup instruction](/frontend/README.md#setup) for `frontend` sevice.
+See [Setup instructions](/frontend/README.md#setup) for `frontend` sevice.
 
 ---
 

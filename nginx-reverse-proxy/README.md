@@ -16,6 +16,6 @@ Then restart any web browsers you have open.
 From the root of this repo, run:
 
 ```sh
-chmod +x ./nginx-reverse-proxy/local_insall.sh
-./nginx-reverse-proxy/local_insall.sh
+chmod +x ./nginx-reverse-proxy/local_install.sh
+./nginx-reverse-proxy/local_install.sh
 ```
