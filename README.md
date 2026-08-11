@@ -1,14 +1,36 @@
 # AOAM Property Plan
 
+## TL;DR
+
+```sh
+docker compose up all -d
+```
+
+---
+
 ## Installation/Setup
 
 ### First Time Setup
+
+#### Set up NGINX Reverse Proxy
+
+See [Setup instructions](/nginx-reverse-proxy/README.md#setup) for `nginx-reverse-proxy` service.
 
 ```sh
 chmod +x scripts/admin.sh
 ./scripts/admin.sh db create
 ./scripts/admin.sh db create-test
 ```
+
+#### Backend
+
+See [Setup instruction](/backend/README.md#setup) for `backend` sevice.
+
+#### Frontend
+
+See [Setup instruction](/frontend/README.md#setup) for `frontend` sevice.
+
+---
 
 ## Data Sources
 

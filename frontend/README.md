@@ -8,6 +8,16 @@
 - [React Leaflet](https://react-leaflet.js.org/docs/start-setup/)
 - [Embla Carousel](https://www.embla-carousel.com/docs/v8/get-started/react)
 
+## Setup
+
+Install [`nvm`](https://github.com/nvm-sh/nvm#install--update-script). Then run:
+
+```sh
+nvm install
+corepack enable
+pnpm i
+```
+
 ---
 
 ## Scaffolded README
