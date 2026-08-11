@@ -17,8 +17,8 @@ export function createPathFileFromComponent(dateStr?: string) {
 
 export function buildPathToGzippedData({
   endTimeParam,
-  filenamePrefix,
   entityType,
+  filenamePrefix,
   startTimeParam,
 }: {
   endTimeParam?: string;
