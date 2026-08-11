@@ -30,12 +30,21 @@
       user-select: none;
     }
 
-    &__image {
+    &__image,
+    &__image-placeholder {
       border: transparent;
       border-radius: 0rem;
+    }
+
+    &__image {
       max-height: 100%;
       max-width: 100%;
       object-fit: cover;
+    }
+
+    &__image-placeholder {
+      background-image: var(--mui-overlays-2);
+      height: 20rem;
     }
   }
 }

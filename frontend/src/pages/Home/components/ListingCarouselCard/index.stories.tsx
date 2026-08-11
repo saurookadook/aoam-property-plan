@@ -24,20 +24,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof ListingCarouselCard>;
 
+const highestEarnerListing = {
+  created_at: '2026-06-26T06:00:02.042731Z',
+  updated_at: '2026-06-26T06:00:02.042731Z',
+  id: '1bc5fd77-b7a6-4055-812c-dfc49c246b9e',
+  cover_photo_url:
+    'https://a0.muscache.com/im/pictures/airflow/Hosting-779010768604893929/original/7bd4ace6-45d3-4228-bb2b-5f65676555b5.jpg',
+  market_id: 'f68ec319-eab2-40d9-949e-c4d1eda49544',
+  name: 'House in the mountains near Salento main park',
+  ttm_revenue: 169204065,
+  country: 'Colombia',
+  locality: 'Salento',
+  region: 'Quindío',
+};
+
 export const HighestEarnerListing: Story = {
   args: {
     listing: {
-      created_at: '2026-06-26T06:00:02.042731Z',
-      updated_at: '2026-06-26T06:00:02.042731Z',
-      id: '1bc5fd77-b7a6-4055-812c-dfc49c246b9e',
-      cover_photo_url:
-        'https://a0.muscache.com/im/pictures/airflow/Hosting-779010768604893929/original/7bd4ace6-45d3-4228-bb2b-5f65676555b5.jpg',
-      market_id: 'f68ec319-eab2-40d9-949e-c4d1eda49544',
-      name: 'House in the mountains near Salento main park',
-      ttm_revenue: 169204065,
-      country: 'Colombia',
-      locality: 'Salento',
-      region: 'Quindío',
+      ...highestEarnerListing,
+    },
+  },
+};
+
+export const HighestEarnerListingNoCoverPhoto: Story = {
+  args: {
+    listing: {
+      ...highestEarnerListing,
+      cover_photo_url: undefined,
     },
   },
 };

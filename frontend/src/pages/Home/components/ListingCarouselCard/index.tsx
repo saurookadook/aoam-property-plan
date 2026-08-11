@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router';
 import classNames from 'classnames';
+import { ImageOff } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@mui/material';
 import { isNonEmptyString } from '@saurookkadookk/node-utils';
 
 import type { HighestEarningListingEntity, NewestListingEntity } from '@/types';
 import { SmartImage } from '@/common/components';
+import { FlexColumn } from '@/layouts';
 
 import './styles.scss';
 
@@ -52,14 +54,20 @@ export function ListingCarouselCard({
         />
 
         <CardContent className="embla-listing-card__slide__content">
-          {listing.cover_photo_url != null ? (
+          {isNonEmptyString(listing.cover_photo_url) ? (
             <SmartImage
               className="embla-listing-card__slide__image"
               src={listing.cover_photo_url}
               alt={listing.name}
             />
           ) : (
-            <div>{`<BROKEN-IMAGE-PLACEHOLDER>`}</div>
+            <FlexColumn
+              className="embla-listing-card__slide__image-placeholder"
+              role="img"
+              aria-label="No image available"
+            >
+              <ImageOff />
+            </FlexColumn>
           )}
         </CardContent>
       </RouterLink>
