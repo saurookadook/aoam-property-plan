@@ -1,6 +1,10 @@
 import type { EndpointConfig } from '@/types';
 
 export function buildRoutePath(config: EndpointConfig): string {
+  if (config.fullPath != null) {
+    return config.fullPath;
+  }
+
   const resolvedTypeComponent = (function () {
     switch (config.type) {
       case 'overview':

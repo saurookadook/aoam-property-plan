@@ -1,0 +1,54 @@
+.listings-carousel {
+  --slide-height: 27rem;
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+
+  row-gap: 0.5rem;
+  width: 100%;
+
+  & .embla {
+    &__viewport,
+    &__slide,
+    &__controls {
+      width: 100%;
+    }
+
+    &__viewport {
+      border: 0.125rem solid var(--mui-palette-primary-main);
+      border-radius: 0.5rem;
+      height: var(--slide-height);
+      overflow: hidden;
+    }
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin-left: calc(var(--slide-spacing) * -1);
+      touch-action: pan-x pinch-zoom;
+    }
+
+    &__controls {
+      display: grid;
+      gap: 1.2em;
+      grid-template-columns: auto 1fr;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
+    &__buttons {
+      align-items: center;
+      display: grid;
+      gap: 0.6em;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__listings-counter {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      // margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+    }
+  }
+}

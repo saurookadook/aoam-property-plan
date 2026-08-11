@@ -77,6 +77,10 @@ async function getRequestFactory({
 }
 
 function buildMirageStorybookRoutePath(config: EndpointConfig): string {
+  if (config.fullPath != null) {
+    return config.fullPath;
+  }
+
   const resolvedTypeComponent = (function () {
     switch (config.type) {
       case 'overview':

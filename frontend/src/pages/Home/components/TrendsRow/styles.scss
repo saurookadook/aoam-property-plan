@@ -1,0 +1,22 @@
+#trends-row {
+  align-items: stretch;
+  gap: 1.5rem;
+  justify-content: center;
+  overflow: visible;
+  width: 100%;
+
+  & .home-carousel {
+    background-color: var(--mui-palette-background-paper);
+    background-image: var(--mui-overlays-1);
+    box-shadow: var(--mui-shadows-1);
+    border-radius: 1rem;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    justify-content: flex-start;
+    max-width: 45vw;
+    min-width: 0;
+    overflow: visible;
+    padding: 1rem;
+  }
+}

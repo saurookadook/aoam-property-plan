@@ -31,8 +31,12 @@ export async function dataRequestHandler(
   try {
     const { params } = request;
 
-    const entityType = (params?.entityType ?? config.entityType) as string;
-    const filenamePrefix = (params?.entityId ?? 'list') as string;
+    const entityType = (params?.entityType ??
+      config?.fullPath ??
+      config.entityType) as string;
+    const filenamePrefix = (params?.entityId ??
+      config?.filenamePrefix ??
+      'list') as string;
     const filePathForRequest = buildPathToGzippedData({
       entityType,
       filenamePrefix,
