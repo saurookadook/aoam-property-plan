@@ -104,11 +104,14 @@ def expected_property_dict(mock_utcnow):
     return dict(
         id=UUID("44cf56a4-1f14-4a08-915f-dc40b7ef657e"),
         address="123 Test St",
+        amenities=["Patio", "Servicios Públicos"],
         bedrooms=3,
         city="Test City",
         country="Test Country",
+        description="A lovely test property.",
         latitude=37.7749,
         longitude=-122.4194,
+        name="Test Property",
         neighborhood="Test Neighborhood",
         notes="Test notes",
         postal_code="12345",
@@ -118,6 +121,7 @@ def expected_property_dict(mock_utcnow):
         source_created_at=source_created_at,
         source_url="https://example.com/property/12345",
         state="Test State",
+        status="active",
     )
 
 

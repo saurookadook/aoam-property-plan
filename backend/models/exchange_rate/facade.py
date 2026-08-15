@@ -39,6 +39,28 @@ class ExchangeRateFacade(BaseFacade):
             )
         return ExchangeRateEntity.model_validate(exchange_rate)
 
+    def get_latest_on_or_before(
+        self, record_date: date | str
+    ) -> Optional[ExchangeRateEntity]:
+        """
+        Returns the most recent exchange rate recorded on or before ``record_date``,
+        or ``None`` when no such record exists.
+
+        NOTE: unlike the ``get_one_by_*`` methods, this does not raise - callers are
+        expected to branch on a missing rate (e.g. by fetching one on demand).
+        """
+        exchange_rate = self.db_session.execute(
+            select(ExchangeRateDB)
+            .where(ExchangeRateDB.record_date <= record_date)
+            .order_by(ExchangeRateDB.record_date.desc())
+            .limit(1)
+        ).scalar_one_or_none()
+
+        if exchange_rate is None:
+            return None
+
+        return ExchangeRateEntity.model_validate(exchange_rate)
+
     def create_or_update(self, *, payload: dict) -> ExchangeRateEntity:
         maybe_one = self._find_one_if_exists(
             id=payload.get("id"), record_date=payload.get("record_date")
