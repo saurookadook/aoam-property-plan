@@ -83,6 +83,7 @@ services:
       - ./backend/db:/opt/aoam-property-plan/backend/db
       - ./backend/models:/opt/aoam-property-plan/backend/models
       - ./backend/scripts:/opt/aoam-property-plan/backend/scripts
+      - ./backend/services:/opt/aoam-property-plan/backend/services
       - ./backend/utils:/opt/aoam-property-plan/backend/utils
       # - ~/.aws:/home/nlpstocksaapp/.aws:ro
 
