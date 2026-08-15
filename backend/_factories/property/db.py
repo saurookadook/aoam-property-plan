@@ -23,11 +23,20 @@ class PropertyDBFactory(
 
     id = factory.LazyFunction(uuid4)
     address = factory.Faker("address")
+    amenities = factory.List(
+        [
+            factory.Faker("word"),
+            factory.Faker("word"),
+            factory.Faker("word"),
+        ]
+    )
     bedrooms = factory.Faker("random_int", min=1, max=10)
     city = factory.Faker("city")
     country = factory.Faker("country")
+    description = factory.Faker("text")
     latitude = factory.Faker("latitude")
     longitude = factory.Faker("longitude")
+    name = factory.Faker("sentence", nb_words=3)
     neighborhood = factory.Faker("street_name")
     postal_code = factory.Faker("postcode")
     property_type = factory.Faker("word")
@@ -42,3 +51,4 @@ class PropertyDBFactory(
     )
     source_url = factory.Faker("url")
     state = factory.Faker("state")
+    status = "active"
