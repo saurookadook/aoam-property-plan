@@ -29,8 +29,21 @@ class PropertyFacade(BaseFacade):
             )
         return PropertyEntity.model_validate(property_record)
 
+    def get_one_by_source_url(self, source_url: str) -> PropertyEntity:
+        try:
+            property_record = self.db_session.execute(
+                select(PropertyDB).where(PropertyDB.source_url == source_url)
+            ).scalar_one()
+        except NoResultFound:
+            raise PropertyFacade.NoResultFound(
+                f"Property record with ``source_url='{source_url}'`` not found"
+            )
+        return PropertyEntity.model_validate(property_record)
+
     def create_or_update(self, *, payload: dict) -> PropertyEntity:
-        maybe_one = self._find_one_if_exists(id=payload.get("id"))
+        maybe_one = self._find_one_if_exists(
+            id=payload.get("id"), source_url=payload.get("source_url")
+        )
         if maybe_one:
             return self.update(payload=payload)
 
@@ -50,10 +63,13 @@ class PropertyFacade(BaseFacade):
         return PropertyEntity.model_validate(property_record)
 
     def update(self, *, payload: dict) -> PropertyEntity:
+        where_clause = (
+            PropertyDB.id == payload.get("id")
+            if payload.get("id") is not None
+            else PropertyDB.source_url == payload.get("source_url")
+        )
         update_stmt = (
-            update(PropertyDB)
-            .where(PropertyDB.id == payload.get("id"))
-            .values(**payload)
+            update(PropertyDB).where(where_clause).values(**payload)
         ).returning(PropertyDB)
 
         updated_record = self.db_session.execute(update_stmt).scalar_one()
@@ -62,13 +78,24 @@ class PropertyFacade(BaseFacade):
         return PropertyEntity.model_validate(updated_record)
 
     def _find_one_if_exists(
-        self, *, id: Optional[Union[UUID, str]] = None
+        self,
+        *,
+        id: Optional[Union[UUID, str]] = None,
+        source_url: Optional[str] = None,
     ) -> PropertyEntity | None:
         try:
             if not id:
                 raise ValueError("No 'id' provided to find property record")
 
             return self.get_one_by_id(id=id)
+        except (ValueError, PropertyFacade.NoResultFound):
+            pass
+
+        try:
+            if not source_url:
+                raise ValueError("No 'source_url' provided to find property record")
+
+            return self.get_one_by_source_url(source_url=source_url)
         except (ValueError, PropertyFacade.NoResultFound):
             pass
 
