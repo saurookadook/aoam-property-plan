@@ -38,7 +38,7 @@ def upgrade() -> None:
         sa.Column(
             "status",
             sa.TEXT(),
-            server_default="active",
+            server_default=sa.text("'active'"),
             nullable=False,
         ),
     )

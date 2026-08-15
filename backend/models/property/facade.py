@@ -63,10 +63,15 @@ class PropertyFacade(BaseFacade):
         return PropertyEntity.model_validate(property_record)
 
     def update(self, *, payload: dict) -> PropertyEntity:
+        if payload.get("id") is None and not payload.get("source_url"):
+            raise ValueError(
+                "Either 'id' or 'source_url' must be provided to update a property record"
+            )
+
         where_clause = (
-            PropertyDB.id == payload.get("id")
+            PropertyDB.id == payload["id"]
             if payload.get("id") is not None
-            else PropertyDB.source_url == payload.get("source_url")
+            else PropertyDB.source_url == payload["source_url"]
         )
         update_stmt = (
             update(PropertyDB).where(where_clause).values(**payload)

@@ -39,5 +39,5 @@ class PropertyDB(BaseDB, TimestampsDB):
     )
     state: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     status: Mapped[str] = mapped_column(
-        postgresql.TEXT, nullable=False, server_default="active"
+        postgresql.TEXT, nullable=False, server_default="'active'"
     )
