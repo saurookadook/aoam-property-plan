@@ -13,6 +13,7 @@ from models.listing_financial_report.db import ListingFinancialReportDB
 from models.market.db import MarketDB
 from models.market_financial_report.db import MarketFinancialReportDB
 from models.property.db import PropertyDB
+from models.property_comp.db import PropertyCompDB
 from models.property_financial_report.db import PropertyFinancialReportDB
 
 # this is the Alembic Config object, which provides
