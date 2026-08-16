@@ -202,7 +202,12 @@ def loan_principal(
     """
     if purchase_price_cop <= 0:
         raise ValueError(
-            f"purchase_price_cop must be greater than 0, got {purchase_price_cop}"
+            f"[loan_principal] `purchase_price_cop` must be `> 0`. Received: `{purchase_price_cop}`"
+        )
+
+    if down_payment_percentage < 0 or down_payment_percentage > 100:
+        raise ValueError(
+            f"[loan_principal] `down_payment_percentage` must be between `0` and `100`. Received: `{down_payment_percentage}`"
         )
 
     return purchase_price_cop * (1 - down_payment_percentage / 100)
@@ -229,10 +234,20 @@ def mortgage_payment(
     3,761,117.91, or USD 906.29 at 4,150 COP/USD. The doc is wrong, not this.
     """
     if term_years <= 0:
-        raise ValueError(f"term_years must be greater than 0, got {term_years}")
+        raise ValueError(
+            f"[mortgage_payment] `term_years` must be `> 0`. Received: `{term_years}`"
+        )
+
+    if annual_rate_percentage < 0 or annual_rate_percentage > 100:
+        raise ValueError(
+            "[mortgage_payment] `annual_rate_percentage` must be between `0` and `100`. "
+            f"Received: `{annual_rate_percentage}`"
+        )
 
     if principal_cop < 0:
-        raise ValueError(f"principal_cop cannot be negative, got {principal_cop}")
+        raise ValueError(
+            f"[mortgage_payment] `principal_cop` cannot be negative. Received: `{principal_cop}`"
+        )
 
     if principal_cop == 0:
         return 0.0
@@ -276,7 +291,7 @@ def closing_costs(
     """
     if purchase_price_cop <= 0:
         raise ValueError(
-            f"purchase_price_cop must be greater than 0, got {purchase_price_cop}"
+            f"[closing_costs] `purchase_price_cop` must be `> 0`. Received: `{purchase_price_cop}`"
         )
 
     return purchase_price_cop * closing_costs_percentage / 100
@@ -307,9 +322,9 @@ def cash_invested(
 
 def monthly_expenses(
     mortgage_cop: float,
+    annual_revenue_cop: float,
+    purchase_price_cop: float,
     hoa_monthly_cop: float = DEFAULT_HOA_MONTHLY_COP,
-    annual_revenue_cop: float = 0.0,
-    purchase_price_cop: float = 0.0,
     assessed_value_cop: Optional[float] = None,
     management_fee_percentage: float = DEFAULT_MANAGEMENT_FEE_PERCENTAGE,
     maintenance_reserve_percentage: float = DEFAULT_MAINTENANCE_RESERVE_PERCENTAGE,
@@ -331,7 +346,7 @@ def monthly_expenses(
     """
     if purchase_price_cop <= 0:
         raise ValueError(
-            f"purchase_price_cop must be greater than 0, got {purchase_price_cop}"
+            f"[monthly_expenses] `purchase_price_cop` must be `> 0`. Received: `{purchase_price_cop}`"
         )
 
     if assessed_value_cop is None:
@@ -379,8 +394,8 @@ def coc_return(annual_net_income_cop: float, cash_invested_cop: float) -> float:
     """
     if cash_invested_cop <= 0:
         raise ValueError(
-            "cash_invested_cop must be greater than 0 to express a return as a "
-            f"percentage, got {cash_invested_cop}"
+            "[coc_return] `cash_invested_cop` must be `> 0` to express a return as a "
+            f"percentage. Received: `{cash_invested_cop}`"
         )
 
     return annual_net_income_cop / cash_invested_cop * 100
@@ -466,6 +481,11 @@ def sensitivity(
     """
     cells = []
 
+    if any(factor <= 0 for factor in factors):
+        raise ValueError(
+            f"[sensitivity] `factors` must all be `> 0`. Received `{factors}`"
+        )
+
     for factor in factors:
         variant = scenario.model_copy(
             update={"annual_revenue_cop": scenario.annual_revenue_cop * factor}
@@ -496,6 +516,8 @@ def conservative_of(*results: AnalysisResult) -> AnalysisResult:
     the one given first rather than an arbitrary pick.
     """
     if not results:
-        raise ValueError("conservative_of requires at least one AnalysisResult")
+        raise ValueError(
+            f"[conservative_of] At least one `AnalysisResult` is required. Received: `{results}`"
+        )
 
     return min(results, key=lambda result: result.annual_net_income_cop)
