@@ -36,9 +36,12 @@ class TestPropertyFinancialReportFacade:
         expected_dict: dict,
     ):
         for key, value in expected_dict.items():
+            # ``calculated_at`` alone arrives as an ISO string rather than a
+            # datetime, so it is compared parsed. The offset it carries is
+            # significant now that the column is ``TIMESTAMP(timezone=True)`` -
+            # it used to be dropped on the way into the database.
             if key == "calculated_at":
-                expected_dt = datetime.fromisoformat(value).replace(tzinfo=None)
-                assert result.calculated_at == expected_dt
+                assert result.calculated_at == datetime.fromisoformat(value)
             else:
                 assert getattr(result, key) == value
 
