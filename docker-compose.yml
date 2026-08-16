@@ -104,6 +104,10 @@ services:
       DATABASE_NAME: test_aoam_property_plan
       ENV: test
     extends: backend
+    volumes:
+      - ./backend/_factories:/opt/aoam-property-plan/backend/_factories
+      - ./backend/_fixtures:/opt/aoam-property-plan/backend/_fixtures
+      - ./backend/_mocks:/opt/aoam-property-plan/backend/_mocks
 
   backend-release:
     build:

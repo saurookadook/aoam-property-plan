@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gzip
 import os
 from datetime import datetime
 
@@ -14,6 +15,7 @@ from api.app.main import app
 from api.dependencies.db_session import api_db_session
 from config.env_var_manager import EnvVarManager
 from db.db_session_manager import DBSessionManager
+from utils.filesystem import get_module_root
 
 os.environ["FORCE_COLOR"] = "1"
 os.environ["PYTHONUNBUFFERED"] = "1"
@@ -72,6 +74,20 @@ def test_app_client_lifecycle(test_db_session):
     with TestClient(app, base_url="https://aoam.dev") as client:
         yield client
     app.dependency_overrides.pop(api_db_session, None)
+
+
+@pytest.fixture(scope="session")
+def finca_raiz_html() -> str:
+    """
+    A real Finca Raiz listing page - the Salento house at
+    https://www.fincaraiz.com.co/casa-en-venta-en-ahitamara-salento/193301244
+    """
+    fixtures_dir = get_module_root(__file__) / "_fixtures" / "html"
+
+    with gzip.open(
+        fixtures_dir / "finca_raiz_salento.html.gz", "rt", encoding="utf-8"
+    ) as gz:
+        return gz.read()
 
 
 @pytest.fixture

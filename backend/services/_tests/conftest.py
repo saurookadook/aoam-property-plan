@@ -1,31 +1,15 @@
 from __future__ import annotations
 
 import json
-import gzip
 import re
-from pathlib import Path
 from typing import Any
 
 import pytest
 
 from services import finca_raiz
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"
-
 _JSON_LD_BLOCK = r'<script type="application/ld\+json".*?</script>'
 _NEXT_DATA_BLOCK = r'<script id="__NEXT_DATA__".*?</script>'
-
-
-@pytest.fixture(scope="session")
-def finca_raiz_html() -> str:
-    """
-    A real Finca Raiz listing page - the Salento house at
-    https://www.fincaraiz.com.co/casa-en-venta-en-ahitamara-salento/193301244
-    """
-    with gzip.open(
-        FIXTURES_DIR / "finca_raiz_salento.html.gz", "rt", encoding="utf-8"
-    ) as gz:
-        return gz.read()
 
 
 @pytest.fixture

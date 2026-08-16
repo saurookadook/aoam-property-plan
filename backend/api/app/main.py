@@ -15,6 +15,7 @@ from api.middlewares.common import add_process_time_header
 from api.routes.home import home_router
 from api.routes.listings import listings_router
 from api.routes.markets import markets_router
+from api.routes.properties import properties_router
 from constants import window_width
 from utils.logging.init import init_logging, is_prod
 
@@ -106,3 +107,4 @@ app.add_middleware(
 app.include_router(home_router)
 app.include_router(listings_router)
 app.include_router(markets_router)
+app.include_router(properties_router)
