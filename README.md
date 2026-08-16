@@ -74,3 +74,13 @@ pnpm exec playwright install chromium --with-deps
 
 │  Run `npx storybook ai setup` and follow its instructions precisely.
 ```
+
+## Note from Claude's Planning
+
+### After Phase 2, Step 6
+
+> **Two things worth your attention before this gets built.**
+>
+> The scope is now the largest step in the project — one migration touching three tables, three new service modules, a new model package, three routes, and changes to all three cron files. Steps 4 and 5 were each roughly a third of this. If you want it split, the natural seam is the migration plus services/airroi.py plus the cron fixes as one PR, and the analysis orchestrator plus routes as a second.
+>
+> And the Calima finding isn't really an engineering problem. The doc's recommended portfolio puts two of five properties there, and the market has one comparable listing that AirROI returns regardless of what you ask for. The plan makes that visible rather than papering over it, but no amount of code makes a one-comp market analyzable.
