@@ -95,6 +95,7 @@ WORKDIR /opt/aoam-property-plan
 COPY _research ./_research
 WORKDIR /opt/aoam-property-plan/backend
 COPY ./backend/_factories ./_factories
+COPY ./backend/_fixtures ./_fixtures
 COPY ./backend/_mocks ./_mocks
 COPY ./backend/conftest.py \
     ./backend/pytest.ini \
