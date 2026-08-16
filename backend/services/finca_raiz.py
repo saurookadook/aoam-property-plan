@@ -128,9 +128,23 @@ def parse_listing_html(html: str) -> dict[str, Any]:
     merged.setdefault("status", "active")
     merged.setdefault("amenities", [])
 
-    if merged.get("source_created_at") is None:
-        merged["source_created_at"] = datetime.now(timezone.utc)
+    raw_source_created_at = merged.get("source_created_at")
+    if raw_source_created_at is None:
+        dt = datetime.now(timezone.utc)
         notes["source_created_at_inferred"] = True
+    elif isinstance(raw_source_created_at, datetime):
+        dt = raw_source_created_at
+    else:
+        try:
+            dt = datetime.fromisoformat(str(raw_source_created_at))
+        except ValueError:
+            dt = datetime.now(timezone.utc)
+            notes["source_created_at_inferred"] = True
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    else:
+        dt = dt.astimezone(timezone.utc)
+    merged["source_created_at"] = dt.isoformat()
 
     if notes:
         merged["notes"] = json.dumps(notes, ensure_ascii=False)

@@ -22,13 +22,10 @@ def finca_raiz_html() -> str:
     A real Finca Raiz listing page - the Salento house at
     https://www.fincaraiz.com.co/casa-en-venta-en-ahitamara-salento/193301244
     """
-    html_path = FIXTURES_DIR / "finca_raiz_salento.html"
-
-    if not html_path.exists():
-        with gzip.open(FIXTURES_DIR / "finca_raiz_salento.html.gz", "rt", encoding="utf-8") as gz:
-            html_path.write_text(gz.read(), encoding="utf-8")
-
-    return html_path.read_text(encoding="utf-8")
+    with gzip.open(
+        FIXTURES_DIR / "finca_raiz_salento.html.gz", "rt", encoding="utf-8"
+    ) as gz:
+        return gz.read()
 
 
 @pytest.fixture

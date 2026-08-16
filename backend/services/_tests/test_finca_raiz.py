@@ -27,7 +27,7 @@ class TestParseListingHtml:
         assert result["neighborhood"] == "Ahitamara"
         assert result["property_type"] == "Casa"
         assert result["purchase_price_cop"] == 700000000
-        assert result["source_created_at"] == "2026-01-21"
+        assert result["source_created_at"] == "2026-01-21T00:00:00+00:00"
         assert result["state"] == "Quindio"
         assert result["status"] == "active"
         assert result["description"].startswith("Código ***")
