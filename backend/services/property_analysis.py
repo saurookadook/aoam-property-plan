@@ -605,7 +605,7 @@ def _scenario_fields(
     return fields
 
 
-def _peak_months(distribution: list[float]) -> list[str]:
+def peak_months(distribution: list[float]) -> list[str]:
     """
     The three months with the largest share of annual revenue.
 
@@ -613,6 +613,10 @@ def _peak_months(distribution: list[float]) -> list[str]:
     which returns an empty list for the Bogota 2br capture - no month there clears
     the threshold. Top-3 always answers. Ties resolve to the earlier month,
     because ``sorted`` is stable.
+
+    Public because ``handle_markets_peak_months`` fills the market-level column
+    the same way, from a centroid estimate, and the two must agree on what a peak
+    month is.
     """
     if not distribution:
         return []
@@ -701,7 +705,5 @@ def _report_payload(
         "comp_count": comp_count,
         "comp_derived_revenue_cop": comp_derived_revenue_cop,
         "monthly_revenue_distribution": estimate.get("monthly_revenue_distributions"),
-        "peak_months": _peak_months(
-            estimate.get("monthly_revenue_distributions") or []
-        ),
+        "peak_months": peak_months(estimate.get("monthly_revenue_distributions") or []),
     }

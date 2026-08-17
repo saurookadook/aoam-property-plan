@@ -5,6 +5,7 @@ from __future__ import annotations
 from api.crons.handlers import (
     handle_exchange_rate,
     handle_listings_by_market,
+    handle_markets_peak_months,
     handle_markets_summaries,
 )
 from utils.logging.init import init_logging
@@ -17,6 +18,7 @@ if __name__ == "__main__":
     handler_ids = [
         "exchange_rate",
         "listings_by_market",
+        "markets_peak_months",
         "markets_summaries",
     ]
 
@@ -40,6 +42,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.handler_name == "listings_by_market":
         handle_listings_by_market()
+    elif args.handler_name == "markets_peak_months":
+        handle_markets_peak_months()
     elif args.handler_name == "markets_summaries":
         handle_markets_summaries()
     elif args.handler_name == "exchange_rate":

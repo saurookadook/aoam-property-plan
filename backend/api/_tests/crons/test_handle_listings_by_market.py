@@ -43,20 +43,27 @@ def listings_by_market_dynamic_resp_callback(
         request_body = json.loads(request.body)
         req_locality = request_body["market"]["locality"]
         req_offset = request_body["pagination"]["offset"]
+        req_page_size = request_body["pagination"]["page_size"]
 
         paged_responses = listings_by_market_response_dicts_by_locality.get(
             req_locality, None
         )
-        if paged_responses is None or req_offset > len(paged_responses) - 1:
+
+        # AirROI's ``offset`` counts records rather than pages, so the page index
+        # has to be recovered from it. A remainder means the caller is stepping by
+        # something other than a page - the bug this fixture used to enshrine, by
+        # indexing pages with the raw offset.
+        page_index, remainder = divmod(req_offset, req_page_size)
+
+        if (
+            paged_responses is None
+            or remainder
+            or page_index > len(paged_responses) - 1
+        ):
             context.status_code = 404
             return {}
 
-        # listing_ids_in_response = [
-        #     listing["listing_info"]["listing_id"]
-        #     for listing in paged_responses[req_offset]["results"]
-        # ]
-        # ri(listing_ids_in_response, title="Listing IDs in Response")
-        response_page = paged_responses[req_offset]
+        response_page = paged_responses[page_index]
         context.status_code = 200
         return response_page
 
@@ -122,6 +129,18 @@ class TestHandleListingsByMarket:
 
         lfr_listing_id_set = {lfr.listing_id for lfr in listing_financial_reports_after}
         assert len(lfr_listing_id_set) == len(listing_financial_reports_after)
+
+        # ``offset`` counts records, not pages. Paging stops at the first 404, and
+        # only two pages per locality are captured, so the third request is the
+        # last one - but it is the step from 0 to 10 to 20 that matters here.
+        offsets_by_locality = defaultdict(list)
+        for sent_request in airroi_request_mocks.request_history:
+            sent_body = sent_request.json()
+            offsets_by_locality[sent_body["market"]["locality"]].append(
+                sent_body["pagination"]["offset"]
+            )
+
+        assert offsets_by_locality["Salento"] == [0, 10, 20]
 
         all_markets = market_facade.get_all()
 
