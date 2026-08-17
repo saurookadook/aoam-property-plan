@@ -57,7 +57,7 @@ class PropertyFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     below the purchase price.
     """
 
-    calculated_at: datetime
+    calculated_at: Optional[datetime] = None
     cash_invested_cop: Optional[float]
     cash_invested_usd: Optional[float]
     closing_costs_percentage: Optional[float]

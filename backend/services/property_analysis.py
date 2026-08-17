@@ -460,10 +460,10 @@ def _persist_comps(
                     )
                 )
             persisted += 1
-        except Exception as exc:
-            logger.error(
+        except Exception:
+            logger.exception(
                 f"Could not persist comp with airroi_id='{airroi_id}' for property "
-                f"with id='{property_record.id}': {exc}"
+                f"with id='{property_record.id}'"
             )
             continue
 

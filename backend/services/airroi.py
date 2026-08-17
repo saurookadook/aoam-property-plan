@@ -210,7 +210,7 @@ def _send(
         return response.json()
     # ``JSONDecodeError`` subclasses ``RequestException``, so it has to be caught
     # first or a malformed body is reported as a transport failure.
-    except requests.JSONDecodeError as exc:
+    except requests.exceptions.JSONDecodeError as exc:
         raise AirROIError(
             f"AirROI returned a malformed body for '{url}': {exc}"
         ) from exc
