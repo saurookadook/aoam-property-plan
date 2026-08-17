@@ -51,6 +51,37 @@ class MarketFinancialReportFacade(BaseFacade):
             for mfr_rec in mfr_records
         ]
 
+    def get_latest_by_market_id(
+        self, market_id: UUID | str
+    ) -> Optional[MarketFinancialReportEntity]:
+        """
+        Returns the most recently reported figures for a market, or ``None`` when
+        the market has never been summarised.
+
+        NOTE: unlike the ``get_one_by_*`` methods, this does not raise - callers
+        are expected to branch on a missing report.
+
+        ``handle_markets_summaries`` inserts a fresh row on every run rather than
+        updating one, so a market accumulates a history and "the report" has to
+        mean the latest of them. Ordered on ``last_updated`` - AirROI's own
+        timestamp for the figures, and the column that carries an index - with
+        ``created_at`` breaking ties so the ordering is total.
+        """
+        market_financial_report = self.db_session.execute(
+            select(MarketFinancialReportDB)
+            .where(MarketFinancialReportDB.market_id == market_id)
+            .order_by(
+                MarketFinancialReportDB.last_updated.desc(),
+                MarketFinancialReportDB.created_at.desc(),
+            )
+            .limit(1)
+        ).scalar_one_or_none()
+
+        if market_financial_report is None:
+            return None
+
+        return MarketFinancialReportEntity.model_validate(market_financial_report)
+
     def create_or_update(self, *, payload: dict) -> MarketFinancialReportEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
         if maybe_one:
