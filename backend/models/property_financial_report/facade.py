@@ -32,6 +32,38 @@ class PropertyFinancialReportFacade(BaseFacade):
             )
         return PropertyFinancialReportEntity.model_validate(property_financial_report)
 
+    def get_latest_by_property_id(
+        self, property_id: UUID | str
+    ) -> Optional[PropertyFinancialReportEntity]:
+        """
+        Returns the most recently calculated report for a property, or ``None``
+        when the property has never been analysed.
+
+        NOTE: unlike the ``get_one_by_*`` methods, this does not raise - callers
+        are expected to branch on a missing report (e.g. by running an analysis).
+
+        Ordered on ``calculated_at`` rather than ``created_at`` because that is
+        the figure's own timestamp; a backfilled report is as old as the numbers
+        in it, not as old as its row. ``nullslast()`` is explicit because
+        Postgres sorts nulls *first* under ``DESC``, which would otherwise let a
+        report with no ``calculated_at`` outrank every real one. ``created_at``
+        breaks ties so the ordering is total.
+        """
+        property_financial_report = self.db_session.execute(
+            select(PropertyFinancialReportDB)
+            .where(PropertyFinancialReportDB.property_id == property_id)
+            .order_by(
+                PropertyFinancialReportDB.calculated_at.desc().nullslast(),
+                PropertyFinancialReportDB.created_at.desc(),
+            )
+            .limit(1)
+        ).scalar_one_or_none()
+
+        if property_financial_report is None:
+            return None
+
+        return PropertyFinancialReportEntity.model_validate(property_financial_report)
+
     def create_or_update(self, *, payload: dict) -> PropertyFinancialReportEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
         if maybe_one:
