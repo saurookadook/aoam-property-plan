@@ -16,10 +16,22 @@ class PropertyDB(BaseDB, TimestampsDB):
     amenities: Mapped[list[str]] = mapped_column(
         postgresql.ARRAY(postgresql.TEXT), nullable=False, server_default="{}"
     )
+    baths: Mapped[Optional[float]] = mapped_column(postgresql.REAL, nullable=True)
+    """
+    ``REAL`` rather than ``INTEGER`` because half-baths are ubiquitous, mirroring
+    ``ListingDB.baths`` so a property and a comp can be compared without a cast.
+    """
+
     bedrooms: Mapped[int] = mapped_column(postgresql.INTEGER, nullable=False)
     city: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     country: Mapped[str] = mapped_column(postgresql.TEXT, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(postgresql.TEXT, nullable=True)
+    guests: Mapped[Optional[int]] = mapped_column(postgresql.INTEGER, nullable=True)
+    """
+    Maximum occupancy. Finca Raiz does not publish it, so it is nullable and
+    stands in as ``bedrooms x 2`` when AirROI needs it.
+    """
+
     latitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     longitude: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     name: Mapped[Optional[str]] = mapped_column(postgresql.TEXT, nullable=True)

@@ -12,10 +12,12 @@ from models.mixins import TimestampsEntityMixin
 class PropertyEntity(BaseEntityModel, TimestampsEntityMixin):
     address: str
     amenities: list[str] = Field(default_factory=list)
+    baths: Optional[float] = None
     bedrooms: int
     city: str
     country: str
     description: Optional[str] = None
+    guests: Optional[int] = None
     latitude: float
     longitude: float
     name: Optional[str] = None

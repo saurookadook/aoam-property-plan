@@ -30,10 +30,14 @@ class PropertyDBFactory(
             factory.Faker("word"),
         ]
     )
+    baths = factory.Faker("pyfloat", positive=True, min_value=1, max_value=6)
     bedrooms = factory.Faker("random_int", min=1, max=10)
     city = factory.Faker("city")
     country = factory.Faker("country")
     description = factory.Faker("text")
+    # The empirical median across the captured comps is roughly two guests per
+    # bedroom, so a factory property lines up with what AirROI would be asked for.
+    guests = factory.LazyAttribute(lambda o: o.bedrooms * 2)
     latitude = factory.Faker("latitude")
     longitude = factory.Faker("longitude")
     name = factory.Faker("sentence", nb_words=3)
