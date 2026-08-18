@@ -160,3 +160,41 @@ class TestMarketFinancialReportFacade:
         assert self._compare_result_with_expected(result, updated_payload)
         assert result.last_updated > market_financial_report_dict["last_updated"]
         assert result.occupancy_rate != market_financial_report_dict["occupancy_rate"]
+
+    def test_get_latest_by_market_id_returns_none_when_never_summarised(
+        self, market_financial_report_facade, test_market_record
+    ):
+        assert (
+            market_financial_report_facade.get_latest_by_market_id(
+                test_market_record.id
+            )
+            is None
+        )
+
+    def test_get_latest_by_market_id(
+        self,
+        market_financial_report_facade,
+        mock_utcnow,
+        test_market_record,
+        test_db_session,
+    ):
+        # ``handle_markets_summaries`` inserts a fresh row per run rather than
+        # updating one, so "the report" for a market has to mean the latest of
+        # a history.
+        older = MarketFinancialReportDBFactory(
+            market_id=test_market_record.id,
+            last_updated=mock_utcnow - timedelta(days=7),
+        )
+        newest = MarketFinancialReportDBFactory(
+            market_id=test_market_record.id,
+            last_updated=mock_utcnow - timedelta(days=1),
+        )
+        test_db_session.commit()
+
+        result = market_financial_report_facade.get_latest_by_market_id(
+            test_market_record.id
+        )
+
+        assert result is not None
+        assert result.id == newest.id
+        assert result.id != older.id

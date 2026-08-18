@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 
@@ -102,3 +102,43 @@ class TestPropertyFinancialReportFacade:
         assert (
             result.loan_term_years != property_financial_report_dict["loan_term_years"]
         )
+
+    def test_get_latest_by_property_id_returns_none_when_never_analysed(
+        self, property_financial_report_facade, property_record
+    ):
+        assert (
+            property_financial_report_facade.get_latest_by_property_id(
+                property_record.id
+            )
+            is None
+        )
+
+    def test_get_latest_by_property_id(
+        self,
+        property_financial_report_facade,
+        mock_utcnow,
+        property_record,
+        test_db_session,
+    ):
+        older = PropertyFinancialReportDBFactory(
+            property_id=property_record.id,
+            calculated_at=mock_utcnow - timedelta(days=10),
+        )
+        newest = PropertyFinancialReportDBFactory(
+            property_id=property_record.id,
+            calculated_at=mock_utcnow - timedelta(days=1),
+        )
+        # Postgres sorts nulls *first* under ``DESC``, so without ``nullslast()``
+        # a report that was never stamped would outrank every real one.
+        undated = PropertyFinancialReportDBFactory(
+            property_id=property_record.id, calculated_at=None
+        )
+        test_db_session.commit()
+
+        result = property_financial_report_facade.get_latest_by_property_id(
+            property_record.id
+        )
+
+        assert result is not None
+        assert result.id == newest.id
+        assert result.id not in (older.id, undated.id)
