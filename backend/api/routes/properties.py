@@ -1,16 +1,30 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional, TypeVar
 
 from fastapi import APIRouter, HTTPException, status
 
 from api.dependencies.db_session import API_DB_SessionDependency
 from api.models.property import PropertyCreateRequest, PropertyResponse
+from api.models.property_analysis import (
+    PropertyAnalysisResponse,
+    PropertyAnalyzeRequest,
+    PropertyCompsResponse,
+)
+from api.routes.handlers.properties import run_analysis
 from models.property.facade import PropertyFacade
-from services import property_source
-from services.exceptions import FetchError, ScrapeError, UnsupportedSource
+from models.property_comp.facade import PropertyCompFacade
+from services import property_analysis, property_source
+from services.exceptions import (
+    AirROIError,
+    FetchError,
+    ScrapeError,
+    UnsupportedSource,
+)
 from services.exchange_rate import convert_cop_to_usd, resolve_cop_per_usd
 from utils.logging.init import init_logging
+
+T = TypeVar("T")
 
 logger = init_logging(__file__)
 
@@ -31,6 +45,8 @@ def create_property(
 
     Re-submitting a ``source_url`` already on file updates that record in place
     rather than inserting a second one - see ``properties_source_url_key``.
+
+    TODO: move the body of this function to a handler in ``handlers/properties.py``
     """
     if request_body.is_manual:
         property_payload = request_body.manual_payload()
@@ -56,6 +72,92 @@ def create_property(
         ) from e
 
     return {"data": property_record}
+
+
+@properties_router.post(
+    "/properties/{property_id}/analyze",
+    response_model=PropertyAnalysisResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def analyze_property(
+    property_id: str,
+    api_db_session: API_DB_SessionDependency,
+    request_body: Optional[PropertyAnalyzeRequest] = None,
+):
+    """
+    Analyses a property against AirROI's revenue data and stores the result.
+
+    Every call writes a new report rather than replacing the last one, so a
+    property keeps the history of what it looked like under different assumptions.
+    The body is optional - omitting it analyses under the Colombia defaults.
+    """
+    report = run_analysis(
+        lambda: property_analysis.analyze_property(
+            api_db_session,
+            property_id=property_id,
+            overrides=request_body.overrides() if request_body else {},
+        ),
+        error_detail="Error analysing property",
+        logger=logger,
+    )
+
+    return {"data": report}
+
+
+@properties_router.get(
+    "/properties/{property_id}/comps",
+    response_model=PropertyCompsResponse,
+)
+def read_property_comps(property_id: str, api_db_session: API_DB_SessionDependency):
+    """
+    Today's comparables for a property, refreshed from AirROI on every call.
+
+    Spends an API call each time and rewrites the stored comp set. Use
+    ``/comps/cached`` to read the set an analysis was actually built on.
+    """
+    comps = run_analysis(
+        lambda: property_analysis.refresh_comps(
+            api_db_session, property_id=property_id
+        ),
+        error_detail="Error refreshing property comps",
+        logger=logger,
+    )
+
+    return {"data": comps}
+
+
+@properties_router.get(
+    "/properties/{property_id}/comps/cached",
+    response_model=PropertyCompsResponse,
+)
+def read_cached_property_comps(
+    property_id: str, api_db_session: API_DB_SessionDependency
+):
+    """
+    The stored comp set, nearest first. Makes no AirROI call.
+
+    Returns an empty list for a property that has never been analysed - that is
+    an answer, not an error, so it is a 200 rather than a 404.
+    """
+    try:
+        PropertyFacade(db_session=api_db_session).get_one_by_id(property_id)
+        comps = PropertyCompFacade(db_session=api_db_session).get_all_by_property_id(
+            property_id
+        )
+    except PropertyFacade.NoResultFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found",
+        ) from e
+    except Exception as e:
+        error_detail = "Error fetching property comps"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
+
+    return {"data": comps}
 
 
 def _scrape(source_url: str) -> dict[str, Any]:
