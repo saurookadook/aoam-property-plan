@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import json
 import os
 from datetime import datetime
 
@@ -14,8 +15,9 @@ from _mocks.temporal import get_mock_utcnow
 from api.app.main import app
 from api.dependencies.db_session import api_db_session
 from config.env_var_manager import EnvVarManager
+from constants import AIRROI_BASE_URL
 from db.db_session_manager import DBSessionManager
-from utils.filesystem import get_module_root
+from utils.filesystem import get_module_root, get_project_root
 
 os.environ["FORCE_COLOR"] = "1"
 os.environ["PYTHONUNBUFFERED"] = "1"
@@ -100,6 +102,84 @@ def patch_utcnow(mocker):
     mock_datetime = mocker.patch("datetime.datetime")
     mock_datetime.now.return_value = get_mock_utcnow()
     return mock_datetime
+
+
+@pytest.fixture(scope="session")
+def airroi_estimate_captures() -> dict[tuple[float, float, int], dict]:
+    """
+    The six real ``/calculator/estimate`` responses saved under ``_research/``.
+
+    Keyed by the query that produced them: coordinates plus bedroom count. That
+    tuple is unique across the set - each of the three localities was captured
+    twice, at two sizes - so a test can ask for "Calima, 2 bedrooms" without
+    naming a file.
+
+    The bedroom count only exists in the filename; the response echoes the
+    coordinates back under ``location`` but never the size it was asked about.
+    """
+    captures_dir = get_project_root(__file__) / "_research" / "calculator" / "estimate"
+    captures: dict[tuple[float, float, int], dict] = {}
+
+    for capture_file in sorted(captures_dir.glob("*.json")):
+        with open(capture_file, "r") as capture_json:
+            capture = json.load(capture_json)
+
+        # ``salento_quindio_colombia__2-baths_3-bedrooms_8-guests`` -> 3
+        bedrooms = int(capture_file.stem.split("__")[1].split("_")[1].split("-")[0])
+        location = capture["location"]
+
+        captures[
+            (
+                round(location["latitude"], 4),
+                round(location["longitude"], 4),
+                bedrooms,
+            )
+        ] = capture
+
+    return captures
+
+
+@pytest.fixture
+def airroi_estimate_dynamic_resp_callback(airroi_estimate_captures):
+    """Serves whichever capture matches the coordinates and size asked for."""
+
+    def _matcher(request, context):
+        query = request.qs
+
+        try:
+            capture_key = (
+                round(float(query["lat"][0]), 4),
+                round(float(query["lng"][0]), 4),
+                int(float(query["bedrooms"][0])),
+            )
+        except (KeyError, IndexError, ValueError):
+            context.status_code = 400
+            return {}
+
+        capture = airroi_estimate_captures.get(capture_key)
+
+        if capture is None:
+            context.status_code = 404
+            return {}
+
+        context.status_code = 200
+        return capture
+
+    return _matcher
+
+
+@pytest.fixture
+def airroi_estimate_mock(http_requests_mock, airroi_estimate_dynamic_resp_callback):
+    """
+    Registers ``GET /calculator/estimate`` against the saved captures.
+
+    The root mocker runs with ``real_http=False``, so a test that reaches AirROI
+    without this fixture fails rather than making a paid call.
+    """
+    return http_requests_mock.get(
+        f"{AIRROI_BASE_URL}/calculator/estimate",
+        json=airroi_estimate_dynamic_resp_callback,
+    )
 
 
 @pytest.fixture
