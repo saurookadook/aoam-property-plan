@@ -25,8 +25,10 @@ class TestPropertyCompFacade:
             # significant - the column is ``TIMESTAMP(timezone=True)``.
             if key == "captured_at":
                 assert result.captured_at == datetime.fromisoformat(value)
-            else:
+            elif isinstance(value, (int, float)):
                 assert getattr(result, key) == pytest.approx(value)
+            else:
+                assert getattr(result, key) == value
 
         return True
 

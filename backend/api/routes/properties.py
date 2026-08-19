@@ -16,15 +16,12 @@ from models.property.facade import PropertyFacade
 from models.property_comp.facade import PropertyCompFacade
 from services import property_analysis, property_source
 from services.exceptions import (
-    AirROIError,
     FetchError,
     ScrapeError,
     UnsupportedSource,
 )
 from services.exchange_rate import convert_cop_to_usd, resolve_cop_per_usd
 from utils.logging.init import init_logging
-
-T = TypeVar("T")
 
 logger = init_logging(__file__)
 
