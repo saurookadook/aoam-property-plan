@@ -22,8 +22,15 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
+#
+# Because this module is also imported by the test suite and which
+# runs ``alembic upgrade head`` from ``pytest_sessionstart``,
+# adding ``disable_existing_loggers=False`` will enable verbose logging.
+# The default would disable every logger that already exists at that point -
+# which is every application logger the conftest's ``import api.app.main`` has
+# already created - silencing them for the whole session.
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
