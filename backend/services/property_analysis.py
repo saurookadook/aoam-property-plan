@@ -33,6 +33,7 @@ from models.listing.facade import ListingFacade
 from models.listing_financial_report.facade import ListingFinancialReportFacade
 from models.property.entity import PropertyEntity
 from models.property.facade import PropertyFacade
+from models.property_comp.entity import PropertyCompEntity
 from models.property_comp.facade import PropertyCompFacade
 from models.property_financial_report.entity import PropertyFinancialReportEntity
 from models.property_financial_report.facade import PropertyFinancialReportFacade
@@ -138,33 +139,11 @@ def analyze_property(
     purchase_price_cop = _resolve_purchase_price(property_record, overrides)
     cop_per_usd = _resolve_cop_per_usd(db_session, property_record)
 
-    estimate = airroi.get_revenue_estimate(
-        latitude=property_record.latitude,
-        longitude=property_record.longitude,
-        bedrooms=property_record.bedrooms,
-        baths=baths,
-        guests=guests,
-    )
-
-    comps = list(estimate.get("comparable_listings") or [])
-    projections = _projections(comps)
-
-    if len(projections) < MIN_COMP_COUNT:
-        logger.info(
-            f"Only {len(projections)} of {len(comps)} inline comps are usable for "
-            f"property with id='{property_record.id}' - retrying against "
-            f"/listings/comparables"
-        )
-        comps = _merge_comps(
-            comps,
-            _fallback_comps(property_record, baths=baths, guests=guests),
-        )
-        projections = _projections(comps)
-
-    _persist_comps(
+    estimate, projections = _collect_comps(
         db_session,
         property_record=property_record,
-        comps=comps,
+        baths=baths,
+        guests=guests,
         captured_at=captured_at,
     )
 
@@ -220,6 +199,80 @@ def analyze_property(
             comp_count=len(projections),
         )
     )
+
+
+def refresh_comps(
+    db_session: Session, *, property_id: UUID | str
+) -> list[PropertyCompEntity]:
+    """
+    Re-fetches a property's comparables from AirROI and rewrites its comp set.
+
+    The same comp collection ``analyze_property`` performs, without the
+    arithmetic or the report - for ``GET /api/properties/{id}/comps``, where the
+    caller wants today's comparables and not a new financial report.
+
+    Raises the same things ``analyze_property`` does for a missing property or a
+    missing bath count. It does not need a purchase price or an exchange rate,
+    because it computes nothing in money.
+    """
+    property_record = PropertyFacade(db_session=db_session).get_one_by_id(property_id)
+
+    _collect_comps(
+        db_session,
+        property_record=property_record,
+        baths=_resolve_baths(property_record),
+        guests=_resolve_guests(property_record),
+        captured_at=datetime.now(timezone.utc),
+    )
+
+    return PropertyCompFacade(db_session=db_session).get_all_by_property_id(
+        property_record.id
+    )
+
+
+def _collect_comps(
+    db_session: Session,
+    *,
+    property_record: PropertyEntity,
+    baths: float,
+    guests: int,
+    captured_at: datetime,
+) -> tuple[dict[str, Any], list[float]]:
+    """
+    Fetches the estimate, persists its comp set, and returns both it and the
+    forward projections of the comps that survived the reconciliation gate.
+    """
+    estimate = airroi.get_revenue_estimate(
+        latitude=property_record.latitude,
+        longitude=property_record.longitude,
+        bedrooms=property_record.bedrooms,
+        baths=baths,
+        guests=guests,
+    )
+
+    comps = list(estimate.get("comparable_listings") or [])
+    projections = _projections(comps)
+
+    if len(projections) < MIN_COMP_COUNT:
+        logger.info(
+            f"Only {len(projections)} of {len(comps)} inline comps are usable for "
+            f"property with id='{property_record.id}' - retrying against "
+            f"/listings/comparables"
+        )
+        comps = _merge_comps(
+            comps,
+            _fallback_comps(property_record, baths=baths, guests=guests),
+        )
+        projections = _projections(comps)
+
+    _persist_comps(
+        db_session,
+        property_record=property_record,
+        comps=comps,
+        captured_at=captured_at,
+    )
+
+    return estimate, projections
 
 
 def _resolve_baths(property_record: PropertyEntity) -> float:
