@@ -1,0 +1,19 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Bolívar",
+        "locality": "Cartagena",
+        "district": null
+    },
+    "occupancy": null,
+    "average_daily_rate": null,
+    "rev_par": null,
+    "revenue": null,
+    "booking_lead_time": null,
+    "length_of_stay": null,
+    "min_nights": null,
+    "active_listings_count": null,
+    "_tuple_verified": false,
+    "_tuple_evidence": "Not verified. No capture under _research/markets/search/ covers Bolivar. Confirm the region and locality strings against POST /markets/search before seeding - airroi._market_body sends the three-part tuple and a miss returns nothing rather than an error.",
+    "_todo": "Figures are null - capture them with POST /markets/summary (services.airroi.get_market_summary), commit the raw response to _research/markets/summary/, then move this file up into seed_data/ and re-run seed_markets.py."
+}

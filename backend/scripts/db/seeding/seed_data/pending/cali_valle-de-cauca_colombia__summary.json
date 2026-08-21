@@ -1,0 +1,19 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Valle del Cauca",
+        "locality": "Cali",
+        "district": null
+    },
+    "occupancy": null,
+    "average_daily_rate": null,
+    "rev_par": null,
+    "revenue": null,
+    "booking_lead_time": null,
+    "length_of_stay": null,
+    "min_nights": null,
+    "active_listings_count": null,
+    "_tuple_verified": true,
+    "_tuple_evidence": "_research/markets/search/{granada,el-penon,calima,pance}_*__search.json all return this exact tuple with active_listings_count 4690. Cali stands in for the Granada / El Penon thesis - AirROI matches neither of those localities.",
+    "_todo": "Figures are null - capture them with POST /markets/summary (services.airroi.get_market_summary), commit the raw response to _research/markets/summary/, then move this file up into seed_data/ and re-run seed_markets.py."
+}
