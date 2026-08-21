@@ -192,6 +192,79 @@ rule in Chunk 6.
 `scripts/db/seeding/seed_markets.py`, new `scripts/db/seeding/seed_properties.py`,
 `_factories/`, `models/_tests/conftest.py`.
 
+### Chunk 1 — status
+
+Steps 2–6 are done. Steps 1 and 7 need live AirROI calls and are left open deliberately.
+
+| Step | State | Notes |
+| :--- | :--- | :--- |
+| Audit query | **Done** | `backend/scripts/db/audit/market_coverage.sql`. Extended past the plan's version with `cardinality(monthly_revenue_distribution)` and an ingested-listing count and centroid, so one query answers "has this market got figures, seasonality, and a position". |
+| 1 · Four new market summaries | **Open** | No AirROI quota spent. Placeholders with the market tuple and null figures live in `seed_data/pending/`, with a README covering how to activate one. Only **Cali's tuple is verified** — every `_research/markets/search/*` capture returns it. Cartagena / Medellín / Santa Marta are unverified guesses and must be confirmed against `/markets/search` first; a miss returns nothing rather than an error. |
+| 2 · `seed_markets.py` refresh | **Done** | Refreshes the latest report instead of `continue`ing. Two extra guards fell out of it: `peak_months` and `monthly_revenue_distribution` are only written when the capture carries them (unconditional writes would have blanked every market's seasonality on each refresh), and a capture missing any of `REQUIRED_FIGURES` is rejected by name rather than surfacing as an `IntegrityError`. |
+| 3 · `monthly_revenue_distribution` | **Done** | Migration `4b1c7d92e8af`. `handle_markets_peak_months` now stores the twelve fractions it was already fetching. |
+| 4 · `properties.market_id` | **Done** | Migration `7d3ea6c4b915` — nullable FK, indexed. Resolved at create time by `resolve_market_id` in `api/routes/handlers/properties.py`. |
+| 5 · Centroid on the read path | **Done** | `MarketFacade.get_centroid_by_id` / `get_all_centroids`, `AVG` computed in the query, returning the new `MarketCentroidEntity`. `_market_centroid` now takes its point from the same method, so the map marker and the `/calculator/estimate` call cannot drift apart. |
+| 6 · `seed_properties.py` | **Partly done** | 12 real Finca Raiz listings, three per market, for the four markets that have summaries. Each is validated against `finca_raiz.parse_listing_html` and carries its parsed payload as a delisting fallback. Cali / Cartagena / Medellín / Santa Marta have empty groups pending step 1. |
+| 7 · `manual_run` the three crons | **Open** | Needs AirROI quota and the dev database. |
+
+#### Two decisions taken while implementing
+
+**A match radius, not bare nearest-centroid.** Nearest centroid alone files every property in
+Colombia against some market, and the budget indicator is a median over one market's properties —
+a Medellín apartment in the Salento bucket makes that median wrong, not just odd.
+`MARKET_MATCH_RADIUS_KM = 50.0`: wider than any single locality's footprint, far narrower than the
+gaps on the roster (Calima→Pance 66km, Bogota→Salento 200km).
+
+**`market_id` is settled at create time, not derived on read.** A centroid moves with every
+`listings_by_market` run, so re-deriving on read would silently reassign stored properties between
+markets from one ingest to the next.
+
+#### Acceptance evidence
+
+A throwaway database (`seed_check_aoam`, since dropped) migrated to head, then
+`seed_markets.py` → `seed_listings.py` → `seed_properties.py`. **The three AirROI crons were not
+run**, which is why `peak_months` and `distribution_months` are empty below — that is step 7, not
+a defect.
+
+```
+        locality        |  adr_cop  | occ  | annual_revenue_cop | airroi_listings | peak_months | dist | ingested | centroid_lat | centroid_lng
+------------------------+-----------+------+--------------------+-----------------+-------------+------+----------+--------------+--------------
+ Bogota Capital Distr…  |  189320.6 | 0.40 |         16871580.9 |          6375.8 |             |      |        0 |              |
+ Calima                 |  860093.1 | 0.18 |         31870830.7 |           177.3 |             |      |       11 |    3.9109355 |  -76.4987518
+ Pance                  |  397697.6 | 0.33 |         27906897.9 |            27.8 |             |      |       11 |    3.3377164 |  -76.5648505
+ Salento                |  336288.5 | 0.34 |         25820409.1 |           514.8 |             |      |       11 |    4.6332236 |  -75.5791827
+```
+
+Bogota has no `_research/listings/search-by-market` capture, so it has no ingested listings, no
+centroid, and its three seeded properties resolve to no market. That is finding 1 showing through,
+and it is what step 7 fixes.
+
+What the budget indicator would render off that database:
+
+```
+   market    | properties |  median_cop   | median_usd | indicator_shows
+-------------+------------+---------------+------------+-----------------
+ Calima      |          3 | 1,300,000,000 |     425469 | t
+ Pance       |          3 |   357,000,000 |     116840 | t
+ Salento     |          3 |   399,000,000 |     130586 | t
+ (no market) |          3 |   970,000,000 |     317466 | t   <- the three Bogota properties
+```
+
+Also verified directly:
+
+- **371 backend tests pass**, up from 353 — 18 new across `models/_tests/market/test_facade.py`,
+  `api/_tests/routes/handlers/test_routes_handlers_properties.py`,
+  `api/_tests/crons/test_handle_markets_peak_months.py` and
+  `api/_tests/routes/test_routes_properties.py`.
+- **Both migrations round-trip**: `downgrade -2` then `upgrade head`, with the column, FK
+  (`properties_market_id_fkey`) and index (`ix_properties_market_id`) confirmed afterwards.
+- **The refresh fix**: `seed_markets.py` run twice leaves 4 report rows rather than 8, restores
+  figures that had been altered by hand, and leaves `peak_months` and
+  `monthly_revenue_distribution` intact.
+- **The figures guard**: a `pending/` placeholder copied into `seed_data/` is rejected with
+  `is missing [average_daily_rate, occupancy, revenue, active_listings_count]`, writes no market
+  row, and does not stop the other four seeding.
+
 ---
 
 ## Chunk 2 — Market reads (backend)
