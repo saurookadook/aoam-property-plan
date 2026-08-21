@@ -24,6 +24,18 @@ class MarketFinancialReportDB(BaseDB, TimestampsDB):
         postgresql.TIMESTAMP, index=True, nullable=False
     )
     listing_count: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
+    monthly_revenue_distribution: Mapped[list[float]] = mapped_column(
+        postgresql.ARRAY(postgresql.REAL), nullable=True
+    )
+    """
+    Twelve fractions summing to 1.0, mirroring the column of the same name on
+    ``property_financial_reports``.
+
+    Written by ``handle_markets_peak_months`` from the centroid estimate it
+    already makes: ``peak_months`` is the top three names out of these twelve
+    numbers, so storing only the names threw away every other month.
+    """
+
     occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
     peak_months: Mapped[list[str]] = mapped_column(
         postgresql.ARRAY(postgresql.TEXT), nullable=True
