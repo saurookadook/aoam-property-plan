@@ -4,11 +4,13 @@ from datetime import datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import Select, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
 
 from models.base.facade import BaseFacade
+from models.listing.db import ListingDB
+from models.market.centroid import MarketCentroidEntity
 from models.market.db import MarketDB
 from models.market.entity import MarketEntity
 
@@ -43,6 +45,62 @@ class MarketFacade(BaseFacade):
             .all()
         )
         return [MarketEntity.model_validate(market) for market in market_records]
+
+    def get_centroid_by_id(
+        self, market_id: UUID | str
+    ) -> Optional[MarketCentroidEntity]:
+        """
+        The average position of a market's ingested listings, or ``None`` when it
+        has none.
+
+        Averaged in Postgres rather than in Python so the map marker on
+        ``/markets`` costs one row instead of every listing in the market -
+        Bogota alone would be thousands. ``AVG`` over ``latitude``/``longitude``
+        is the same rule ``api.crons.handlers._market_centroid`` applies, which
+        is the point: the marker and the ``/calculator/estimate`` call that fills
+        ``peak_months`` have to describe the same spot, or a market's seasonality
+        is reported for somewhere it is not.
+
+        A plain mean of degrees, which is wrong near the poles and across the
+        antimeridian and irrelevantly so for a Colombian locality spanning a
+        fraction of a degree.
+
+        NOTE: does not raise for an unknown ``market_id`` - it returns ``None``,
+        the same as a real market with nothing ingested yet. Callers branch on
+        the absence either way.
+        """
+        # A ``GROUP BY`` over no matching rows yields no row at all rather than a
+        # row of nulls, so "nothing ingested" and "no such market" both arrive
+        # here as ``None``.
+        centroid = self.db_session.execute(
+            self._centroid_select().where(ListingDB.market_id == market_id)
+        ).one_or_none()
+
+        if centroid is None:
+            return None
+
+        return MarketCentroidEntity.model_validate(centroid)
+
+    def get_all_centroids(self) -> list[MarketCentroidEntity]:
+        """
+        One centroid per market that has ingested listings, cheapest way to plot
+        the whole roster.
+
+        Markets with nothing ingested are absent rather than present with a null
+        point: there is no position to report, and an entry that has to be
+        null-checked by every caller is worse than no entry.
+        """
+        centroids = (
+            self.db_session.execute(
+                self._centroid_select()
+                .where(ListingDB.market_id.isnot(None))
+                .order_by(ListingDB.market_id)
+            )
+            .mappings()
+            .all()
+        )
+
+        return [MarketCentroidEntity.model_validate(centroid) for centroid in centroids]
 
     def create_or_update(self, *, payload: dict) -> MarketEntity:
         maybe_one = self._find_one_if_exists(id=payload.get("id"))
@@ -87,3 +145,15 @@ class MarketFacade(BaseFacade):
             pass
 
         return None
+
+    def _centroid_select(self) -> Select:
+            # ``latitude``/``longitude`` are ``NOT NULL`` on ``listings``, so the
+            # ``AVG``s are null only when the group is empty - which for the grouped
+            # form cannot happen, and for the single-market form is exactly the
+            # "nothing ingested" case ``get_centroid_by_id`` checks for.
+            return select(
+                ListingDB.market_id.label("market_id"),
+                func.avg(ListingDB.latitude).label("latitude"),
+                func.avg(ListingDB.longitude).label("longitude"),
+                func.count(ListingDB.id).label("listing_count"),
+            ).group_by(ListingDB.market_id)
