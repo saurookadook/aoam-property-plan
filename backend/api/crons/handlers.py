@@ -261,7 +261,7 @@ def handle_markets_peak_months():
             )
             continue
 
-        centroid = _market_centroid(listing_facade, market)
+        centroid = _market_centroid(listing_facade, market_facade, market)
         if centroid is None:
             continue
 
@@ -283,7 +283,8 @@ def handle_markets_peak_months():
             )
             continue
 
-        months = peak_months(estimate.get("monthly_revenue_distributions") or [])
+        distribution = estimate.get("monthly_revenue_distributions") or []
+        months = peak_months(distribution)
         if not months:
             logger.warning(
                 f"Centroid estimate for market with id='{market.id}' and "
@@ -292,8 +293,15 @@ def handle_markets_peak_months():
             continue
 
         try:
+            # The distribution is stored as well as the three names derived from
+            # it. It was already being fetched and thrown away, and a market-level
+            # seasonality chart cannot be drawn from three strings.
             market_financial_report_facade.update(
-                payload={"id": latest_report.id, "peak_months": months}
+                payload={
+                    "id": latest_report.id,
+                    "monthly_revenue_distribution": distribution,
+                    "peak_months": months,
+                }
             )
             local_db_session.commit()
             logger.info(
@@ -315,7 +323,9 @@ def handle_markets_peak_months():
 
 
 def _market_centroid(
-    listing_facade: ListingFacade, market: MarketEntity
+    listing_facade: ListingFacade,
+    market_facade: MarketFacade,
+    market: MarketEntity,
 ) -> Optional[tuple[float, float, int, float]]:
     """
     Reduces a market's ingested listings to one point and one typical property.
@@ -323,9 +333,11 @@ def _market_centroid(
     ``markets`` holds no coordinates - only country/region/locality/district - so
     the listings are the only thing that can say where a market is.
 
-    A plain mean of latitude and longitude, which is wrong near the poles and
-    across the antimeridian and irrelevantly so for a Colombian locality spanning
-    a fraction of a degree.
+    The point comes from ``MarketFacade.get_centroid_by_id`` rather than being
+    averaged here, so the marker ``/markets`` plots and the estimate this feeds to
+    AirROI cannot drift apart: a market's seasonality has to be reported for the
+    place the map says it is. The typical size stays local because it is a median
+    over the ingested rows, which the read path has no use for.
 
     Returns ``None`` when the market cannot describe itself. Bath count is
     required by AirROI and a fabricated one silently changes which comps come
@@ -333,14 +345,16 @@ def _market_centroid(
     guessed at - the same rule ``services.property_analysis`` applies to a
     property.
     """
-    listings = listing_facade.get_all_by_market_id(market.id)
+    centroid = market_facade.get_centroid_by_id(market.id)
 
-    if not listings:
+    if centroid is None:
         logger.warning(
             f"No ingested listings for market with id='{market.id}' and "
             f"locality='{market.locality}' - run 'listings_by_market' first"
         )
         return None
+
+    listings = listing_facade.get_all_by_market_id(market.id)
 
     baths_values = [listing.baths for listing in listings if listing.baths is not None]
     if not baths_values:
@@ -357,8 +371,8 @@ def _market_centroid(
     )
 
     return (
-        statistics.fmean(listing.latitude for listing in listings),
-        statistics.fmean(listing.longitude for listing in listings),
+        centroid.latitude,
+        centroid.longitude,
         bedrooms,
         float(statistics.median(baths_values)),
     )

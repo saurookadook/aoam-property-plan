@@ -60,11 +60,32 @@ def market_listings(salento_market, test_db_session):
 @pytest.fixture
 def latest_report(salento_market, test_db_session):
     report = MarketFinancialReportDBFactory(
-        market_id=salento_market.id, peak_months=None
+        market_id=salento_market.id,
+        monthly_revenue_distribution=None,
+        peak_months=None,
     )
     test_db_session.commit()
     # Read before the handler detaches it by removing the scoped session.
     return report.id
+
+
+# ``monthly_revenue_distributions`` from
+# ``_research/calculator/estimate/salento_quindio_colombia__2-baths_3-bedrooms_8-guests.json``
+# - the capture the median 3-bedroom centroid query resolves to.
+SALENTO_DISTRIBUTION = [
+    0.09494533694086553,
+    0.07502271701425754,
+    0.08286931348819382,
+    0.08220289734011337,
+    0.07287337677798432,
+    0.07819997404771865,
+    0.0988698349470266,
+    0.08618993161190687,
+    0.06902114243349175,
+    0.07618002102302641,
+    0.07739341926374922,
+    0.10623203511166586,
+]
 
 
 class TestHandleMarketsPeakMonths:
@@ -85,6 +106,34 @@ class TestHandleMarketsPeakMonths:
         # The only route to this column: ``/markets/summary`` has never returned
         # ``peak_months`` and there is no ``/markets/seasonality`` endpoint.
         assert refreshed.peak_months == ["December", "July", "January"]
+
+    def test_stores_the_distribution_the_month_names_came_from(
+        self,
+        airroi_estimate_mock,
+        latest_report,
+        market_listings,
+        salento_market,
+        test_db_session,
+    ):
+        """
+        The twelve numbers, not just the three names derived from them. The handler
+        already fetched them; discarding them left a market-level seasonality view
+        with nothing to draw.
+        """
+        handle_markets_peak_months()
+
+        refreshed = MarketFinancialReportFacade(
+            db_session=test_db_session
+        ).get_one_by_id(latest_report)
+
+        assert refreshed.monthly_revenue_distribution is not None
+        assert len(refreshed.monthly_revenue_distribution) == 12
+        # The column is ``REAL[]``, so the stored values are float32 rounded off
+        # the float64 the response carried.
+        assert refreshed.monthly_revenue_distribution == pytest.approx(
+            SALENTO_DISTRIBUTION, rel=1e-6
+        )
+        assert sum(refreshed.monthly_revenue_distribution) == pytest.approx(1.0)
 
     def test_asks_about_the_centroid_and_the_median_property(
         self,
@@ -155,3 +204,4 @@ class TestHandleMarketsPeakMonths:
         ).get_one_by_id(latest_report)
 
         assert refreshed.peak_months is None
+        assert refreshed.monthly_revenue_distribution is None
