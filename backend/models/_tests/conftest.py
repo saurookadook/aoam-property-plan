@@ -6,9 +6,11 @@ from uuid import UUID
 import pytest
 
 from _factories.exchange_rate.db import ExchangeRateDBFactory
+from _factories.listing.db import ListingDBFactory
 from _factories.market.db import MarketDBFactory
 from _factories.market_financial_report.db import MarketFinancialReportDBFactory
 from _factories.property.db import PropertyDBFactory
+from _factories.property_comp.db import PropertyCompDBFactory
 
 
 @pytest.fixture
@@ -83,6 +85,13 @@ def expected_listing_dict(test_market_record):
 
 
 @pytest.fixture
+def listing_record(expected_listing_dict, test_db_session):
+    listing = ListingDBFactory(**expected_listing_dict)
+    test_db_session.commit()
+    return listing
+
+
+@pytest.fixture
 def expected_listing_financial_report_dict(expected_listing_dict):
     return dict(
         id=UUID("859d10d3-1fd0-4dd5-9b46-f10bd30f4fee"),
@@ -105,10 +114,12 @@ def expected_property_dict(mock_utcnow):
         id=UUID("44cf56a4-1f14-4a08-915f-dc40b7ef657e"),
         address="123 Test St",
         amenities=["Patio", "Servicios Públicos"],
+        baths=2.5,
         bedrooms=3,
         city="Test City",
         country="Test Country",
         description="A lovely test property.",
+        guests=6,
         latitude=37.7749,
         longitude=-122.4194,
         name="Test Property",
@@ -156,6 +167,30 @@ def expected_property_financial_report_dict(property_record, mock_utcnow):
         monthly_expenses_usd=100.0,
         payback_years=5.0,
     )
+
+
+@pytest.fixture
+def expected_property_comp_dict(listing_record, mock_utcnow, property_record):
+    captured_at = mock_utcnow.replace(tzinfo=timezone.utc).isoformat()
+
+    return dict(
+        id=UUID("0c9ef0a2-3d4f-4b21-9c5e-7a1f2b8d4e63"),
+        property_id=property_record.id,
+        listing_id=listing_record.id,
+        adr_cop=349873.7,
+        captured_at=captured_at,
+        distance_km=0.42,
+        occupancy_rate=0.423,
+        ttm_revenue_cop=52217691.0,
+        ttm_total_days=365.0,
+    )
+
+
+@pytest.fixture
+def property_comp_record(expected_property_comp_dict, test_db_session):
+    property_comp = PropertyCompDBFactory(**expected_property_comp_dict)
+    test_db_session.commit()
+    return property_comp
 
 
 @pytest.fixture

@@ -108,6 +108,7 @@ services:
       - ./backend/_factories:/opt/aoam-property-plan/backend/_factories
       - ./backend/_fixtures:/opt/aoam-property-plan/backend/_fixtures
       - ./backend/_mocks:/opt/aoam-property-plan/backend/_mocks
+      - ./backend/conftest.py:/opt/aoam-property-plan/backend/conftest.py
 
   backend-release:
     build:
