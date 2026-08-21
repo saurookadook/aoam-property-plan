@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import Field
 
@@ -20,6 +21,7 @@ class PropertyEntity(BaseEntityModel, TimestampsEntityMixin):
     guests: Optional[int] = None
     latitude: float
     longitude: float
+    market_id: Optional[UUID] = None
     name: Optional[str] = None
     neighborhood: str
     notes: Optional[str]

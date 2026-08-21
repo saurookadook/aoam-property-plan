@@ -40,6 +40,9 @@ class PropertyDBFactory(
     guests = factory.LazyAttribute(lambda o: o.bedrooms * 2)
     latitude = factory.Faker("latitude")
     longitude = factory.Faker("longitude")
+    # Left unset rather than pointed at a fabricated market: the column is a real
+    # foreign key, so a random UUID here would fail every insert.
+    market_id = None
     name = factory.Faker("sentence", nb_words=3)
     neighborhood = factory.Faker("street_name")
     postal_code = factory.Faker("postcode")
