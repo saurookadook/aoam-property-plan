@@ -1,0 +1,19 @@
+{
+    "market": {
+        "country": "Colombia",
+        "region": "Antioquia",
+        "locality": "Medellín",
+        "district": null
+    },
+    "occupancy": null,
+    "average_daily_rate": null,
+    "rev_par": null,
+    "revenue": null,
+    "booking_lead_time": null,
+    "length_of_stay": null,
+    "min_nights": null,
+    "active_listings_count": null,
+    "_tuple_verified": false,
+    "_tuple_evidence": "Not verified. No capture under _research/markets/search/ covers Antioquia. AirROI may key Medellin without its accent, or under a metropolitan-area name the way Bogota is 'Bogota Capital District - Municipality'. Confirm against POST /markets/search first.",
+    "_todo": "Figures are null - capture them with POST /markets/summary (services.airroi.get_market_summary), commit the raw response to _research/markets/summary/, then move this file up into seed_data/ and re-run seed_markets.py."
+}

@@ -11,7 +11,7 @@ from api.models.property_analysis import (
     PropertyAnalyzeRequest,
     PropertyCompsResponse,
 )
-from api.routes.handlers.properties import run_analysis
+from api.routes.handlers.properties import resolve_market_id, run_analysis
 from models.property.facade import PropertyFacade
 from models.property_comp.facade import PropertyCompFacade
 from services import property_analysis, property_source
@@ -54,6 +54,15 @@ def create_property(
     property_payload["source_url"] = request_body.source_url
     property_payload["purchase_price_usd"] = _resolve_price_usd(
         property_payload.get("purchase_price_cop"), api_db_session
+    )
+    # Resolved here rather than on read so that a property's market is a fact
+    # about the record, settled by the coordinates it was created with. Nearest
+    # centroid moves as listings are ingested; re-deriving it on every read would
+    # silently reassign stored properties between markets.
+    property_payload["market_id"] = resolve_market_id(
+        api_db_session,
+        latitude=property_payload["latitude"],
+        longitude=property_payload["longitude"],
     )
 
     try:

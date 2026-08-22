@@ -29,6 +29,10 @@ class MarketFinancialReportDBFactory(
     )
     last_updated = factory.LazyAttribute(lambda o: o.updated_at + timedelta(days=1))
     listing_count = factory.Faker("pyfloat", min_value=1.0, max_value=500.0)
+    # Twelve fractions summing to 1.0, flat rather than random: a distribution
+    # that does not sum to one is not a distribution, and a test asserting
+    # seasonality wants to set its own shape anyway.
+    monthly_revenue_distribution = [round(1 / 12, 6)] * 12
     occupancy_rate = factory.Faker("pyfloat", positive=True, min_value=0.5, max_value=1)
     peak_months = factory.List(
         [

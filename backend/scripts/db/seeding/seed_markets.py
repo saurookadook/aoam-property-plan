@@ -10,12 +10,29 @@ from rich import inspect as ri
 from db.db_session_manager import DBSessionManager
 from models.market.db import MarketDB
 from models.market.facade import MarketFacade
-from models.market_financial_report.db import MarketFinancialReportDB
 from models.market_financial_report.facade import MarketFinancialReportFacade
 from utils.filesystem import get_module_root
 from utils.logging.init import init_logging
 
 root_logger = init_logging(__file__)
+
+REQUIRED_FIGURES = (
+    "average_daily_rate",
+    "occupancy",
+    "revenue",
+    "active_listings_count",
+)
+"""
+What a capture has to carry before it is worth a row.
+
+``adr_cop``, ``occupancy_rate``, ``annual_revenue_cop`` and ``listing_count`` are
+all ``NOT NULL`` on ``market_financial_reports``, so a capture missing any of
+them cannot produce a report - and a market with no report is invisible to every
+read path Phase 4 adds. Checked up front so the failure names the file and the
+missing field, rather than surfacing as an ``IntegrityError`` further down.
+
+See ``seed_data/pending/`` for the placeholder captures this exists to catch.
+"""
 
 
 def seed_db_with_markets():
@@ -37,6 +54,18 @@ def seed_db_with_markets():
                 market_data = json.load(f)
                 ri(market_data, sort=True, title="'market_data' from JSON file")
                 market_details = market_data.get("market")
+
+                missing_figures = [
+                    figure
+                    for figure in REQUIRED_FIGURES
+                    if market_data.get(figure) is None
+                ]
+                if missing_figures:
+                    raise ValueError(
+                        f"'{json_summary.name}' is missing "
+                        f"[{', '.join(missing_figures)}] - capture the summary "
+                        f"before seeding it (see 'seed_data/pending/README.md')"
+                    )
 
                 market_dict = dict(
                     country=market_details.get("country"),
@@ -65,21 +94,14 @@ def seed_db_with_markets():
 
                 ri(market_record, sort=True, title="'market_record' from 'market_data'")
 
-                maybe_one_report = (
-                    local_db_session.execute(
-                        select(MarketFinancialReportDB).where(
-                            MarketFinancialReportDB.market_id == market_record.id
-                        )
-                    )
-                    .scalars()
-                    .first()
+                # Refreshes the market's latest report rather than skipping the
+                # market, which is what this did. A seed script that only works
+                # once on a clean database is not a seed script: re-running it
+                # after re-capturing ``seed_data/`` has to move the figures, or
+                # the only way to update a market is to delete its rows by hand.
+                latest_report = market_financial_report_facade.get_latest_by_market_id(
+                    market_record.id
                 )
-
-                if maybe_one_report is not None:
-                    root_logger.info(
-                        f"Market financial report already exists for market with ``id``: '{market_record.id}'. Skipping..."
-                    )
-                    continue
 
                 market_financial_report_dict = dict(
                     market_id=market_record.id,
@@ -90,8 +112,30 @@ def seed_db_with_markets():
                         "last_updated", datetime.now(timezone.utc)
                     ),
                     occupancy_rate=market_data.get("occupancy"),
-                    peak_months=market_data.get("peak_months", None),
                 )
+
+                # ``peak_months`` and ``monthly_revenue_distribution`` are set
+                # only when the capture actually carries them, which
+                # ``/markets/summary`` never has - both come from the centroid
+                # estimate ``handle_markets_peak_months`` makes. Sending them
+                # unconditionally would have refreshing the headline figures
+                # blank the seasonality of every market on the way past.
+                for seasonality_field in (
+                    "monthly_revenue_distribution",
+                    "peak_months",
+                ):
+                    if market_data.get(seasonality_field) is not None:
+                        market_financial_report_dict[seasonality_field] = market_data[
+                            seasonality_field
+                        ]
+
+                if latest_report is not None:
+                    market_financial_report_dict["id"] = latest_report.id
+                    root_logger.info(
+                        f"Refreshing market financial report with ``id``: "
+                        f"'{latest_report.id}' for market with ``id``: "
+                        f"'{market_record.id}'"
+                    )
 
                 market_financial_report_facade.create_or_update(
                     payload=market_financial_report_dict

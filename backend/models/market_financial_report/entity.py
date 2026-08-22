@@ -16,5 +16,6 @@ class MarketFinancialReportEntity(BaseEntityModel, TimestampsEntityMixin):
     annual_revenue_usd: Optional[float] = None
     last_updated: datetime
     listing_count: float
+    monthly_revenue_distribution: Optional[list[float]] = None
     occupancy_rate: float
     peak_months: Optional[list[str]]

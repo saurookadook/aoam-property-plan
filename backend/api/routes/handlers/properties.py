@@ -1,16 +1,34 @@
 from __future__ import annotations
 
 import logging
-from typing import Callable, TypeVar
+from typing import Callable, Optional, TypeVar
+from uuid import UUID
 
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
+from models.market.facade import MarketFacade
 from models.property.facade import PropertyFacade
 from services.exceptions import (
     AirROIError,
 )
+from services.geo import haversine_km
 
 T = TypeVar("T")
+
+MARKET_MATCH_RADIUS_KM = 50.0
+"""
+How far a property may sit from a market's centroid and still be filed under it.
+
+Nearest-centroid on its own would file every property in Colombia against some
+market, and the budget indicator is a median of the properties in one - a
+Medellin apartment landing in the Salento bucket does not make that median
+wrong-looking, it makes it wrong. 50km is wider than any single locality's
+listing footprint and far narrower than the gaps between the roster's markets
+(Calima to Pance is roughly 65km, Bogota to Salento roughly 200km), so a property
+on the edge of a market still matches and one in a city we do not track matches
+nothing.
+"""
 
 
 def run_analysis(
@@ -50,3 +68,43 @@ def run_analysis(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=error_detail,
         ) from e
+
+
+def resolve_market_id(
+    db_session: Session, *, latitude: float, longitude: float
+) -> Optional[UUID]:
+    """
+    Which market a property belongs to, decided by coordinates.
+
+    ``markets.locality`` is AirROI's name for a place and ``properties.city`` is
+    whatever Finca Raiz printed on the page, so the two cannot be joined on text:
+    a cabin in Pance is filed under ``city='Cali'`` and would match no market at
+    all. Coordinates are the only thing both sides agree on.
+
+    Nearest centroid wins, within ``MARKET_MATCH_RADIUS_KM``. Returns ``None``
+    when nothing is close enough, or when no market has ingested listings yet -
+    an unmatched property is still a property worth storing, it just cannot
+    contribute to a market's budget indicator.
+
+    Distance is measured with ``services.geo.haversine_km`` rather than in
+    Postgres for the same reason a comp's distance is: this runs once per created
+    property against a handful of centroids, and ``ST_Distance`` would mean a
+    round trip to learn something a single subtraction already answers.
+    """
+    centroids = MarketFacade(db_session=db_session).get_all_centroids()
+
+    if not centroids:
+        return None
+
+    nearest = min(
+        centroids,
+        key=lambda centroid: haversine_km(
+            latitude, longitude, centroid.latitude, centroid.longitude
+        ),
+    )
+    distance_km = haversine_km(latitude, longitude, nearest.latitude, nearest.longitude)
+
+    if distance_km > MARKET_MATCH_RADIUS_KM:
+        return None
+
+    return nearest.market_id

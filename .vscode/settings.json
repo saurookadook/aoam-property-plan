@@ -51,6 +51,12 @@
         "https://developer.microsoft.com/json-schemas/": true,
         "https://railway.com/railway.schema.json": true
     },
+    "[json]": {
+        "editor.tabSize": 4
+    },
+    "[jsonc]": {
+        "editor.tabSize": 4
+    },
     "[yaml]": {
         "editor.detectIndentation": false,
         "editor.tabSize": 2

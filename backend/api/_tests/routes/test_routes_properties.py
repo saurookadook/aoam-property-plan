@@ -6,6 +6,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from _factories.exchange_rate.db import ExchangeRateDBFactory
+from _factories.listing.db import ListingDBFactory
+from _factories.market.db import MarketDBFactory
 from models.property.db import PropertyDB
 from services.exchange_rate import FRANKFURTER_RATES_URL
 
@@ -298,3 +300,89 @@ class TestCreatePropertyOverrides:
         assert result.status_code == 201
         assert result.json()["data"]["description"] == "Needs a new roof"
         assert result.json()["data"]["notes"] == "Seen 2026-08-14"
+
+
+# The Salento centroid the ingested listings below average out to. The fixture
+# listing page sits 10.8km from it and ``MANUAL_BODY`` all but on top of it.
+SALENTO_CENTROID = (4.6375, -75.5703)
+
+# Roughly 640km away, so nothing on the roster is within the match radius.
+CARTAGENA = (10.3910, -75.4794)
+
+
+class TestCreatePropertyMarketResolution:
+    """
+    ``properties.market_id`` is the join key the budget indicator needs.
+    ``properties.city`` cannot be it: Finca Raiz files a Pance cabin under
+    ``city='Cali'`` while ``markets.locality`` is AirROI's ``'Pance'``.
+    """
+
+    @pytest.fixture
+    def salento_market(self, test_db_session):
+        latitude, longitude = SALENTO_CENTROID
+        market = MarketDBFactory(
+            country="Colombia", region="Quindío", locality="Salento", district=None
+        )
+        # Committed before the listing: ``listings.market_id`` is a real foreign
+        # key and the factories pass it as a plain value, so nothing tells the
+        # unit of work to insert the market first.
+        test_db_session.commit()
+
+        ListingDBFactory(
+            market_id=market.id,
+            latitude=latitude,
+            longitude=longitude,
+            location=f"POINT({longitude} {latitude})",
+        )
+        test_db_session.commit()
+        return market
+
+    def test_files_a_scraped_property_under_its_market(
+        self,
+        test_app_client,
+        finca_raiz_listing,
+        salento_market,
+        stored_exchange_rate,
+    ):
+        result = test_app_client.post(
+            "/api/properties", json={"source_url": LISTING_URL}
+        )
+
+        assert result.status_code == 201
+        assert result.json()["data"]["market_id"] == str(salento_market.id)
+
+    def test_files_a_manual_property_under_its_market(
+        self, test_app_client, salento_market, stored_exchange_rate
+    ):
+        result = test_app_client.post("/api/properties", json=MANUAL_BODY)
+
+        assert result.status_code == 201
+        assert result.json()["data"]["market_id"] == str(salento_market.id)
+
+    def test_stores_no_market_for_a_property_outside_every_market(
+        self, test_app_client, salento_market, stored_exchange_rate
+    ):
+        latitude, longitude = CARTAGENA
+        body = {**MANUAL_BODY, "latitude": latitude, "longitude": longitude}
+
+        result = test_app_client.post("/api/properties", json=body)
+
+        # Still a 201: an unmatched property is worth storing, it just cannot
+        # contribute to any market's budget indicator.
+        assert result.status_code == 201
+        assert result.json()["data"]["market_id"] is None
+
+    def test_stores_no_market_when_nothing_has_been_ingested(
+        self, test_app_client, stored_exchange_rate, test_db_session
+    ):
+        MarketDBFactory(
+            country="Colombia", region="Quindío", locality="Salento", district=None
+        )
+        test_db_session.commit()
+
+        result = test_app_client.post("/api/properties", json=MANUAL_BODY)
+
+        # The market exists but has no listings, so it has no centroid and there
+        # is nothing to measure the property against.
+        assert result.status_code == 201
+        assert result.json()["data"]["market_id"] is None

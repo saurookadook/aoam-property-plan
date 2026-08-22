@@ -40,6 +40,20 @@ def expected_market_financial_report_dict(test_market_record):
         annual_revenue_usd=1000.0,
         last_updated="2026-05-18T11:29:20.063778",
         listing_count=10.0,
+        monthly_revenue_distribution=[
+            0.07,
+            0.06,
+            0.08,
+            0.09,
+            0.08,
+            0.11,
+            0.12,
+            0.11,
+            0.07,
+            0.07,
+            0.06,
+            0.08,
+        ],
         occupancy_rate=0.85,
         peak_months=["June", "July", "August"],
     )
@@ -105,7 +119,7 @@ def expected_listing_financial_report_dict(expected_listing_dict):
 
 
 @pytest.fixture
-def expected_property_dict(mock_utcnow):
+def expected_property_dict(mock_utcnow, test_market_record):
     source_created_at = (
         (mock_utcnow - timedelta(days=30)).replace(tzinfo=timezone.utc).isoformat()
     )
@@ -122,6 +136,7 @@ def expected_property_dict(mock_utcnow):
         guests=6,
         latitude=37.7749,
         longitude=-122.4194,
+        market_id=test_market_record.id,
         name="Test Property",
         neighborhood="Test Neighborhood",
         notes="Test notes",
