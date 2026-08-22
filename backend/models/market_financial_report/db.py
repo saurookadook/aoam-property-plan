@@ -37,6 +37,6 @@ class MarketFinancialReportDB(BaseDB, TimestampsDB):
     """
 
     occupancy_rate: Mapped[float] = mapped_column(postgresql.REAL, nullable=False)
-    peak_months: Mapped[list[str]] = mapped_column(
+    peak_months: Mapped[list[str] | None] = mapped_column(
         postgresql.ARRAY(postgresql.TEXT), nullable=True
     )

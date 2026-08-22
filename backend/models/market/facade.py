@@ -147,13 +147,13 @@ class MarketFacade(BaseFacade):
         return None
 
     def _centroid_select(self) -> Select:
-            # ``latitude``/``longitude`` are ``NOT NULL`` on ``listings``, so the
-            # ``AVG``s are null only when the group is empty - which for the grouped
-            # form cannot happen, and for the single-market form is exactly the
-            # "nothing ingested" case ``get_centroid_by_id`` checks for.
-            return select(
-                ListingDB.market_id.label("market_id"),
-                func.avg(ListingDB.latitude).label("latitude"),
-                func.avg(ListingDB.longitude).label("longitude"),
-                func.count(ListingDB.id).label("listing_count"),
-            ).group_by(ListingDB.market_id)
+        # ``latitude``/``longitude`` are ``NOT NULL`` on ``listings``, so the
+        # ``AVG``s are null only when the group is empty - which for the grouped
+        # form cannot happen, and for the single-market form is exactly the
+        # "nothing ingested" case ``get_centroid_by_id`` checks for.
+        return select(
+            ListingDB.market_id.label("market_id"),
+            func.avg(ListingDB.latitude).label("latitude"),
+            func.avg(ListingDB.longitude).label("longitude"),
+            func.count(ListingDB.id).label("listing_count"),
+        ).group_by(ListingDB.market_id)
