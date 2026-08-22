@@ -4,15 +4,18 @@ from datetime import datetime, timezone
 from typing import Optional, Union
 from uuid import UUID
 
-from sqlalchemy import Select, func, select, update
+from sqlalchemy import Select, func, select, true, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import aliased
 
 from models.base.facade import BaseFacade
 from models.listing.db import ListingDB
 from models.market.centroid import MarketCentroidEntity
 from models.market.db import MarketDB
-from models.market.entity import MarketEntity
+from models.market.entity import MarketEntity, MarketWithFinancialReportEntity
+from models.market_financial_report.db import MarketFinancialReportDB
+from models.market_financial_report.entity import MarketFinancialReportEntity
 
 
 class MarketFacade(BaseFacade):
@@ -45,6 +48,69 @@ class MarketFacade(BaseFacade):
             .all()
         )
         return [MarketEntity.model_validate(market) for market in market_records]
+
+    def get_all_with_latest_reports(self) -> list[MarketWithFinancialReportEntity]:
+        """
+        Every market with its latest figures and its centroid, in one query.
+
+        The alternative - ``get_all()`` then ``get_latest_by_market_id`` and
+        ``get_centroid_by_id`` per row - is two extra round trips per market, so
+        seventeen queries for today's eight-market roster and worse as it grows,
+        to render a page that is one card per market.
+
+        A market with no report, or with nothing ingested, is still returned:
+        ``LEFT JOIN``s throughout. "This market has no figures yet" is a state
+        the card has to render, so dropping the row would hide the market
+        entirely rather than show it as incomplete.
+
+        The lateral repeats ``get_latest_by_market_id``'s ordering
+        (``last_updated`` then ``created_at``, both descending) because
+        ``handle_markets_summaries`` inserts a fresh row per run - a plain join
+        would multiply each market by its whole reporting history.
+        """
+        latest_report = aliased(
+            MarketFinancialReportDB,
+            (
+                select(MarketFinancialReportDB)
+                .where(MarketFinancialReportDB.market_id == MarketDB.id)
+                .order_by(
+                    MarketFinancialReportDB.last_updated.desc(),
+                    MarketFinancialReportDB.created_at.desc(),
+                )
+                .limit(1)
+                # for usage, see:
+                # - https://docs.sqlalchemy.org/en/21/tutorial/data_select.html#tutorial-lateral-correlation
+                .lateral("latest_market_financial_report")
+            ),
+        )
+        centroids = self._centroid_select().subquery("market_centroids")
+
+        rows = self.db_session.execute(
+            select(
+                MarketDB,
+                latest_report,
+                centroids.c.latitude,
+                centroids.c.longitude,
+            )
+            .select_from(MarketDB)
+            .outerjoin(latest_report, true())
+            .outerjoin(centroids, centroids.c.market_id == MarketDB.id)
+            .order_by(MarketDB.locality.asc())
+        ).all()
+
+        return [
+            MarketWithFinancialReportEntity(
+                **MarketEntity.model_validate(market_record).model_dump(),
+                financial_report=(
+                    MarketFinancialReportEntity.model_validate(report_record)
+                    if report_record is not None
+                    else None
+                ),
+                latitude=latitude,
+                longitude=longitude,
+            )
+            for market_record, report_record, latitude, longitude in rows
+        ]
 
     def get_centroid_by_id(
         self, market_id: UUID | str
