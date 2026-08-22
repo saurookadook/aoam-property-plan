@@ -30,16 +30,15 @@ def read_exchange_rate(api_db_session: API_DB_SessionDependency):
     returning null here would push that judgement onto every caller. The client
     should show the failure and keep displaying COP.
     """
-    with api_db_session as db_session:
-        try:
-            exchange_rate = resolve_cop_per_usd(db_session)
-        except Exception as e:
-            error_detail = "Error fetching exchange rate"
-            logger.error(f"{error_detail}: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=error_detail,
-            ) from e
+    try:
+        exchange_rate = resolve_cop_per_usd(api_db_session)
+    except Exception as e:
+        error_detail = "Error fetching exchange rate"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
 
     if exchange_rate is None:
         logger.warning("No exchange rate available to serve")
