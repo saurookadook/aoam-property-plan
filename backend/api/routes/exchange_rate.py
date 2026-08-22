@@ -41,11 +41,11 @@ def read_exchange_rate(api_db_session: API_DB_SessionDependency):
                 detail=error_detail,
             ) from e
 
-        if exchange_rate is None:
-            logger.warning("No exchange rate available to serve")
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="No exchange rate available",
-            )
+    if exchange_rate is None:
+        logger.warning("No exchange rate available to serve")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="No exchange rate available",
+        )
 
-        return {"data": exchange_rate}
+    return {"data": exchange_rate}

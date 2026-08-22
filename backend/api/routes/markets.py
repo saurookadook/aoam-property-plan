@@ -41,7 +41,7 @@ def read_markets_list(api_db_session: API_DB_SessionDependency):
                 detail=error_detail,
             )
 
-        return {"data": markets}
+    return {"data": markets}
 
 
 @markets_router.get(
@@ -131,4 +131,4 @@ def read_market_overview(
                 detail=error_detail,
             ) from e
 
-        return {"data": market_overview_data}
+    return {"data": market_overview_data}
