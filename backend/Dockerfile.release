@@ -36,6 +36,7 @@ COPY ./backend/constants ./constants
 COPY ./backend/db ./db
 COPY ./backend/models ./models
 COPY ./backend/scripts ./scripts
+COPY ./backend/services ./services
 COPY ./backend/utils ./utils
 COPY ./backend/alembic.ini \
     ./backend/gunicorn_config.py \
