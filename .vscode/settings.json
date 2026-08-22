@@ -1,4 +1,7 @@
 {
+    //---------------------  AI Co-Authors  -------------------------
+    // Co-Authored-By: Claude <noreply@anthropic.com>
+    //----------------------------------------------------------------
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnType": false, // required
     "editor.formatOnPaste": false, // optional
