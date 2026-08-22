@@ -12,6 +12,7 @@ from fastapi_crons import Crons, get_cron_router
 # from fastapi_csrf_protect.exceptions import CsrfProtectError
 
 from api.middlewares.common import add_process_time_header
+from api.routes.exchange_rate import exchange_rate_router
 from api.routes.home import home_router
 from api.routes.listings import listings_router
 from api.routes.markets import markets_router
@@ -105,6 +106,7 @@ app.add_middleware(
 )
 
 app.include_router(home_router)
+app.include_router(exchange_rate_router)
 app.include_router(listings_router)
 app.include_router(markets_router)
 app.include_router(properties_router)
