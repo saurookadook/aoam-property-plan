@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 from sqlalchemy import func, select
 
+from _factories.property.db import PropertyDBFactory
 from models.property.db import PropertyDB
 from models.property.entity import PropertyEntity
 from models.property.facade import PropertyFacade
@@ -35,6 +36,30 @@ class TestPropertyFacade:
         with pytest.raises(PropertyFacade.NoResultFound):
             non_existent_id = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
             property_facade.get_one_by_id(non_existent_id)
+
+    def test_get_all_returns_newest_first(
+        self, property_facade, property_record, test_db_session
+    ):
+        older = PropertyDBFactory(
+            created_at=property_record.created_at - timedelta(days=1),
+            source_url="https://example.com/property/older",
+        )
+        newer = PropertyDBFactory(
+            created_at=property_record.created_at + timedelta(days=1),
+            source_url="https://example.com/property/newer",
+        )
+        test_db_session.commit()
+
+        results = property_facade.get_all()
+
+        assert [record.id for record in results] == [
+            newer.id,
+            property_record.id,
+            older.id,
+        ]
+
+    def test_get_all_is_empty_when_nothing_is_stored(self, property_facade):
+        assert property_facade.get_all() == []
 
     def test_get_one_by_source_url(self, property_facade, property_record):
         result = property_facade.get_one_by_source_url(property_record.source_url)
