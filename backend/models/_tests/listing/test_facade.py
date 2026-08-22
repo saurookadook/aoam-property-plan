@@ -241,3 +241,118 @@ class TestListingFacade:
             assert getattr(result, key) == value
 
         return True
+
+
+class TestListingFacadeMarketQueryParams:
+    """
+    ``get_all_by_market_id`` pushes filtering, sorting and limiting into the
+    query. Fetching every listing and slicing in Python would make ``limit``
+    cosmetic and would make ``sort`` describe the page rather than the market.
+    """
+
+    @pytest.fixture
+    def listing_facade(self, test_db_session):
+        return ListingFacade(db_session=test_db_session)
+
+    @pytest.fixture
+    def market_record(self, test_db_session):
+        market = MarketDBFactory()
+        test_db_session.commit()
+        return market
+
+    def _ingest(self, market_record, test_db_session, **kwargs):
+        latitude = kwargs.pop("latitude", 4.64)
+        longitude = kwargs.pop("longitude", -75.56)
+        listing = ListingDBFactory(
+            market_id=market_record.id,
+            latitude=latitude,
+            longitude=longitude,
+            location=f"POINT({longitude} {latitude})",
+            **kwargs,
+        )
+        test_db_session.commit()
+        return listing
+
+    def test_defaults_to_airroi_id_ascending(
+        self, listing_facade, market_record, test_db_session
+    ):
+        for airroi_id in [300, 100, 200]:
+            self._ingest(market_record, test_db_session, airroi_id=airroi_id)
+
+        results = listing_facade.get_all_by_market_id(market_record.id)
+
+        assert [listing.airroi_id for listing in results] == [100, 200, 300]
+
+    def test_filters_and_limits(self, listing_facade, market_record, test_db_session):
+        self._ingest(market_record, test_db_session, airroi_id=100, bedrooms=3)
+        self._ingest(market_record, test_db_session, airroi_id=200, bedrooms=3)
+        self._ingest(market_record, test_db_session, airroi_id=300, bedrooms=2)
+
+        results = listing_facade.get_all_by_market_id(
+            market_record.id, bedrooms=3, limit=1
+        )
+
+        assert [listing.airroi_id for listing in results] == [100]
+
+    def test_sort_reaches_the_latest_financial_report(
+        self, listing_facade, market_record, test_db_session
+    ):
+        listing = self._ingest(market_record, test_db_session, airroi_id=100)
+        other = self._ingest(market_record, test_db_session, airroi_id=200)
+
+        ListingFinancialReportDBFactory(listing_id=listing.id, ttm_revenue=1.0)
+        ListingFinancialReportDBFactory(listing_id=other.id, ttm_revenue=2.0)
+        test_db_session.commit()
+
+        results = listing_facade.get_all_by_market_id(market_record.id, sort="revenue")
+
+        assert [listing.airroi_id for listing in results] == [200, 100]
+
+    def test_rejects_an_unknown_sort(
+        self, listing_facade, market_record, test_db_session
+    ):
+        # The route constrains ``sort`` with a ``Literal`` so this is a 422 over
+        # HTTP, but the facade is callable from crons and scripts too.
+        with pytest.raises(ValueError, match="Unknown listing sort 'price'"):
+            listing_facade.get_all_by_market_id(market_record.id, sort="price")
+
+    def test_includes_financial_reports_on_request(
+        self, listing_facade, market_record, test_db_session
+    ):
+        listing = self._ingest(market_record, test_db_session, airroi_id=100)
+        report = ListingFinancialReportDBFactory(listing_id=listing.id)
+        test_db_session.commit()
+
+        results = listing_facade.get_all_by_market_id(
+            market_record.id, include_financial_reports=True
+        )
+
+        assert len(results) == 1
+        assert [item.id for item in results[0].listing_financial_reports] == [report.id]
+
+    def test_excludes_financial_reports_by_default(
+        self, listing_facade, market_record, test_db_session
+    ):
+        listing = self._ingest(market_record, test_db_session, airroi_id=100)
+        ListingFinancialReportDBFactory(listing_id=listing.id)
+        test_db_session.commit()
+
+        results = listing_facade.get_all_by_market_id(market_record.id)
+
+        assert results[0].listing_financial_reports == []
+
+    def test_sorting_with_reports_does_not_duplicate_a_listing(
+        self, listing_facade, market_record, test_db_session
+    ):
+        listing = self._ingest(market_record, test_db_session, airroi_id=100)
+
+        for revenue in [1.0, 2.0, 3.0]:
+            ListingFinancialReportDBFactory(listing_id=listing.id, ttm_revenue=revenue)
+        test_db_session.commit()
+
+        results = listing_facade.get_all_by_market_id(
+            market_record.id, sort="revenue", include_financial_reports=True
+        )
+
+        assert [listing.airroi_id for listing in results] == [100]
+        assert len(results[0].listing_financial_reports) == 3

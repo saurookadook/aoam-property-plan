@@ -22,6 +22,10 @@ from utils.filesystem import get_module_root, get_project_root
 os.environ["FORCE_COLOR"] = "1"
 os.environ["PYTHONUNBUFFERED"] = "1"
 
+EnvVarManager().env_vars.database_name = os.environ["DATABASE_NAME"] = (
+    "test_aoam_property_plan"
+)
+
 
 def pytest_sessionstart(session):
     import shutil
@@ -29,10 +33,6 @@ def pytest_sessionstart(session):
     raw_window_width, raw_window_height = shutil.get_terminal_size()
     os.environ["COLUMNS"] = str(raw_window_width)
     os.environ["LINES"] = str(raw_window_height)
-
-    EnvVarManager().env_vars.database_name = os.environ["DATABASE_NAME"] = (
-        "test_aoam_property_plan"
-    )
 
     alembic_ini = os.path.join(os.path.abspath("."), "alembic.ini")
     alembic_config = config.Config(alembic_ini)

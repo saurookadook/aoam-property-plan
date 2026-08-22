@@ -317,6 +317,58 @@ fetch-and-store. Response carries `cop_per_usd` **and** `record_date`, which the
 `None` → **503, not 200-with-null**: a currency toggle with no rate is a broken feature, not an
 empty result.
 
+### Chunk 2 — status
+
+All four deliverables are done. **418 backend tests pass**, up from 371.
+
+| Deliverable | State | Notes |
+| :--- | :--- | :--- |
+| `GET /api/markets` nested report | **Done** | `MarketWithFinancialReportEntity` in `models/market/entity.py`; `MarketFacade.get_all_with_latest_reports()` is one query — `LEFT JOIN LATERAL` for the newest report plus the existing `_centroid_select()` subquery for the `AVG` position. Ordered by `locality ASC` so the card grid is stable. |
+| `GET /api/markets/{id}` query params | **Done** | `bedrooms` (`ge=0`), `property_type`, `sort` (`Literal["revenue", "occupancy"]`), `limit` (`ge=1, le=200`). All four are pushed into SQL. |
+| Listings carry their reports | **Done** | `include_financial_reports=True` in the route; `selectinload(ListingDB.listing_financial_reports)` in `_build_select_clause`. |
+| `GET /api/exchange-rate` | **Done** | New `api/routes/exchange_rate.py` + `api/models/exchange_rate.py`. Returns `cop_per_usd` and `record_date`; `None` → **503**. |
+
+#### Three decisions taken while implementing
+
+**`sort` is validated twice, deliberately.** A `Literal` in the route so a bad value is a 422 rather
+than a 500, and a `ValueError` in `ListingFacade` naming the accepted values, because the crons and
+seeding scripts call the facade directly and never pass through FastAPI's validation.
+
+**`ExchangeRateData` is a plain `BaseModel`, not a `BaseResponseModel`.** `BaseResponseModel`
+carries `alias_generator=to_camel` with `serialize_by_alias=True`, which would emit `copPerUsd` /
+`recordDate`. Every other payload nests snake_case entities under a camelCase envelope, and Chunk 4
+specifies snake_case frontend types — so only the envelope is camelCased here too.
+
+**`.select_from()` is required on both new selects.** With a `LATERAL` alias and a subquery in the
+same statement, SQLAlchemy cannot infer the left side and raises `Can't determine which FROM clause
+to join from`. Left implicit, this surfaces only once a second join is added.
+
+#### Two behaviour changes to call out in the PR
+
+1. **`/api/markets/{id}` listings are now ordered.** `get_all_by_market_id` had no `ORDER BY`, so
+   the previous order was whatever Postgres happened to return. The default is now
+   `ORDER BY airroi_id ASC`. This is the plan's own honesty note, not a regression.
+2. **Listings now carry `listing_financial_reports`.** The response grows a nested array per
+   listing. `location` also changes shape as a side effect: `select(ListingDB)` skips the explicit
+   `ST_AsText`, so `ListingEntity` rebuilds the WKT string from the coordinates. Same point, and
+   the tests assert on `airroi_id` ordering rather than whole-entity equality because of it.
+
+#### Acceptance evidence
+
+- **418 tests pass**, up from 371 — 47 new across `api/_tests/routes/test_routes_markets.py`
+  (rewritten, 27), `api/_tests/routes/test_routes_exchange_rate.py` (new, 8),
+  `models/_tests/listing/test_facade.py` (+9) and `models/_tests/market/test_facade.py` (+11).
+- **`sort` reads the newest report per listing**, asserted by seeding a stale high-revenue report
+  and a newer low-revenue one and checking the ordering follows the newer figure.
+- **`limit` is applied after ordering, not before** — asserted by checking that
+  `sort=revenue&limit=2` returns the two highest earners in the market, not the first two rows.
+- **Listings with no report sort last** (`NULLS LAST`) rather than dropping out of the response.
+- **`/api/exchange-rate` returns 503** when the table is empty and the upstream fetch fails, and
+  ignores a rate dated in the future.
+- **A latent bug fixed on the way past**: `api/routes/markets.py` built its `ListingFacade` with
+  `db_session=api_db_session`, the module-level dependency callable rather than the request's
+  session.
+
 ---
 
 ## Chunk 3 — Property reads and the analysis envelope (backend)
