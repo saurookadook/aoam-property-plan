@@ -155,6 +155,9 @@ def read_property_report(property_id: str, api_db_session: API_DB_SessionDepende
         report = PropertyFinancialReportFacade(
             db_session=api_db_session
         ).get_latest_by_property_id(property_id)
+
+        if report is not None:
+            report = build_analysis_data(report)
     except PropertyFacade.NoResultFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -168,10 +171,7 @@ def read_property_report(property_id: str, api_db_session: API_DB_SessionDepende
             detail=error_detail,
         ) from e
 
-    if report is None:
-        return {"data": None}
-
-    return {"data": build_analysis_data(report)}
+    return {"data": report}
 
 
 @properties_router.post(
