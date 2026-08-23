@@ -105,6 +105,49 @@ class TestPropertyCompFacade:
             no_distance.id,
         ]
 
+    def test_get_all_by_property_id_carries_the_listing(
+        self,
+        listing_record,
+        property_comp_facade,
+        property_comp_record,
+        property_record,
+    ):
+        comp = property_comp_facade.get_all_by_property_id(property_record.id)[0]
+
+        assert comp.listing is not None
+        assert comp.listing.id == listing_record.id
+        assert comp.listing.airroi_id == listing_record.airroi_id
+        assert comp.listing.property_type == listing_record.property_type
+
+    def test_get_all_by_property_id_serves_a_narrow_listing(
+        self, property_comp_facade, property_record, property_comp_record
+    ):
+        comp = property_comp_facade.get_all_by_property_id(property_record.id)[0]
+
+        # The comp table renders a name, a type and a link out - not a
+        # description, thirteen amenities and twenty photo URLs per row.
+        assert set(comp.listing.model_dump()) == {
+            "id",
+            "airroi_id",
+            "baths",
+            "bedrooms",
+            "cover_photo_url",
+            "latitude",
+            "longitude",
+            "name",
+            "property_type",
+            "source_url",
+        }
+
+    def test_the_write_path_entity_has_no_listing_key(
+        self, property_comp_facade, property_comp_record
+    ):
+        # ``PropertyCompEntity`` stays relationship-free so that round-tripping
+        # one through ``model_dump()`` still produces a usable payload.
+        written = property_comp_facade.get_one_by_id(property_comp_record.id)
+
+        assert "listing" not in written.model_dump()
+
     def test_get_all_by_property_id_is_empty_for_an_unanalysed_property(
         self, property_comp_facade, property_record
     ):

@@ -19,7 +19,13 @@ from models.property_financial_report.facade import PropertyFinancialReportFacad
 from services import property_analysis
 from services.exceptions import AirROIError
 from services.exchange_rate import FRANKFURTER_RATES_URL
-from services.property_analysis import analyze_property, refresh_comps
+from constants.colombia import DEFAULT_INTEREST_RATE_PERCENTAGE
+from services.calculations import analyze
+from services.property_analysis import (
+    analyze_property,
+    refresh_comps,
+    scenario_from_report,
+)
 
 COP_PER_USD = 4150.0
 
@@ -571,3 +577,82 @@ class TestRefreshComps:
         test_db_session.execute(delete(ExchangeRateDB))
 
         assert len(refresh_comps(test_db_session, property_id=property_record.id)) == 25
+
+
+class TestScenarioFromReport:
+    """
+    The guarantee that a stored report can always be re-explained.
+
+    The deep-dive page reloads through ``GET``, and neither the expense
+    breakdown nor the sensitivity sweep has a column - so both are rebuilt from
+    the report's own inputs. If this rebuild is not faithful, every figure the
+    read path shows is quietly computed under assumptions the report was never
+    run with.
+    """
+
+    @pytest.fixture
+    def report(self, airroi_estimate_mock, salento_3br, test_db_session):
+        return analyze_property(
+            test_db_session,
+            property_id=salento_3br.id,
+            overrides={
+                "down_payment_percentage": 35.0,
+                "hoa_monthly_cop": 250_000.0,
+                "interest_rate_percentage": 13.5,
+                "renovation_budget_cop": 20_000_000.0,
+            },
+        )
+
+    def test_round_trips_the_report_it_was_built_from(self, report):
+        # The acceptance gate for this chunk: re-analysing the rebuilt scenario
+        # reproduces the stored result rather than approximating it.
+        rebuilt = analyze(scenario_from_report(report))
+
+        assert rebuilt.coc_return_percentage == pytest.approx(
+            report.coc_return_percentage
+        )
+        assert rebuilt.annual_net_income_cop == pytest.approx(
+            report.annual_net_income_cop
+        )
+        assert rebuilt.cash_invested_cop == pytest.approx(report.cash_invested_cop)
+        assert rebuilt.monthly_expenses.total_cop == pytest.approx(
+            report.monthly_expenses_cop
+        )
+        assert rebuilt.monthly_expenses.mortgage_cop == pytest.approx(
+            report.monthly_mortgage_cop
+        )
+        assert rebuilt.payback_years == pytest.approx(report.payback_years)
+
+    def test_maps_the_interest_rate_column_onto_the_scenario_knob(self, report):
+        # ``property_financial_reports.interest_rate`` against
+        # ``PropertyScenario.interest_rate_percentage`` - the rename this
+        # function exists to absorb.
+        assert report.interest_rate == pytest.approx(13.5)
+        assert scenario_from_report(report).interest_rate_percentage == pytest.approx(
+            13.5
+        )
+
+    def test_carries_every_stored_assumption_across(self, report):
+        scenario = scenario_from_report(report)
+
+        assert scenario.down_payment_percentage == pytest.approx(35.0)
+        assert scenario.hoa_monthly_cop == pytest.approx(250_000.0)
+        assert scenario.renovation_budget_cop == pytest.approx(20_000_000.0)
+        assert scenario.cop_per_usd == pytest.approx(COP_PER_USD)
+
+    def test_a_null_assumption_falls_back_to_the_colombia_default(self, report):
+        # Dropped rather than defaulted here, so the fallback stays in one place.
+        scenario = scenario_from_report(
+            report.model_copy(update={"interest_rate": None})
+        )
+
+        assert scenario.interest_rate_percentage == pytest.approx(
+            DEFAULT_INTEREST_RATE_PERCENTAGE
+        )
+
+    @pytest.mark.parametrize(
+        "column", ["purchase_price_cop", "annual_revenue_cop", "exchange_rate"]
+    )
+    def test_a_missing_required_input_raises_rather_than_guessing(self, column, report):
+        with pytest.raises(ValueError, match=column):
+            scenario_from_report(report.model_copy(update={column: None}))

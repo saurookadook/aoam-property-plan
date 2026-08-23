@@ -148,3 +148,7 @@ class PropertyCreateRequest(BaseModel):
 
 class PropertyResponse(BaseResponseModel):
     data: PropertyEntity
+
+
+class PropertiesListResponse(BaseResponseModel):
+    data: list[PropertyEntity]
