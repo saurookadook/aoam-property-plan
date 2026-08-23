@@ -24,6 +24,9 @@
             "path": "./tsconfig.node.json"
         },
         {
+            "path": "./tsconfig.strict.json"
+        },
+        {
             "path": "./tsconfig.test.json"
         }
     ]
