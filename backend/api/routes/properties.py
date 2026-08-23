@@ -1,19 +1,29 @@
 from __future__ import annotations
 
-from typing import Any, Optional, TypeVar
+from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException, status
 
 from api.dependencies.db_session import API_DB_SessionDependency
-from api.models.property import PropertyCreateRequest, PropertyResponse
+from api.models.property import (
+    PropertiesListResponse,
+    PropertyCreateRequest,
+    PropertyResponse,
+)
 from api.models.property_analysis import (
+    PropertyAnalysisReportResponse,
     PropertyAnalysisResponse,
     PropertyAnalyzeRequest,
     PropertyCompsResponse,
 )
-from api.routes.handlers.properties import resolve_market_id, run_analysis
+from api.routes.handlers.properties import (
+    build_analysis_data,
+    resolve_market_id,
+    run_analysis,
+)
 from models.property.facade import PropertyFacade
 from models.property_comp.facade import PropertyCompFacade
+from models.property_financial_report.facade import PropertyFinancialReportFacade
 from services import property_analysis, property_source
 from services.exceptions import (
     FetchError,
@@ -80,6 +90,90 @@ def create_property(
     return {"data": property_record}
 
 
+@properties_router.get(
+    "/properties",
+    response_model=PropertiesListResponse,
+)
+def read_properties_list(api_db_session: API_DB_SessionDependency):
+    """Every stored property, most recently added first."""
+    try:
+        properties = PropertyFacade(db_session=api_db_session).get_all()
+    except Exception as e:
+        error_detail = "Error fetching properties"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
+
+    return {"data": properties}
+
+
+@properties_router.get(
+    "/properties/{property_id}",
+    response_model=PropertyResponse,
+)
+def read_property(property_id: str, api_db_session: API_DB_SessionDependency):
+    """One stored property, as it was saved. Makes no AirROI call."""
+    try:
+        property_record = PropertyFacade(db_session=api_db_session).get_one_by_id(
+            property_id
+        )
+    except PropertyFacade.NoResultFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found",
+        ) from e
+    except Exception as e:
+        error_detail = "Error fetching property"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
+
+    return {"data": property_record}
+
+
+@properties_router.get(
+    "/properties/{property_id}/report",
+    response_model=PropertyAnalysisReportResponse,
+)
+def read_property_report(property_id: str, api_db_session: API_DB_SessionDependency):
+    """
+    The latest stored analysis, rebuilt into the full envelope. No AirROI call.
+
+    This is what a deep-dive page load reads. ``POST /analyze`` spends an API
+    call and rewrites the comp set every time, so reloading through it would
+    charge for every refocus and every StrictMode double-mount.
+
+    ``{"data": null}`` with a 200 for a property that has never been analysed -
+    the same answer shape ``/comps/cached`` gives, for the same reason.
+    """
+    try:
+        PropertyFacade(db_session=api_db_session).get_one_by_id(property_id)
+        report = PropertyFinancialReportFacade(
+            db_session=api_db_session
+        ).get_latest_by_property_id(property_id)
+    except PropertyFacade.NoResultFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found",
+        ) from e
+    except Exception as e:
+        error_detail = "Error fetching property report"
+        logger.error(f"{error_detail}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_detail,
+        ) from e
+
+    if report is None:
+        return {"data": None}
+
+    return {"data": build_analysis_data(report)}
+
+
 @properties_router.post(
     "/properties/{property_id}/analyze",
     response_model=PropertyAnalysisResponse,
@@ -96,6 +190,9 @@ def analyze_property(
     Every call writes a new report rather than replacing the last one, so a
     property keeps the history of what it looked like under different assumptions.
     The body is optional - omitting it analyses under the Colombia defaults.
+
+    NOTE: ``data`` is the full analysis envelope - report, monthly expense
+    breakdown and sensitivity sweep - not the report on its own.
     """
     report = run_analysis(
         lambda: property_analysis.analyze_property(
@@ -107,7 +204,7 @@ def analyze_property(
         logger=logger,
     )
 
-    return {"data": report}
+    return {"data": build_analysis_data(report)}
 
 
 @properties_router.get(

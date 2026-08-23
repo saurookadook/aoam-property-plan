@@ -48,7 +48,7 @@ class TestAnalyzeProperty:
         result = test_app_client.post(f"/api/properties/{salento_property.id}/analyze")
 
         assert result.status_code == 201
-        data = result.json()["data"]
+        data = result.json()["data"]["report"]
         assert data["annual_revenue_source"] == "airroi_p25"
         assert data["comp_count"] == 17
         assert data["peak_months"] == ["December", "July", "January"]
@@ -69,7 +69,7 @@ class TestAnalyzeProperty:
         )
 
         assert result.status_code == 201
-        data = result.json()["data"]
+        data = result.json()["data"]["report"]
         assert data["down_payment_percentage"] == pytest.approx(40.0)
         assert data["interest_rate"] == pytest.approx(8.0)
         # An explicit ``0`` is a choice, not an omission.
@@ -105,7 +105,10 @@ class TestAnalyzeProperty:
             json={"down_payment_percentage": 50},
         )
 
-        assert first.json()["data"]["id"] != second.json()["data"]["id"]
+        assert (
+            first.json()["data"]["report"]["id"]
+            != second.json()["data"]["report"]["id"]
+        )
 
     def test_an_unknown_property_is_404(self, airroi_estimate_mock, test_app_client):
         result = test_app_client.post(f"/api/properties/{UNKNOWN_ID}/analyze")
@@ -157,7 +160,7 @@ class TestAnalyzeProperty:
             json={"purchase_price_cop": 700_000_000.0},
         )
         assert accepted.status_code == 201
-        assert accepted.json()["data"]["purchase_price_cop"] == pytest.approx(
+        assert accepted.json()["data"]["report"]["purchase_price_cop"] == pytest.approx(
             700_000_000.0
         )
 
@@ -198,7 +201,7 @@ class TestAnalyzeProperty:
         result = test_app_client.post(f"/api/properties/{property_record.id}/analyze")
 
         assert result.status_code == 201
-        data = result.json()["data"]
+        data = result.json()["data"]["report"]
         assert data["comp_derived_revenue_cop"] is None
         assert data["annual_revenue_source"] == "airroi_p25_thin_comps"
 
@@ -275,3 +278,182 @@ class TestReadCachedPropertyComps:
 
         assert result.status_code == 404
         assert result.json()["detail"] == "Property not found"
+
+
+class TestAnalysisEnvelope:
+    def test_analyze_returns_report_expenses_and_sensitivity(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        result = test_app_client.post(f"/api/properties/{salento_property.id}/analyze")
+
+        assert result.status_code == 201
+        data = result.json()["data"]
+        assert set(data) == {"report", "expenses", "sensitivity"}
+        assert set(data["expenses"]) == {
+            "mortgage_cop",
+            "hoa_cop",
+            "management_fee_cop",
+            "maintenance_reserve_cop",
+            "predial_cop",
+            "total_cop",
+        }
+        assert len(data["sensitivity"]) == 3
+        assert [
+            cell["revenue_factor"] for cell in data["sensitivity"]
+        ] == pytest.approx([0.9, 1.0, 1.1])
+
+    def test_the_middle_sensitivity_cell_is_the_report_itself(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        data = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze"
+        ).json()["data"]
+
+        unscaled = data["sensitivity"][1]
+
+        assert unscaled["annual_revenue_cop"] == pytest.approx(
+            data["report"]["annual_revenue_cop"]
+        )
+        assert unscaled["coc_return_percentage"] == pytest.approx(
+            data["report"]["coc_return_percentage"]
+        )
+
+    def test_the_expense_lines_sum_to_the_stored_total(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        data = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze"
+        ).json()["data"]
+
+        assert data["expenses"]["total_cop"] == pytest.approx(
+            data["report"]["monthly_expenses_cop"]
+        )
+        assert data["expenses"]["mortgage_cop"] == pytest.approx(
+            data["report"]["monthly_mortgage_cop"]
+        )
+
+    def test_an_unrecognised_assumption_is_rejected_rather_than_ignored(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        # ``interest_rate`` is the *column* name. Seeding a form from a stored
+        # report and posting it straight back used to run at the 10% default and
+        # hand back a number nobody asked for.
+        result = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze",
+            json={"interest_rate": 14.0},
+        )
+
+        assert result.status_code == 422
+        assert airroi_estimate_mock.call_count == 0
+
+
+class TestReadPropertyReport:
+    def test_returns_the_latest_analysis_without_calling_airroi(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        analysed = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze",
+            json={"down_payment_percentage": 45.0},
+        )
+        calls_after_analysis = airroi_estimate_mock.call_count
+
+        result = test_app_client.get(f"/api/properties/{salento_property.id}/report")
+
+        assert result.status_code == 200
+        assert airroi_estimate_mock.call_count == calls_after_analysis
+
+        data = result.json()["data"]
+        assert data["report"]["id"] == analysed.json()["data"]["report"]["id"]
+        assert data["report"]["down_payment_percentage"] == pytest.approx(45.0)
+
+    def test_reproduces_what_the_analysis_returned(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        # The read path rebuilds expenses and sensitivity from the stored row,
+        # so it has to agree with the write path figure for figure.
+        analysed = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze"
+        ).json()["data"]
+        read_back = test_app_client.get(
+            f"/api/properties/{salento_property.id}/report"
+        ).json()["data"]
+
+        assert read_back["expenses"] == analysed["expenses"]
+        assert read_back["sensitivity"] == analysed["sensitivity"]
+
+    def test_reads_the_newest_report_not_the_first(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        test_app_client.post(f"/api/properties/{salento_property.id}/analyze")
+        latest = test_app_client.post(
+            f"/api/properties/{salento_property.id}/analyze",
+            json={"down_payment_percentage": 60.0},
+        )
+
+        result = test_app_client.get(f"/api/properties/{salento_property.id}/report")
+
+        assert result.json()["data"]["report"]["id"] == (
+            latest.json()["data"]["report"]["id"]
+        )
+
+    def test_a_never_analysed_property_is_null_data_not_a_404(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        result = test_app_client.get(f"/api/properties/{salento_property.id}/report")
+
+        assert result.status_code == 200
+        assert result.json()["data"] is None
+        assert airroi_estimate_mock.call_count == 0
+
+    def test_an_unknown_property_is_404(self, test_app_client):
+        result = test_app_client.get(f"/api/properties/{UNKNOWN_ID}/report")
+
+        assert result.status_code == 404
+        assert result.json()["detail"] == "Property not found"
+
+
+class TestCompsCarryTheirListing:
+    def test_cached_comps_carry_a_narrow_listing(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        test_app_client.post(f"/api/properties/{salento_property.id}/analyze")
+
+        comps = test_app_client.get(
+            f"/api/properties/{salento_property.id}/comps/cached"
+        ).json()["data"]
+
+        assert all(comp["listing"] is not None for comp in comps)
+        assert set(comps[0]["listing"]) == {
+            "id",
+            "airroi_id",
+            "baths",
+            "bedrooms",
+            "cover_photo_url",
+            "latitude",
+            "longitude",
+            "name",
+            "property_type",
+            "source_url",
+        }
+        assert comps[0]["listing"]["id"] == comps[0]["listing_id"]
+
+    def test_refreshed_comps_carry_the_listing_too(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        comps = test_app_client.get(
+            f"/api/properties/{salento_property.id}/comps"
+        ).json()["data"]
+
+        assert all(comp["listing"]["property_type"] for comp in comps)
+
+    def test_the_comp_keeps_its_own_frozen_metrics(
+        self, airroi_estimate_mock, salento_property, test_app_client
+    ):
+        # ADR / occupancy / revenue come off the snapshot on the join row, not
+        # off the listing - that snapshot is the whole point of the row.
+        comps = test_app_client.get(
+            f"/api/properties/{salento_property.id}/comps"
+        ).json()["data"]
+
+        assert all(comp["adr_cop"] is not None for comp in comps)
+        assert "listing_financial_reports" not in comps[0]["listing"]

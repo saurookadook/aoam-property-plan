@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 import pytest
 import requests
 from sqlalchemy import func, select
@@ -8,6 +10,7 @@ from sqlalchemy.orm import Session
 from _factories.exchange_rate.db import ExchangeRateDBFactory
 from _factories.listing.db import ListingDBFactory
 from _factories.market.db import MarketDBFactory
+from _factories.property.db import PropertyDBFactory
 from models.property.db import PropertyDB
 from services.exchange_rate import FRANKFURTER_RATES_URL
 
@@ -16,6 +19,8 @@ LISTING_URL = (
 )
 
 COP_PER_USD = 4150.0
+
+UNKNOWN_ID = "988d0b5d-d4a5-4808-a94d-2d9df1df7588"
 
 MANUAL_BODY = {
     "source_url": "https://example.com/off-market/salento-finca",
@@ -386,3 +391,51 @@ class TestCreatePropertyMarketResolution:
         # is nothing to measure the property against.
         assert result.status_code == 201
         assert result.json()["data"]["market_id"] is None
+
+
+class TestReadPropertiesList:
+    def test_returns_every_stored_property_newest_first(
+        self, test_app_client, test_db_session
+    ):
+        older = PropertyDBFactory(
+            source_url="https://example.com/property/older",
+            created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+        newer = PropertyDBFactory(
+            source_url="https://example.com/property/newer",
+            created_at=datetime(2026, 6, 1, tzinfo=timezone.utc),
+        )
+        test_db_session.commit()
+
+        result = test_app_client.get("/api/properties")
+
+        assert result.status_code == 200
+        assert [record["id"] for record in result.json()["data"]] == [
+            str(newer.id),
+            str(older.id),
+        ]
+
+    def test_is_an_empty_list_before_anything_is_stored(self, test_app_client):
+        result = test_app_client.get("/api/properties")
+
+        assert result.status_code == 200
+        assert result.json()["data"] == []
+
+
+class TestReadProperty:
+    def test_returns_the_stored_property(self, test_app_client, test_db_session):
+        property_record = PropertyDBFactory(
+            source_url="https://example.com/property/one"
+        )
+        test_db_session.commit()
+
+        result = test_app_client.get(f"/api/properties/{property_record.id}")
+
+        assert result.status_code == 200
+        assert result.json()["data"]["id"] == str(property_record.id)
+
+    def test_an_unknown_property_is_404(self, test_app_client):
+        result = test_app_client.get(f"/api/properties/{UNKNOWN_ID}")
+
+        assert result.status_code == 404
+        assert result.json()["detail"] == "Property not found"

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Callable, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 from uuid import UUID
 
 from fastapi import HTTPException, status
@@ -9,10 +9,13 @@ from sqlalchemy.orm import Session
 
 from models.market.facade import MarketFacade
 from models.property.facade import PropertyFacade
+from models.property_financial_report.entity import PropertyFinancialReportEntity
+from services.calculations import analyze, sensitivity
 from services.exceptions import (
     AirROIError,
 )
 from services.geo import haversine_km
+from services.property_analysis import scenario_from_report
 
 T = TypeVar("T")
 
@@ -68,6 +71,24 @@ def run_analysis(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=error_detail,
         ) from e
+
+
+def build_analysis_data(report: PropertyFinancialReportEntity) -> dict[str, Any]:
+    """
+    Wraps a stored report in the two figures the analysis panel also needs.
+
+    Both are rebuilt from the report through ``scenario_from_report``, so a
+    freshly written report and one read back a month later are explained by
+    exactly the same arithmetic - there is no second code path for the read side
+    to drift down.
+    """
+    scenario = scenario_from_report(report)
+
+    return {
+        "report": report,
+        "expenses": analyze(scenario).monthly_expenses,
+        "sensitivity": sensitivity(scenario),
+    }
 
 
 def resolve_market_id(
