@@ -427,6 +427,61 @@ table that renders none of it, *and* drag `listing_financial_reports` into a sec
 See Problem 4 — this is the cheapest defence against every future naming drift, and it turns a
 silent wrong-number into a 422.
 
+### Chunk 3 — status
+
+All five deliverables are done. **446 backend tests pass**, up from 418.
+
+| Deliverable | State | Notes |
+| :--- | :--- | :--- |
+| `scenario_from_report` | **Done** | In `services/property_analysis.py`, driven by two explicit column→field maps. The three required inputs raise; a null assumption column is *dropped* rather than defaulted, so `PropertyScenario` re-applies the same Colombia default the original run used. |
+| `PropertyAnalysisData` envelope | **Done** | `report` + `expenses` + `sensitivity`. `POST /analyze` now returns it, so `data` is no longer the report itself. |
+| Three new read routes | **Done** | `GET /api/properties`, `GET /api/properties/{id}`, `GET /api/properties/{id}/report`. `PropertyFacade.get_all()` orders `created_at DESC, id DESC`. |
+| Comps carry their listing | **Done** | `PropertyCompDB.listing` relationship (no migration), `selectinload` in `get_all_by_property_id`, narrow `CompListingEntity`. |
+| `extra="forbid"` | **Done** | On `ScenarioOverridesRequest`, inherited by the generated `PropertyAnalyzeRequest`. |
+
+#### Two decisions taken while implementing
+
+**The nested listing lives on a subclass, not on `PropertyCompEntity`.** Decision 5 said to widen
+`PropertyCompEntity`; the first attempt did, and it broke two ways at once. `from_attributes` reads
+every field off the ORM object, so validating a comp with the relationship unloaded — which
+`_persist_comps` does twenty-five times per analysis — lazy-loads a listing nothing asked for. And
+`model_dump()` then emits a `listing` key, which `PropertyCompFacade.update` passes straight into
+`values(**payload)`; Postgres answered with `column "id" is of type uuid but expression is of type
+boolean`. `PropertyCompWithListingEntity(PropertyCompEntity)` follows the
+`MarketWithFinancialReportEntity` precedent from Chunk 2, keeps the write path relationship-free,
+and produces the same response shape on both comps routes, which is what decision 5 was actually
+about.
+
+**The envelope is assembled in `api/routes/handlers/properties.build_analysis_data`, not in the
+service.** Both `POST /analyze` and `GET /{id}/report` go through it, so a freshly written report
+and one read back a month later are explained by the same arithmetic. Keeping it in the handler
+layer means `services/property_analysis` stays free of API models; `scenario_from_report` is the
+piece that had to be a service, and it is.
+
+#### One behaviour change to call out in the PR
+
+**`POST /api/properties/{id}/analyze` changed shape.** `data` was the report; it is now
+`{report, expenses, sensitivity}`. Nothing consumes it yet — there is no frontend, and the only
+callers were backend tests, which were updated. `data.report` is byte-for-byte what `data` used to
+be.
+
+#### Acceptance evidence
+
+- **446 tests pass**, up from 418 — 28 new across `services/_tests/test_property_analysis.py` (+7),
+  `api/_tests/routes/test_routes_property_analysis.py` (+14),
+  `api/_tests/routes/test_routes_properties.py` (+4), `models/_tests/property/test_facade.py` (+2)
+  and `models/_tests/property_comp/test_facade.py` (+3).
+- **The round-trip test is green**: `analyze(scenario_from_report(report))` reproduces the stored
+  CoC return, net income, cash invested, payback and *both* expense figures the report persists.
+- **`interest_rate` → `interest_rate_percentage` is asserted directly**, and posting
+  `{"interest_rate": 14.0}` to `/analyze` is now a **422 with no AirROI call** rather than a silent
+  run at the 10% default. Problem 4 is closed on the backend side.
+- **`GET /{id}/report` makes no AirROI call** and returns figures identical to the ones `/analyze`
+  returned, asserted by comparing the two `expenses` and `sensitivity` payloads outright.
+- **A never-analysed property is `{"data": null}` with a 200**; an unknown property is still a 404.
+- **The nested listing is narrow** — asserted by comparing the served key set exactly, so a future
+  widening to `ListingEntity` fails the test rather than quietly shipping 25 descriptions.
+
 ---
 
 ## Chunk 4 — Frontend foundation

@@ -15,5 +15,5 @@ on:
       - "backend/**/*.yml"
 
 jobs:
-  build:
+  test:
     uses: ./.github/workflows/backend-test.yml

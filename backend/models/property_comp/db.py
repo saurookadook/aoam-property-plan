@@ -6,9 +6,10 @@ from uuid import UUID
 
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db.base_db import BaseDB
+from models.listing.db import ListingDB
 from models.mixins import TimestampsDB
 
 
@@ -35,6 +36,16 @@ class PropertyCompDB(BaseDB, TimestampsDB):
     """
 
     listing_id: Mapped[UUID] = mapped_column(ForeignKey("listings.id"), nullable=False)
+    listing: Mapped[ListingDB] = relationship()
+    """
+    The listing this row froze its metrics from.
+
+    No ``back_populates``: a listing is a comp of whatever properties happen to
+    be near it, and nothing needs to ask a listing that question. Deliberately
+    left lazy - only ``get_all_by_property_id`` eager-loads it, because that is
+    the one read that renders a comp table.
+    """
+
     occupancy_rate: Mapped[Optional[float]] = mapped_column(
         postgresql.REAL, nullable=True
     )

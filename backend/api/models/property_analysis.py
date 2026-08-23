@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel, ConfigDict, create_model
 from pydantic.fields import FieldInfo
 
-from models.property_comp.entity import PropertyCompEntity
+from models.property_comp.entity import PropertyCompWithListingEntity
 from models.property_financial_report.entity import PropertyFinancialReportEntity
-from services.calculations import PropertyScenario
+from services.calculations import (
+    MonthlyExpenseBreakdown,
+    PropertyScenario,
+    SensitivityCell,
+)
 from utils.pydantic_helpers import BaseResponseModel
 
 # Derived by the analysis rather than supplied: the revenue estimate is the whole
@@ -49,6 +53,14 @@ def _optional_scenario_fields() -> dict[str, tuple[Any, FieldInfo]]:
 class ScenarioOverridesRequest(BaseModel):
     """Base for the generated request model - see ``PropertyAnalyzeRequest``."""
 
+    # An unrecognised key is a 422 rather than a silent omission. The trap this
+    # closes: ``property_financial_reports`` stores the interest rate in a column
+    # called ``interest_rate``, so seeding a re-analysis form from a stored report
+    # and posting it straight back sends ``interest_rate``, which is not a
+    # scenario field. Ignored, the request would quietly run at the 10% default
+    # and hand back a number the caller never asked for.
+    model_config = ConfigDict(extra="forbid")
+
     def overrides(self) -> dict[str, Any]:
         """
         Only what the caller actually supplied.
@@ -70,13 +82,41 @@ PropertyAnalyzeRequest = create_model(
         "``purchase_price_cop`` is accepted because a property whose listing hid "
         "its price has none stored, and the analysis cannot run without one."
     ),
-    **_optional_scenario_fields(),
+    **cast(dict[str, Any], _optional_scenario_fields()),
 )
 
 
+class PropertyAnalysisData(BaseResponseModel):
+    """
+    A report plus the two things it implies but does not store.
+
+    ``expenses`` and ``sensitivity`` are computed from the report's own inputs
+    rather than persisted. Columns for either would freeze a presentation choice
+    into the schema - ``DEFAULT_SENSITIVITY_FACTORS`` is a decision about what to
+    show, not a fact about the property - and would save nothing on the read
+    path, since every input the arithmetic needs is already on the row.
+    """
+
+    report: PropertyFinancialReportEntity
+    expenses: MonthlyExpenseBreakdown
+    sensitivity: list[SensitivityCell]
+
+
 class PropertyAnalysisResponse(BaseResponseModel):
-    data: PropertyFinancialReportEntity
+    data: PropertyAnalysisData
+
+
+class PropertyAnalysisReportResponse(BaseResponseModel):
+    """
+    The latest stored analysis, or ``None`` for a property never analysed.
+
+    ``null`` with a 200 rather than a 404, matching ``/comps/cached``: the
+    property exists and the honest answer to "what does its report say" is
+    "nothing yet".
+    """
+
+    data: Optional[PropertyAnalysisData] = None
 
 
 class PropertyCompsResponse(BaseResponseModel):
-    data: list[PropertyCompEntity]
+    data: list[PropertyCompWithListingEntity]

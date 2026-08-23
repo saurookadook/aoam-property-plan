@@ -33,7 +33,7 @@ from models.listing.facade import ListingFacade
 from models.listing_financial_report.facade import ListingFinancialReportFacade
 from models.property.entity import PropertyEntity
 from models.property.facade import PropertyFacade
-from models.property_comp.entity import PropertyCompEntity
+from models.property_comp.entity import PropertyCompWithListingEntity
 from models.property_comp.facade import PropertyCompFacade
 from models.property_financial_report.entity import PropertyFinancialReportEntity
 from models.property_financial_report.facade import PropertyFinancialReportFacade
@@ -201,9 +201,69 @@ def analyze_property(
     )
 
 
+SCENARIO_FIELDS_FROM_REPORT = {
+    "assessed_value_cop": "assessed_value_cop",
+    "closing_costs_percentage": "closing_costs_percentage",
+    "down_payment_percentage": "down_payment_percentage",
+    "hoa_monthly_cop": "hoa_monthly_cop",
+    # The column is ``interest_rate``; the scenario knob is
+    # ``interest_rate_percentage``. This mapping is the only place the two names
+    # are reconciled - see the plan's Problem 4.
+    "interest_rate_percentage": "interest_rate",
+    "loan_term_years": "loan_term_years",
+    "maintenance_reserve_percentage": "maintenance_reserve_percentage",
+    "management_fee_percentage": "management_fee_percentage",
+    "predial_rate_percentage": "predial_rate_percentage",
+    "renovation_budget_cop": "renovation_budget_cop",
+}
+"""``PropertyScenario`` field -> the ``property_financial_reports`` column it was stored in."""
+
+REQUIRED_SCENARIO_FIELDS_FROM_REPORT = {
+    "purchase_price_cop": "purchase_price_cop",
+    "annual_revenue_cop": "annual_revenue_cop",
+    "cop_per_usd": "exchange_rate",
+}
+
+
+def scenario_from_report(
+    report: PropertyFinancialReportEntity,
+) -> PropertyScenario:
+    """
+    Rebuilds the scenario a stored report was produced by.
+
+    A report row carries every input it was run against precisely so that it can
+    explain itself later, and this is the function that cashes that in: the
+    deep-dive page reloads through ``GET``, so the expense breakdown and the
+    sensitivity sweep - neither of which has a column - have to be recomputed
+    from the row rather than re-fetched from AirROI.
+
+    Nothing is invented. The three required inputs raise if the row cannot supply
+    them, and a ``null`` assumption column is dropped rather than defaulted here,
+    so ``PropertyScenario`` applies the same Colombia default it applied originally
+    instead of this function guessing at one.
+    """
+    fields: dict[str, Any] = {}
+
+    for scenario_field, column in REQUIRED_SCENARIO_FIELDS_FROM_REPORT.items():
+        value = getattr(report, column)
+        if value is None:
+            raise ValueError(
+                f"Property financial report with id='{report.id}' has no "
+                f"'{column}', so the scenario behind it cannot be rebuilt"
+            )
+        fields[scenario_field] = float(value)
+
+    for scenario_field, column in SCENARIO_FIELDS_FROM_REPORT.items():
+        value = getattr(report, column)
+        if value is not None:
+            fields[scenario_field] = float(value)
+
+    return PropertyScenario(**fields)
+
+
 def refresh_comps(
     db_session: Session, *, property_id: UUID | str
-) -> list[PropertyCompEntity]:
+) -> list[PropertyCompWithListingEntity]:
     """
     Re-fetches a property's comparables from AirROI and rewrites its comp set.
 

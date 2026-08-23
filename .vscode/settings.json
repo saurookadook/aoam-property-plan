@@ -1,6 +1,7 @@
 {
     //---------------------  AI Co-Authors  -------------------------
     // Co-Authored-By: Claude <noreply@anthropic.com>
+    // Co-authored-by: Copilot <copilot@github.com>
     //----------------------------------------------------------------
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnType": false, // required
@@ -40,6 +41,7 @@
     "python.analysis.extraPaths": [
         "backend/.venv/lib/python3.12/site-packages",
     ],
+    "python.analysis.typeCheckingMode": "standard",
     "[sql]": {
         "editor.formatOnSave": false
     },

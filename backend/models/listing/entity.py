@@ -92,6 +92,29 @@ class ListingEntity(BaseEntityModel, TimestampsEntityMixin):
         return input_data
 
 
+class CompListingEntity(BaseEntityModel):
+    """
+    Just enough of a listing to render one row of a comp table.
+
+    Deliberately not ``ListingEntity``. A comp's ADR, occupancy and revenue come
+    off the frozen snapshot on ``property_comps`` - that snapshot is the whole
+    point of the join row - so the listing only has to supply what it is and
+    where to go and see it. Serving the full entity would ship a description,
+    every amenity and every photo URL for twenty-five comps that render none of
+    them, and drag ``listing_financial_reports`` into a second N+1.
+    """
+
+    airroi_id: int
+    baths: Optional[float] = None
+    bedrooms: int
+    cover_photo_url: Optional[str] = None
+    latitude: float
+    longitude: float
+    name: Optional[str] = None
+    property_type: str
+    source_url: Optional[str] = None
+
+
 class NewestListingEntity(BaseEntityModel, TimestampsEntityMixin):
     cover_photo_url: Optional[str] = None
     market_id: UUID

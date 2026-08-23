@@ -7,10 +7,14 @@ from uuid import UUID
 from sqlalchemy import and_, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import selectinload
 
 from models.base.facade import BaseFacade
 from models.property_comp.db import PropertyCompDB
-from models.property_comp.entity import PropertyCompEntity
+from models.property_comp.entity import (
+    PropertyCompEntity,
+    PropertyCompWithListingEntity,
+)
 
 
 class PropertyCompFacade(BaseFacade):
@@ -49,26 +53,34 @@ class PropertyCompFacade(BaseFacade):
 
     def get_all_by_property_id(
         self, property_id: UUID | str
-    ) -> list[PropertyCompEntity]:
+    ) -> list[PropertyCompWithListingEntity]:
         """
-        Every comp held for a property, nearest first.
+        Every comp held for a property, nearest first, each with its listing.
 
         Ordered by distance because that is the order the comps are read in -
         ``GET /api/properties/{id}/comps/cached`` shows them as a list of nearby
         properties. Comps AirROI returned without usable coordinates sort last
         rather than leading with a null.
+
+        The listing is eager-loaded here and nowhere else: this is the only read
+        that renders a comp table, and the table needs a name, a type and a link
+        out to Airbnb. One extra query for the whole set rather than one per row.
         """
         property_comps = (
             self.db_session.execute(
                 select(PropertyCompDB)
                 .where(PropertyCompDB.property_id == property_id)
+                .options(selectinload(PropertyCompDB.listing))
                 .order_by(PropertyCompDB.distance_km.asc().nullslast())
             )
             .scalars()
             .all()
         )
 
-        return [PropertyCompEntity.model_validate(record) for record in property_comps]
+        return [
+            PropertyCompWithListingEntity.model_validate(record)
+            for record in property_comps
+        ]
 
     def create_or_update(self, *, payload: dict) -> PropertyCompEntity:
         maybe_one = self._find_one_if_exists(

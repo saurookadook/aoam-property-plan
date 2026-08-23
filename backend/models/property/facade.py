@@ -40,6 +40,28 @@ class PropertyFacade(BaseFacade):
             )
         return PropertyEntity.model_validate(property_record)
 
+    def get_all(self) -> list[PropertyEntity]:
+        """
+        Every stored property, most recently added first.
+
+        Newest first because ``/properties`` is a working list rather than an
+        archive - the property someone just pasted a URL for is the one they are
+        about to open. ``id`` breaks ties so the ordering is total: a bulk seed
+        writes several rows inside one transaction and they all share a
+        ``created_at``.
+        """
+        property_records = (
+            self.db_session.execute(
+                select(PropertyDB).order_by(
+                    PropertyDB.created_at.desc(), PropertyDB.id.desc()
+                )
+            )
+            .scalars()
+            .all()
+        )
+
+        return [PropertyEntity.model_validate(record) for record in property_records]
+
     def create_or_update(self, *, payload: dict) -> PropertyEntity:
         maybe_one = self._find_one_if_exists(
             id=payload.get("id"), source_url=payload.get("source_url")
