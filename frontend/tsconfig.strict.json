@@ -40,7 +40,6 @@
         "src/common/utils/metricThresholds.ts",
         "src/common/utils/propertyAnalysis.ts",
         "src/common/utils/__tests__/*.test.ts",
-        "src/mock-data-server/utils/routing.ts",
         "src/providers/CurrencyProvider.tsx"
     ]
 }
