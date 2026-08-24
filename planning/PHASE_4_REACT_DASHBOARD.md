@@ -574,6 +574,64 @@ a type error that compiles today only because strict is off, and `MarketsList` d
 at line 44. Fix `Toast`'s props (and its hardcoded "while fetching market overview data" fallback)
 here, since every new page reuses it.
 
+### Chunk 4 — status
+
+**Done.** Zero new dependencies, as required.
+
+| Deliverable | Landed as |
+| --- | --- |
+| Types | `src/types/{properties,propertyAnalysis,comps,exchangeRate}.d.ts`; `markets.d.ts` rewritten with `MarketFinancialReportEntity` / `MarketWithFinancialReportEntity` and `district: string \| null` |
+| Envelope unwrapping | `src/utils/unwrapEnvelope.ts` — `ApiError` (carries `.status`) + `unwrapEnvelope<T>` |
+| Utilities | `src/common/utils/{currency,investmentFit,dataConfidence,metricThresholds,charts,propertyAnalysis}.ts`, each with a `__tests__/*.test.ts` |
+| Currency context | `src/providers/CurrencyProvider.tsx` + COP/USD toggle in `TopNavBar`, mounted from `layouts/Root` |
+| Mock-server plumbing | `subPath` on `EndpointConfig`, unified `buildRoutePath`, `mutationRequestHandler`, `POST` registration in all three servers; 13 endpoint configs |
+| Fixtures | 8 markets (one with a null report), plus exchange-rate, properties, report, analyze and comps fixtures; `frontend/scripts/capture-fixtures.sh` |
+| Strict TS + CI | `frontend/tsconfig.strict.json`, referenced from `tsconfig.json`; `🔎 Typecheck` and `🧹 Lint` steps in `frontend-test.yml` |
+| `Toast` | `alertSeverity` now optional and derived from `status`; new `fallbackErrorMessage` prop; both markets queries retrofitted onto `unwrapEnvelope` |
+
+#### Five decisions taken while implementing
+
+1. **`MANUAL_FIELDS` moved to `src/constants/property.ts`.** The plan asked for it in
+   `types/properties.d.ts`, but a `.d.ts` cannot hold a runtime value. The type
+   (`ManualPropertyField`) stays in the declaration file and is derived from the constant's
+   companion union, so the two cannot drift.
+2. **`CurrencyProvider` is mounted in `layouts/Root`, not `main.tsx`.** Every router-based test
+   renders `WithMemoryRouter` → `Root` → `TopNavBar`, and `TopNavBar` calls `useCurrency()`.
+   Mounting at `main.tsx` would have thrown in every existing page test.
+3. **`build:types` is now `tsc --build`, not `tsc --project`.** `tsconfig.json` has `"files": []`
+   plus `references`, so `tsc --project` type-checked *nothing* — the CI step the plan asks for
+   would have been decorative in a second sense. Switching to `--build` surfaced two latent config
+   faults: `types: ["@testing-library", "jest-dom"]` in `tsconfig.common.json` never resolved, and
+   the test project lacked vite's ambient `*.scss` declarations that its imports rely on. Both
+   fixed.
+4. **`tsconfig.strict.json` is `strict: true` only.** `noUncheckedIndexedAccess` and
+   `exactOptionalPropertyTypes` were tried and reverted: because `tsc` reports errors in *imported*
+   files, they produced failures in `NavDrawer`, `stringTransformers`, `ListingFinancialReportsTable`
+   and the router types — unrelated files, none of which Phase 4 touches.
+5. **Two pre-existing lint errors were fixed and `storybook-static` ignored.** `pnpm lint` cannot be
+   a CI gate while it fails on committed build output and two old errors (`no-useless-escape` in
+   `fetchy.ts`, `no-empty-pattern` in `AppThemeProvider.tsx`). `.storybook/*.ts` also needed the
+   TypeScript parser, which the Storybook plugin's own config does not set.
+
+#### One thing deliberately left alone
+
+Only the two **markets** queries were retrofitted onto `unwrapEnvelope`. The Home carousels and
+`ListingOverview` still call `.json()` directly; converting them is Chunk 5/6 work and would have
+put unrelated pages in this diff.
+
+#### Acceptance evidence
+
+- `pnpm build:types` — clean across all four projects, strict included.
+- `pnpm lint` — 0 errors (46 pre-existing warnings).
+- `pnpm test` — 16 files, 96 passed, 1 skipped (the pre-existing `fetchy` skip). The three
+  Mirage-backed page tests still pass against the regenerated fixtures.
+- Mock data server serves every new route, including `POST /properties`,
+  `POST /properties/:propertyId/analyze`, `GET /properties/:propertyId/comps/cached`, and returns
+  `{"data": null}` for a property with no analysis.
+- `investmentFit` reproduces the sanity table above: Pance 47 (thin), Calima 45, Salento 39,
+  Bogota 26. Salento and Bogota land one point above the doc's figures because the doc rounds each
+  component before weighting; the ranking is identical.
+
 ---
 
 ## Chunk 5 — Step 11, market overview screen
