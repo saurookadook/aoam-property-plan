@@ -1,7 +1,11 @@
-import { createServer, type Request as MirageRequest } from 'miragejs';
+import {
+  createServer,
+  type Request as MirageRequest,
+  Response as MirageResponse,
+} from 'miragejs';
 
 import { endpointConfigs } from '@/constants';
-import { buildRoutePath } from '@/mock-data-server/utils';
+import { buildRoutePath } from '@/mock-data-server/utils/routing';
 
 const BASE_DATA_SERVER_URL = 'http://localhost:3030/mock-data/api';
 
@@ -67,7 +71,7 @@ async function proxyToDataServer({
 }) {
   console.log(`[MOCK - /api/${endpointPath}] request: `, request);
 
-  return fetch(`${BASE_DATA_SERVER_URL}/${endpointPath}`, {
+  const response = await fetch(`${BASE_DATA_SERVER_URL}/${endpointPath}`, {
     body: method === 'POST' ? (request.requestBody ?? '{}') : undefined,
     headers: {
       ...request.requestHeaders,
@@ -85,4 +89,6 @@ async function proxyToDataServer({
       );
       return error;
     });
+
+  return new MirageResponse(response.status ?? 200, {}, response);
 }

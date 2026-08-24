@@ -40,7 +40,10 @@ export type EndpointConfig = {
 };
 
 export type MockSuccessResponse<T = any> = MockResponse<T>;
-export type MockErrorResponse = { detail: string };
+export type MockErrorResponse = {
+  detail: string;
+  status: number;
+};
 
 export type MockResponse<T = any> = MockSuccessResponse<T> | MockErrorResponse;
 

@@ -8,20 +8,24 @@ export function create200Response<T = any>(
   };
 }
 
-export function createErrorResponse(errorDetail: string): MockErrorResponse {
+export function createErrorResponse(
+  errorDetail: string,
+  statusCode: number,
+): MockErrorResponse {
   return {
     detail: errorDetail,
+    status: statusCode,
   };
 }
 
 export function create400Response(
   errorDetail: string = 'Bad request', // force formatting
 ) {
-  return createErrorResponse(errorDetail);
+  return createErrorResponse(errorDetail, 400);
 }
 
 export function create500Response(
   errorDetail: string = 'Internal server error', // force formatting
 ) {
-  return createErrorResponse(errorDetail);
+  return createErrorResponse(errorDetail, 500);
 }
