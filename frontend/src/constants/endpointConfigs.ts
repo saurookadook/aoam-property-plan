@@ -8,7 +8,7 @@ export const baseEndpointConfig = {
 export const endpointConfigs: EndpointConfig[] = [
   {
     ...baseEndpointConfig,
-    type: 'home',
+    type: 'list',
     emptyResult: {
       data: [],
     },
@@ -19,7 +19,7 @@ export const endpointConfigs: EndpointConfig[] = [
   },
   {
     ...baseEndpointConfig,
-    type: 'home',
+    type: 'list',
     emptyResult: {
       data: [],
     },
@@ -61,5 +61,89 @@ export const endpointConfigs: EndpointConfig[] = [
     },
     errorMessage: 'Error fetching markets',
     entityType: 'markets',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'list',
+    emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error fetching exchange rate',
+    entityType: 'exchange-rate',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'list',
+    emptyResult: {
+      data: [],
+    },
+    errorMessage: 'Error fetching properties',
+    entityType: 'properties',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'list',
+    emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error creating property',
+    entityType: 'properties',
+    filenamePrefix: 'created',
+    method: 'POST',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'overview',
+    emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error fetching property',
+    entityIdPathParam: 'propertyId',
+    entityType: 'properties',
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'sub-resource',
+    emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error fetching property report',
+    entityIdPathParam: 'propertyId',
+    entityType: 'properties',
+    subPath: ['report'],
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'sub-resource',
+    emptyResult: {
+      data: null,
+    },
+    errorMessage: 'Error analyzing property',
+    entityIdPathParam: 'propertyId',
+    entityType: 'properties',
+    method: 'POST',
+    subPath: ['analyze'],
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'sub-resource',
+    emptyResult: {
+      data: [],
+    },
+    errorMessage: 'Error fetching property comps',
+    entityIdPathParam: 'propertyId',
+    entityType: 'properties',
+    subPath: ['comps'],
+  },
+  {
+    ...baseEndpointConfig,
+    type: 'sub-resource',
+    emptyResult: {
+      data: [],
+    },
+    errorMessage: 'Error fetching cached property comps',
+    entityIdPathParam: 'propertyId',
+    entityType: 'properties',
+    subPath: ['comps', 'cached'],
   },
 ];

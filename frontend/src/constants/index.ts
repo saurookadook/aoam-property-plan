@@ -23,4 +23,5 @@ console.log({
 });
 
 export * from './endpointConfigs';
+export * from './property';
 export * from './theme';
