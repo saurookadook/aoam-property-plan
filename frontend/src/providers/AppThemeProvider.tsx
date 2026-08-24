@@ -5,7 +5,7 @@ import { muiTheme } from '@/constants';
 
 export const colorSchemeKey = 'aoam-color-scheme';
 
-export const colorSchemeManager = function colorSchemeManager({}) {
+export const colorSchemeManager = function colorSchemeManager() {
   return {
     get: (defaultValue: any): any => {
       return window.localStorage.getItem(colorSchemeKey) ?? defaultValue;
