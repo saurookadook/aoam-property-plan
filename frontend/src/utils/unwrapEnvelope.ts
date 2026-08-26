@@ -8,7 +8,7 @@
  * query never enters its error state, so `error` stays `null` and there is
  * nothing to show a toast for.
  *
- * Every read in the app goes through here so that a failure is a rejected
+ * The migrated market reads go through here so that a failure is a rejected
  * promise - the one thing react-query's `error`, `isError` and retry behaviour
  * all key off.
  */

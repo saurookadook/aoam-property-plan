@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, Snackbar, type AlertColor } from '@mui/material';
 
+import {
+  MUIAlertColor,
+  ReactQueryToastStatus,
+  type MUIAlertColorValue,
+} from '@/constants';
+
 /** react-query's own `status` union, which is what every caller has to hand. */
 export type ToastStatus = 'error' | 'pending' | 'success';
 
@@ -39,23 +45,31 @@ export function Toast({
 
   const autoHideDurationMemo = useMemo(() => {
     if (autoHideDuration != null) return autoHideDuration;
-    return status === 'error' ? 6000 : 2000;
+    return status === ReactQueryToastStatus.ERROR ? 6000 : 2000;
   }, [autoHideDuration, status]);
 
-  const resolvedSeverity = useMemo<AlertColor>(() => {
+  const resolvedSeverity = useMemo<MUIAlertColorValue>(() => {
     if (alertSeverity != null) return alertSeverity;
-    return status === 'success' ? 'success' : 'error';
+
+    switch (status) {
+      case ReactQueryToastStatus.PENDING:
+        return MUIAlertColor.INFO;
+      case ReactQueryToastStatus.SUCCESS:
+        return MUIAlertColor.SUCCESS;
+      default:
+        return MUIAlertColor.ERROR;
+    }
   }, [alertSeverity, status]);
 
   const alertText = useMemo(() => {
-    if (status === 'success') {
+    if (status === ReactQueryToastStatus.SUCCESS) {
       return 'Operation completed successfully!';
     }
 
     return error != null ? String(error) : fallbackErrorMessage;
   }, [error, fallbackErrorMessage, status]);
 
-  if (status === 'pending') {
+  if (status === ReactQueryToastStatus.PENDING) {
     return null;
   }
 
