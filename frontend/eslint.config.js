@@ -14,7 +14,17 @@ export default defineConfig([
     'coverage',
     'dist',
     'node_modules',
+    'storybook-static',
   ]),
+  {
+    files: ['.storybook/**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   {
     files: ['src/**/*.{ts,tsx}'],
     extends: [

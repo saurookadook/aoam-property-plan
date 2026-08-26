@@ -5,7 +5,7 @@ import type { ListingEntity, MarketEntity } from '@/types';
 import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
-import { fetchy } from '@/utils';
+import { fetchy, unwrapEnvelope } from '@/utils';
 import { MarketOverviewData } from './components';
 
 import './styles.scss';
@@ -14,16 +14,16 @@ export const marketOverviewQuery = (marketId: string) =>
   queryOptions({
     queryKey: ['marketOverview', marketId],
     queryFn: async () => {
-      const marketOverviewResponse = await fetchy
+      const marketOverview = await fetchy
         .get(`${API_SERVER_DOMAIN}/api/markets/${marketId}`) // force formatting
-        .then((res) => res.json());
+        .then(
+          unwrapEnvelope<{
+            listings: ListingEntity[];
+            market: MarketEntity;
+          }>,
+        );
 
-      return {
-        marketOverview: marketOverviewResponse.data as {
-          listings: ListingEntity[];
-          market: MarketEntity;
-        },
-      };
+      return { marketOverview };
     },
   });
 
@@ -63,8 +63,8 @@ export function MarketOverview() {
 
       {!isFetching && error != null && (
         <Toast
-          alertSeverity={status} // force formatting
           error={error}
+          fallbackErrorMessage="An unknown error occurred while fetching market overview data."
           status={status}
         />
       )}

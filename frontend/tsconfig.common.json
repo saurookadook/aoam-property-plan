@@ -27,14 +27,8 @@
             ]
         },
         "types": [
-            "@testing-library",
             "vitest",
-            "jest-dom"
-        ],
-        // "typeRoots": [
-        //     "./node_modules/@types",
-        //     "./node_modules/@testing-library",
-        //     "./node_modules/@saurookkadookk"
-        // ]
+            "@testing-library/jest-dom"
+        ]
     }
 }

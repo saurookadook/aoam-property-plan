@@ -19,6 +19,14 @@ jobs:
       - name: "Set up Node version and dependencies"
         uses: ./.github/actions/node-setup
 
+      - name: "🔎 Typecheck"
+        working-directory: ./frontend
+        run: pnpm build:types:strict && pnpm build:types
+
+      - name: "🧹 Lint"
+        working-directory: ./frontend
+        run: pnpm lint
+
       - name: "🖊️ Run tests"
         working-directory: ./frontend
         run: pnpm test:cov

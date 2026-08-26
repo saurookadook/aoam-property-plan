@@ -10,6 +10,7 @@ import type {
   MockResponseCache,
 } from '@/types';
 import { buildPathToGzippedData, readGzippedJson } from './filesystem';
+import { resolveEntityIdPathParam } from './routing';
 import {
   create200Response,
   create400Response,
@@ -34,12 +35,19 @@ export async function dataRequestHandler(
     const entityType = (params?.entityType ??
       config?.fullPath ??
       config.entityType) as string;
-    const filenamePrefix = (params?.entityId ??
+    /**
+     * Read through `config.entityIdPathParam` rather than a hardcoded
+     * `entityId`, because that is the key the route was registered with - a
+     * route declaring `:marketId` puts the id on `params.marketId` and nothing
+     * else.
+     */
+    const filenamePrefix = (params?.[resolveEntityIdPathParam(config)] ??
       config?.filenamePrefix ??
       'list') as string;
     const filePathForRequest = buildPathToGzippedData({
       entityType,
       filenamePrefix,
+      subPath: config.subPath,
     });
     const compositeKey = buildCompositeKey(config, filenamePrefix);
     logProxy(`[${config.logName} - /api/${config.type}] before reading file: `, {
@@ -88,6 +96,33 @@ export async function dataRequestHandler(
     );
     return create500Response();
   }
+}
+
+/**
+ * Serves a `POST` from the same fixtures a `GET` would.
+ *
+ * The mock server has no store to write to, so a mutation cannot be simulated
+ * faithfully. What it can do is exercise the client's mutation path - request
+ * shape, pending state, invalidation - which is the part a page test needs and
+ * the part `mirageTestServer` could not reach at all while it registered
+ * `this.get` only.
+ *
+ * The body is parsed rather than ignored so a malformed request is visible in
+ * the logs instead of silently succeeding.
+ */
+export async function mutationRequestHandler(
+  request: ExpressRequest | MirageRequest,
+  mockResponseCache: MockResponseCache,
+  config: EndpointConfig,
+) {
+  const requestBody = safeGetBodyJson<KeyedObject>(request, {});
+
+  logProxy(`[${config.logName} - /api/${config.type}] mutation request body: `, {
+    requestBody,
+    url: request.url,
+  });
+
+  return dataRequestHandler(request, mockResponseCache, config);
 }
 
 export function safeGetBodyJson<T>(
@@ -143,8 +178,10 @@ export async function pollForMockResponse<T = MockResponse>(
 
 function buildCompositeKey(config: EndpointConfig, filenamePrefix: string) {
   return [
-    config.type, // force formatting
+    config.method ?? 'GET', // force formatting
+    config.type,
     config.entityType,
+    ...(config.subPath ?? []),
     filenamePrefix,
   ].join('_');
 }

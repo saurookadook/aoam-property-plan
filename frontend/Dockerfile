@@ -24,6 +24,7 @@ COPY ./frontend/index.html \
     ./frontend/tsconfig.common.json \
     ./frontend/tsconfig.json \
     ./frontend/tsconfig.node.json \
+    ./frontend/tsconfig.strict.json \
     ./frontend/tsconfig.test.json \
     ./
 RUN $pnpm build
