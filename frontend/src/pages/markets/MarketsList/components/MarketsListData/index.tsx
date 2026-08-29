@@ -4,30 +4,16 @@ import type { MarketWithFinancialReportEntity, PropertyEntity } from '@/types';
 import { BUDGET_COP } from '@/constants';
 import type { CurrencyRate } from '@/common/utils/currency';
 import { FlexColumn, FlexRow } from '@/layouts';
+import {
+  sortMarkets,
+  type MarketSortKey,
+} from '@/pages/markets/MarketsList/utils/sortMarkets';
+import { groupPurchasePricesByMarketId } from '@/pages/markets/MarketsList/utils/dataProcessing';
 import { ColombiaMap } from '../ColombiaMap';
 import { MarketCard, marketCardElementId } from '../MarketCard';
 import { MarketSortControls } from '../MarketSortControls';
-import { sortMarkets, type MarketSortKey } from '../../utils/sortMarkets';
 
 import './styles.scss';
-
-function groupPurchasePricesByMarketId(
-  properties: readonly PropertyEntity[],
-): Map<string, number[]> {
-  const pricesByMarketId = new Map<string, number[]>();
-
-  for (const property of properties) {
-    if (property.market_id == null || property.purchase_price_cop == null) {
-      continue;
-    }
-
-    const prices = pricesByMarketId.get(property.market_id) ?? [];
-    prices.push(property.purchase_price_cop);
-    pricesByMarketId.set(property.market_id, prices);
-  }
-
-  return pricesByMarketId;
-}
 
 export function MarketsListData({
   marketsListData,
@@ -63,7 +49,7 @@ export function MarketsListData({
 
   return (
     <FlexColumn id="markets-list-data" className="markets-list-data">
-      <MarketSortControls sortKey={sortKey} onSortKeyChange={setSortKey} />
+      <MarketSortControls onSortKeyChange={setSortKey} sortKey={sortKey} />
 
       <ColombiaMap markets={marketsListData} onSelectMarket={setSelectedMarketId} />
 
