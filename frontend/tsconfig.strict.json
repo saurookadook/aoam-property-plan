@@ -40,6 +40,16 @@
         "src/common/utils/metricThresholds.ts",
         "src/common/utils/propertyAnalysis.ts",
         "src/common/utils/__tests__/*.test.ts",
-        "src/providers/CurrencyProvider.tsx"
+        "src/providers/CurrencyProvider.tsx",
+        "src/pages/markets/MarketsList/index.tsx",
+        "src/pages/markets/MarketsList/index.test.tsx",
+        "src/pages/markets/MarketsList/utils/sortMarkets.ts",
+        "src/pages/markets/MarketsList/utils/__tests__/*.test.ts",
+        "src/pages/markets/MarketsList/components/MarketsListData/index.tsx",
+        "src/pages/markets/MarketsList/components/MarketCard/index.tsx",
+        "src/pages/markets/MarketsList/components/MarketCard/BudgetIndicator/index.tsx",
+        "src/pages/markets/MarketsList/components/FitScoreBadge/index.tsx",
+        "src/pages/markets/MarketsList/components/MarketSortControls/index.tsx",
+        "src/pages/markets/MarketsList/components/ColombiaMap/index.tsx"
     ]
 }

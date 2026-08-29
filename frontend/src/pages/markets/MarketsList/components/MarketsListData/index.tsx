@@ -1,50 +1,84 @@
-import { Link as RouterLink } from 'react-router';
-import { Card, CardActions, CardContent, Typography } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
 
-import type { MarketEntity } from '@/types';
-import { FlexRow } from '@/layouts';
+import type { MarketWithFinancialReportEntity, PropertyEntity } from '@/types';
+import { BUDGET_COP } from '@/constants';
+import type { CurrencyRate } from '@/common/utils/currency';
+import { FlexColumn, FlexRow } from '@/layouts';
+import { ColombiaMap } from '../ColombiaMap';
+import { MarketCard, marketCardElementId } from '../MarketCard';
+import { MarketSortControls } from '../MarketSortControls';
+import { sortMarkets, type MarketSortKey } from '../../utils/sortMarkets';
 
 import './styles.scss';
 
+function groupPurchasePricesByMarketId(
+  properties: readonly PropertyEntity[],
+): Map<string, number[]> {
+  const pricesByMarketId = new Map<string, number[]>();
+
+  for (const property of properties) {
+    if (property.market_id == null || property.purchase_price_cop == null) {
+      continue;
+    }
+
+    const prices = pricesByMarketId.get(property.market_id) ?? [];
+    prices.push(property.purchase_price_cop);
+    pricesByMarketId.set(property.market_id, prices);
+  }
+
+  return pricesByMarketId;
+}
+
 export function MarketsListData({
   marketsListData,
+  propertiesListData,
+  rate,
 }: {
-  marketsListData: MarketEntity[];
+  marketsListData: MarketWithFinancialReportEntity[];
+  propertiesListData: PropertyEntity[];
+  rate: CurrencyRate | null;
 }) {
+  const [sortKey, setSortKey] = useState<MarketSortKey>('fit');
+  const [selectedMarketId, setSelectedMarketId] = useState<string | null>(null);
+
+  const sortedMarkets = useMemo(
+    () => sortMarkets(marketsListData, sortKey),
+    [marketsListData, sortKey],
+  );
+
+  const pricesByMarketId = useMemo(
+    () => groupPurchasePricesByMarketId(propertiesListData),
+    [propertiesListData],
+  );
+
+  useEffect(() => {
+    if (selectedMarketId == null) {
+      return;
+    }
+
+    document
+      .getElementById(marketCardElementId(selectedMarketId))
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [selectedMarketId]);
+
   return (
-    <FlexRow id="markets-list-data" className="markets-list-data">
-      {marketsListData.map((market) => {
-        return (
-          <Card key={market.id} className="markets-list-data__data-item">
-            <CardContent>
-              <Typography variant="h3">
-                <RouterLink to={`/markets/${market.id}`}>{market.locality}</RouterLink>
-              </Typography>
+    <FlexColumn id="markets-list-data" className="markets-list-data">
+      <MarketSortControls sortKey={sortKey} onSortKeyChange={setSortKey} />
 
-              <Typography
-                className="markets-list-data__data-item__details-wrapper"
-                variant="body2"
-              >
-                {market.district != null && (
-                  <Typography component="span">District: {market.district}</Typography>
-                )}
-                <Typography component="span">Region: {market.region}</Typography>
-                <Typography component="span">Country: {market.country}</Typography>
-              </Typography>
-            </CardContent>
+      <ColombiaMap markets={marketsListData} onSelectMarket={setSelectedMarketId} />
 
-            <CardActions>
-              <details>
-                <summary>Raw Data</summary>
-
-                <pre>
-                  <code>{JSON.stringify(market, null, 2)}</code>
-                </pre>
-              </details>
-            </CardActions>
-          </Card>
-        );
-      })}
-    </FlexRow>
+      <FlexRow className="markets-list-data__grid">
+        {sortedMarkets.map((market) => (
+          <MarketCard
+            key={market.id}
+            budgetCop={BUDGET_COP}
+            isSelected={market.id === selectedMarketId}
+            market={market}
+            purchasePricesCop={pricesByMarketId.get(market.id) ?? []}
+            rate={rate}
+          />
+        ))}
+      </FlexRow>
+    </FlexColumn>
   );
 }

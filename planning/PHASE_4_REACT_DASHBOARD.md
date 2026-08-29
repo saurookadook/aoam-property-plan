@@ -12,7 +12,7 @@ The backend built across Phases 1–3 is well ahead of the doc's assumptions —
 exist and produce a rich `PropertyFinancialReportEntity` with revenue percentiles, a 12-month
 revenue distribution, peak months, comp counts and COP/USD pairs.
 
-**No frontend consumes any of it.** The React app today is a markets/listings *browser*:
+**No frontend consumes any of it.** The React app today is a markets/listings _browser_:
 `/home` carousels, `/markets`, `/markets/:marketId`, `/listings/:listingId`. There is no property
 concept, no form component anywhere in `src/`, no chart, no currency toggle, and no `useMutation`
 in the entire codebase. Measured against the doc's Step 10–13 feature list, **two items are
@@ -45,7 +45,7 @@ Computed from `backend/scripts/db/seeding/seed_data/*.json` at COP 4,000/USD:
 Every market misses the doc's revenue floor by 40–60%. Calima's occupancy is a third of the
 claim while its ADR is nearly double it. **Any fit score anchored to Part 1's ranges clamps every
 market to zero and ranks nothing.** Pance's 27.8 listings is below the doc's own Step 1
-"fewer than 30 → fall back" threshold. Note also that `revenue` is *not* `adr × occupancy × 365`
+"fewer than 30 → fall back" threshold. Note also that `revenue` is _not_ `adr × occupancy × 365`
 (Salento: 25.8M actual vs 40.5M formula), so revenue and ADR are genuinely independent signals.
 
 ### Nine findings that constrain what Phase 4 can be
@@ -174,7 +174,7 @@ FROM markets m LEFT JOIN LATERAL (
    centroid. `services/geo.haversine_km` and the centroid logic already exist, so this is a
    migration plus roughly twenty lines. **This unblocks the budget indicator** (finding 3).
 5. **Market centroid on the read path** as `AVG(listings.latitude)` / `AVG(listings.longitude)`
-   computed in the query — *not* as columns. It is derived data that changes with every listings
+   computed in the query — _not_ as columns. It is derived data that changes with every listings
    ingest; reuse `_market_centroid`'s averaging rule so the map marker and the peak-months
    estimate stand on the same point.
 6. **`seed_properties.py`**, beside `seed_markets.py`, with at least three real Finca Raiz listing
@@ -269,7 +269,7 @@ Also verified directly:
 
 ## Chunk 2 — Market reads (backend)
 
-**`GET /api/markets` — nested `financial_report`.** Do *not* widen `MarketEntity`: it is returned
+**`GET /api/markets` — nested `financial_report`.** Do _not_ widen `MarketEntity`: it is returned
 by `/markets/{id}` and consumed by three cron handlers, all of which would then have to supply a
 report. Add a read-shaped composite in `models/market/entity.py`, where
 `HighestEarningListingEntity` sets the precedent:
@@ -421,7 +421,7 @@ Type the nested object as a **narrow** `CompListingEntity` — `airroi_id`, `bat
 comp row, which is the entire point of that snapshot per `PropertyCompDB`'s docstring; the listing
 supplies only name, type, bedrooms, baths and the Airbnb link. A full `ListingEntity` would ship a
 400-character description, thirteen amenities and twenty photo URLs per comp × 25 comps for a
-table that renders none of it, *and* drag `listing_financial_reports` into a second N+1.
+table that renders none of it, _and_ drag `listing_financial_reports` into a second N+1.
 
 **`extra="forbid"` on `ScenarioOverridesRequest`.** One line in `api/models/property_analysis.py`.
 See Problem 4 — this is the cheapest defence against every future naming drift, and it turns a
@@ -433,7 +433,7 @@ All five deliverables are done. **446 backend tests pass**, up from 418.
 
 | Deliverable | State | Notes |
 | :--- | :--- | :--- |
-| `scenario_from_report` | **Done** | In `services/property_analysis.py`, driven by two explicit column→field maps. The three required inputs raise; a null assumption column is *dropped* rather than defaulted, so `PropertyScenario` re-applies the same Colombia default the original run used. |
+| `scenario_from_report` | **Done** | In `services/property_analysis.py`, driven by two explicit column→field maps. The three required inputs raise; a null assumption column is _dropped_ rather than defaulted, so `PropertyScenario` re-applies the same Colombia default the original run used. |
 | `PropertyAnalysisData` envelope | **Done** | `report` + `expenses` + `sensitivity`. `POST /analyze` now returns it, so `data` is no longer the report itself. |
 | Three new read routes | **Done** | `GET /api/properties`, `GET /api/properties/{id}`, `GET /api/properties/{id}/report`. `PropertyFacade.get_all()` orders `created_at DESC, id DESC`. |
 | Comps carry their listing | **Done** | `PropertyCompDB.listing` relationship (no migration), `selectinload` in `get_all_by_property_id`, narrow `CompListingEntity`. |
@@ -472,7 +472,7 @@ be.
   `api/_tests/routes/test_routes_properties.py` (+4), `models/_tests/property/test_facade.py` (+2)
   and `models/_tests/property_comp/test_facade.py` (+3).
 - **The round-trip test is green**: `analyze(scenario_from_report(report))` reproduces the stored
-  CoC return, net income, cash invested, payback and *both* expense figures the report persists.
+  CoC return, net income, cash invested, payback and _both_ expense figures the report persists.
 - **`interest_rate` → `interest_rate_percentage` is asserted directly**, and posting
   `{"interest_rate": 14.0}` to `/analyze` is now a **422 with no AirROI call** rather than a silent
   run at the 10% default. Problem 4 is closed on the backend side.
@@ -599,13 +599,13 @@ here, since every new page reuses it.
    renders `WithMemoryRouter` → `Root` → `TopNavBar`, and `TopNavBar` calls `useCurrency()`.
    Mounting at `main.tsx` would have thrown in every existing page test.
 3. **`build:types` is now `tsc --build`, not `tsc --project`.** `tsconfig.json` has `"files": []`
-   plus `references`, so `tsc --project` type-checked *nothing* — the CI step the plan asks for
+   plus `references`, so `tsc --project` type-checked _nothing_ — the CI step the plan asks for
    would have been decorative in a second sense. Switching to `--build` surfaced two latent config
    faults: `types: ["@testing-library", "jest-dom"]` in `tsconfig.common.json` never resolved, and
    the test project lacked vite's ambient `*.scss` declarations that its imports rely on. Both
    fixed.
 4. **`tsconfig.strict.json` is `strict: true` only.** `noUncheckedIndexedAccess` and
-   `exactOptionalPropertyTypes` were tried and reverted: because `tsc` reports errors in *imported*
+   `exactOptionalPropertyTypes` were tried and reverted: because `tsc` reports errors in _imported_
    files, they produced failures in `NavDrawer`, `stringTransformers`, `ListingFinancialReportsTable`
    and the router types — unrelated files, none of which Phase 4 touches.
 5. **Two pre-existing lint errors were fixed and `storybook-static` ignored.** `pnpm lint` cannot be
@@ -680,7 +680,7 @@ thin = listing_count < 30
 ```
 
 **Justification.** Revenue carries the most weight because it is the outcome variable and —
-verified above — it is *not* `ADR × occupancy × 365` in AirROI's data, so it is an independent
+verified above — it is _not_ `ADR × occupancy × 365` in AirROI's data, so it is an independent
 measurement rather than a restatement of the other two. Occupancy is second: it is the reliability
 axis the doc itself names and the one that most separates the markets (0.18 → 0.40). ADR gets half
 that weight because it is partly inside revenue already; its marginal information is
@@ -708,6 +708,35 @@ real API data rather than the doc's fictional numbers. Every score lands under 5
 honest — no market clears half the anchor band. Document that the anchors are a calibration
 constant to revisit once the four new markets land in chunk 1; that is the moment the real range
 is known. The UI must label the score a derived heuristic, not a datum.
+
+### Chunk 5 — status
+
+**Done.** All eight markets from chunk 1's roster render; `investmentFit.ts` needed no changes.
+
+| Deliverable | Landed as |
+| --- | --- |
+| `/markets` rewrite | `marketsListQuery` (`queryOptions`, `staleTime` 1h), `marketsListLoader(queryClient)` `ensureQueryData`s both `marketsListQuery` and a new `propertiesListQuery` in parallel; `useSuspenseQuery` in the component, gated on `isPending` rather than `isFetching` |
+| `propertiesListQuery` | New — `GET /api/properties`, needed to bucket purchase prices per `market_id` for `BudgetIndicator`. Not named explicitly in this chunk's own spec text, but required by decision 3's median |
+| Exchange rate | `useExchangeRateQuery()` — a plain `useQuery`, not suspended and not in the loader, `retry: false`. A market card's ADR/occupancy/revenue always have `_usd` siblings NULL (finding 5), so this live rate is the only way the currency toggle can work for them at all; its own failure (a 503, or a cold cache) degrades every card to COP rather than taking the whole page down |
+| `MarketCard` | `src/pages/markets/MarketsList/components/MarketCard/` — props `market`, `rate: CurrencyRate \| null`, `budgetCop`, `purchasePricesCop`, `isSelected`. Renders COP always, converts via `useCurrency().formatFromCop` when `rate` is present, falls back to COP silently when it is not (rather than typing `rate` as non-null and forcing every caller through a cast) |
+| `MarketCard/BudgetIndicator` | Wraps `medianPurchasePriceCop` (chunk 4, unchanged) over the market's bucketed prices; "Not enough price data (N)" below n=3 |
+| `FitScoreBadge` | `null` fit → "Fit score pending" chip; scored → a primary `Chip` plus a second outlined "Thin market (N listings)" chip when `isThinMarket`, both with a tooltip naming the score a derived heuristic |
+| `MarketSortControls` | MUI `ToggleButtonGroup`, exclusive, backed by `MARKET_SORT_OPTIONS` in the new `utils/sortMarkets.ts` |
+| `ColombiaMap` | `MapContainer` copied from `ListingMapCard` (no `useMap` import); one `Marker` per market with a non-null centroid; click calls `onSelectMarket`, and `MarketsListData` scrolls `#market-card-{id}` into view via a plain `document.getElementById` effect rather than a ref map |
+| `sortMarkets.ts` | New colocated utility (not under `common/utils` — this is page-specific business logic, not a Phase-4-wide seam) sorting descending by the selected key with report-less markets always last regardless of key |
+| `BUDGET_COP` | Added to `src/constants/index.ts` |
+| Stories | `MarketCard`, `FitScoreBadge`, `MarketSortControls`, `ColombiaMap`, `BudgetIndicator` — props only. `MarketsList`'s own story follows `MarketOverview`'s `reactRouterParameters` + loader pattern, since the global Storybook decorators already provide Mirage and a `QueryClientProvider` |
+| Page test | Mirage-backed against the real 8-market fixture: 8 cards render, default order is fit-descending (`Cartagena, Pance, Calima, Salento, Medellín, Cali, Bogota, Santa Marta`), resorting by ADR reorders, Santa Marta (no report) shows the empty state, and toggling currency flips a card's ADR from COP to USD |
+| CI | `tsconfig.strict.json`'s `include` grew by the eight files above; `pnpm build:types:strict`, `pnpm build:types`, `pnpm lint` and `pnpm test` are all clean |
+
+#### One decision taken while implementing
+
+**`useCurrency()`'s `formatFromCop` takes `rate: CurrencyRate` (non-null) by type, but a market
+card's rate can genuinely be absent** (exchange-rate fetch still pending, or failed). Rather than
+widen that shared hook's signature or cast a `null` through it, `MarketCard` only calls
+`formatFromCop` when `rate` is non-null and otherwise formats the COP figure directly — so the
+currency toggle silently has no effect until a live rate is available, instead of the card
+crashing or showing an unrelated "unavailable" placeholder for every figure.
 
 ---
 
@@ -791,7 +820,7 @@ The data is twelve floats summing to 1.0. The entire charting requirement is
 Draw two reference lines the other options make awkward: solid at the annual mean (1/12 = 8.33%)
 and dashed at the doc's +15% threshold (9.58%). That turns twelve bars into an argument, and shows
 visually why `peak_months` uses top-3 rather than the doc's +15% rule — Step 6 measured the Bogota
-2br capture clearing that threshold in *zero* months.
+2br capture clearing that threshold in _zero_ months.
 
 Market cards get pills, not this chart, until chunk 1's `monthly_revenue_distribution` column lands.
 
@@ -811,7 +840,7 @@ Three cases, one rule:
 - **Comps** — COP only, no USD sibling. Convert with `report.exchange_rate` when a report exists
   so comps sit on the same footing as the analysis they produced; live rate otherwise.
 
-They *will* disagree. Make that visible rather than reconcilable: "converted at COP 4,013 / USD ·
+They _will_ disagree. Make that visible rather than reconcilable: "converted at COP 4,013 / USD ·
 12 Aug 2026 (as analysed)" on the property page, "COP 4,087 / USD · today" on markets.
 `useCurrency()` requiring `{rate, rateAsOf, rateSource}` makes silent mixing impossible. The fit
 score is COP-anchored on purpose, so no sort order depends on any of this.
@@ -866,7 +895,7 @@ score is COP-anchored on purpose, so no sort order depends on any of this.
    than from `/api/markets/{id}`. Any fixture or test comparing across the two will break.
 7. **`queryClient` is a module-level singleton** exported from `browserRouter.tsx`.
    `WithMemoryRouter` re-imports `routerConfig` from the same module, so loaders in tests close
-   over the *app's* client while the test wraps a fresh one. `MarketsList` gets away with it today
+   over the _app's_ client while the test wraps a fresh one. `MarketsList` gets away with it today
    because it uses `useQuery` directly; loader-based pages will populate one cache and read
    another. Inject the client, or have the test pass the same one.
 8. **Storybook stories that fetch need the express mock server on :3030.** Keep every story on a
@@ -882,12 +911,14 @@ score is COP-anchored on purpose, so no sort order depends on any of this.
 ## Verification
 
 **Backend**
+
 - `docker compose run --rm backend-test` — existing suite green, new route tests pass.
 - The `scenario_from_report` round-trip test is the acceptance gate for chunk 3.
 - Audit query output pasted into this document for chunk 1.
 - `curl` every new endpoint through `https://aoam.dev/api/...` and via `/docs`.
 
 **Frontend**
+
 - `pnpm test` (vitest). Note `fetchy.test.ts:163` is `it.skip`, **not** a live failure — the suite
   is not red today and should stay that way.
 - `pnpm build:types` and `pnpm lint` — newly enforced in CI by chunk 4.
@@ -898,6 +929,7 @@ score is COP-anchored on purpose, so no sort order depends on any of this.
 - `pnpm storybook:start` — stories for the presentational components.
 
 **End-to-end, `docker compose up all -d` at `https://aoam.dev`**
+
 1. `/markets` — cards show ADR, occupancy, revenue, peak-month pills, rounded listing count; map
    places a marker per market; sort controls reorder; budget indicator shows a figure or the
    "not enough price data" message.
@@ -906,7 +938,7 @@ score is COP-anchored on purpose, so no sort order depends on any of this.
 3. `/properties/:id` — analyse with Colombian defaults; all 9 metrics render, revenue comparison
    labels the conservative figure and shows the percentile spread, sensitivity shows 3 cells,
    the 12-bar chart renders with both reference lines.
-4. **Analyse a Calima property specifically** — confirm the low-confidence banner appears *and*
+4. **Analyse a Calima property specifically** — confirm the low-confidence banner appears _and_
    that CoC/payback render grey rather than green. This is the case the whole thing exists for.
 5. Comps table loads from cache, sorts, links out to Airbnb; "Refresh comps" re-fetches.
 6. Toggle currency; confirm a report's USD values reconcile against its own stored

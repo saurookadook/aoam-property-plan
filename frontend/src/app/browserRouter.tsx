@@ -14,6 +14,7 @@ import {
   MarketsList,
   listingOverviewLoader,
   marketOverviewLoader,
+  marketsListLoader,
 } from '@/pages';
 
 export const queryClient = new QueryClient({
@@ -70,6 +71,7 @@ export const routerConfig: AOAMRouteObject[] = [
         path: 'markets',
         label: navItemsLabels.MARKETS,
         element: <MarketsList />,
+        loader: marketsListLoader(queryClient),
       },
       {
         path: 'markets/:marketId',

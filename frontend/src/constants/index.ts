@@ -1,3 +1,9 @@
+/**
+ * Total capital available for one Colombia STR purchase, per the plan's Part 6
+ * assumptions. Anchors `BudgetIndicator`'s "properties affordable" figure.
+ */
+export const BUDGET_COP = 1_766_000_000;
+
 export const API_SERVER_DOMAIN = (function () {
   console.log({
     name: 'pre API_SERVER_DOMAIN build',

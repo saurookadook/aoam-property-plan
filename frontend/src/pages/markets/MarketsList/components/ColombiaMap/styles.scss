@@ -1,0 +1,14 @@
+#colombia-map {
+  height: 24rem;
+}
+
+.colombia-map {
+  min-height: 24rem;
+  position: relative;
+
+  & .MuiCardContent-root,
+  & .leaflet-container {
+    height: 100%;
+    width: 100%;
+  }
+}
