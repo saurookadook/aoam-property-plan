@@ -15,21 +15,29 @@ export function createPathFileFromComponent(dateStr?: string) {
   return dateStr.replace(/\s/g, '_').replace(/:/g, '-');
 }
 
+/**
+ * `subPath` namespaces a sub-resource's fixtures, so `properties/:id/comps`
+ * lands at `properties/comps/<uuid>__data.json.gz` instead of colliding with the
+ * property detail fixture at `properties/<uuid>__data.json.gz`.
+ */
 export function buildPathToGzippedData({
   endTimeParam,
   entityType,
   filenamePrefix,
   startTimeParam,
+  subPath = [],
 }: {
   endTimeParam?: string;
   entityType: string;
   filenamePrefix: string;
   startTimeParam?: string;
+  subPath?: string[];
 }) {
   return path.join(
     '__mocks__',
     'gzipped',
     entityType,
+    ...subPath,
     `${filenamePrefix}__data.json.gz`,
   );
 }

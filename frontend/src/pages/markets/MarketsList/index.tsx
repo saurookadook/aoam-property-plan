@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { MarketEntity } from '@/types';
+import type { MarketWithFinancialReportEntity } from '@/types';
 import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
 import { FlexColumn } from '@/layouts';
-import { fetchy } from '@/utils';
+import { fetchy, unwrapEnvelope } from '@/utils';
 import { MarketsListData } from './components';
 
 import './styles.scss';
@@ -13,11 +13,11 @@ function useMarketsListQuery() {
   return useQuery({
     queryKey: ['marketsList'],
     queryFn: async () => {
-      const marketsListResponse = await fetchy
+      const marketsList = await fetchy
         .get(`${API_SERVER_DOMAIN}/api/markets`) // force formatting
-        .then((res) => res.json());
+        .then(unwrapEnvelope<MarketWithFinancialReportEntity[]>);
 
-      return { marketsList: marketsListResponse.data as MarketEntity[] };
+      return { marketsList };
     },
   });
 }
@@ -41,8 +41,8 @@ export function MarketsList() {
 
       {!isFetching && error != null && (
         <Toast
-          alertSeverity={status} // force formatting
           error={error}
+          fallbackErrorMessage="An unknown error occurred while fetching the markets list."
           status={status}
         />
       )}

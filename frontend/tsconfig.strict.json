@@ -1,0 +1,45 @@
+{
+    /**
+     * The strict-mode beachhead.
+     *
+     * `tsconfig.common.json` leaves `strict` off, and turning it on repo-wide
+     * would bury Phase 4's own errors under pre-existing ones. So the files
+     * added or rewritten in Phase 4 are type-checked strictly here, and the
+     * `include` list grows as the rest of the app is brought up to standard.
+     *
+     * Note that `tsc` reports errors in *imported* files as well as `include`d
+     * ones, so adding a file here also holds its imports to `strict` at the
+     * points this code touches them.
+     */
+    "extends": "./tsconfig.common.json",
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.strict.tsbuildinfo",
+        "jsx": "react-jsx",
+        "lib": [
+            "ES2023",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "strict": true,
+        "types": [
+            "node",
+            "vitest",
+            "@testing-library/jest-dom",
+            "vite/client"
+        ]
+    },
+    "include": [
+        "src/types/*.d.ts",
+        "src/constants/property.ts",
+        "src/utils/unwrapEnvelope.ts",
+        "src/utils/__tests__/unwrapEnvelope.test.ts",
+        "src/common/utils/charts.ts",
+        "src/common/utils/currency.ts",
+        "src/common/utils/dataConfidence.ts",
+        "src/common/utils/investmentFit.ts",
+        "src/common/utils/metricThresholds.ts",
+        "src/common/utils/propertyAnalysis.ts",
+        "src/common/utils/__tests__/*.test.ts",
+        "src/providers/CurrencyProvider.tsx"
+    ]
+}

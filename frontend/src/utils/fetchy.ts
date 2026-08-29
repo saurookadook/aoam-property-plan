@@ -43,7 +43,7 @@ const fetchy = (function () {
    * of the Regular Expression from {@link https://datatracker.ietf.org/doc/html/rfc3986#appendix-B|RFC 3986, Appendix B}
    */
   const isAbsoluteURL = (reqString: string): boolean => {
-    return /^(([^:\/?#]+):)?\/\/(([^\/?#]+))$$/im.test(reqString);
+    return /^(([^:/?#]+):)?\/\/(([^/?#]+))$$/im.test(reqString);
   };
 
   /**

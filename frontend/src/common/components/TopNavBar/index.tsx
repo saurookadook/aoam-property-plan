@@ -4,6 +4,7 @@ import { MenuIcon, SunIcon, MoonIcon } from 'lucide-react';
 import { Box, Button, Typography, useColorScheme } from '@mui/material';
 
 import { FlexRow, FlexSpacer } from '@/layouts';
+import { useCurrency } from '@/providers';
 import { useAppStore } from '@/store';
 import { NavDrawer } from '../NavDrawer';
 
@@ -12,6 +13,7 @@ import './styles.scss';
 export function TopNavBar() {
   const { appState } = useAppStore();
   const { mode, setMode } = useColorScheme();
+  const { currency, toggleCurrency } = useCurrency();
   const [isNavDrawerOpen, setIsNavDrawerOpen] = useState(false);
 
   const oppositeMode = useMemo(() => {
@@ -41,6 +43,16 @@ export function TopNavBar() {
           </RouterLink>
 
           <FlexSpacer />
+
+          <Button
+            aria-label={`Display amounts in ${currency === 'COP' ? 'USD' : 'COP'}`}
+            className="top-nav-bar__currency-toggle"
+            onClick={toggleCurrency}
+          >
+            <Typography component="span" variant="button">
+              {currency}
+            </Typography>
+          </Button>
 
           <Button
             aria-label={`Switch to ${oppositeMode} mode`}
