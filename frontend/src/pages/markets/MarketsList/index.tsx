@@ -9,8 +9,8 @@ import { MarketsListData } from './components';
 
 import './styles.scss';
 
-/** A rolling 12-month average with no single moment of calculation - Step 10's hour-long stale time. */
-const MARKETS_STALE_TIME = 1000 * 60 * 60;
+/** Step 10's hour-long stale time, shared by every query this page issues. */
+const HOUR_STALE_TIME = 1000 * 60 * 60;
 
 export const marketsListQuery = queryOptions({
   queryKey: ['marketsList'],
@@ -21,7 +21,7 @@ export const marketsListQuery = queryOptions({
 
     return { marketsList };
   },
-  staleTime: MARKETS_STALE_TIME,
+  staleTime: HOUR_STALE_TIME,
 });
 
 export const propertiesListQuery = queryOptions({
@@ -33,7 +33,7 @@ export const propertiesListQuery = queryOptions({
 
     return { propertiesList };
   },
-  staleTime: MARKETS_STALE_TIME,
+  staleTime: HOUR_STALE_TIME,
 });
 
 /**
@@ -53,7 +53,7 @@ export function useExchangeRateQuery() {
 
       return { exchangeRate };
     },
-    staleTime: MARKETS_STALE_TIME,
+    staleTime: HOUR_STALE_TIME,
     retry: false,
   });
 }

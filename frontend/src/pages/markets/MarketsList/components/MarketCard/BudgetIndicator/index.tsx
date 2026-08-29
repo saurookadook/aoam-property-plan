@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 
-import { medianPurchasePriceCop } from '@/common/utils/investmentFit';
+import { filterPricedValues, medianPurchasePriceCop } from '@/common/utils/investmentFit';
 import { formatCop } from '@/common/utils/currency';
 
 import './styles.scss';
@@ -19,9 +19,7 @@ export function BudgetIndicator({
   budgetCop: number;
   purchasePricesCop: readonly (number | null | undefined)[];
 }) {
-  const pricedCount = purchasePricesCop.filter(
-    (price): price is number => price != null && Number.isFinite(price) && price > 0,
-  ).length;
+  const pricedCount = filterPricedValues(purchasePricesCop).length;
   const medianCop = medianPurchasePriceCop(purchasePricesCop);
 
   if (medianCop == null) {
