@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Decorator } from '@storybook/react-vite';
 
 import { createMirageStorybookServer } from '../src/__storybook__/mirageStorybookServer';
-import { AppThemeProvider } from '../src/providers';
+import { AppThemeProvider, CurrencyProvider } from '../src/providers';
 
 import 'leaflet/dist/leaflet.css';
 import '../src/index.scss';
@@ -46,6 +46,14 @@ export const AppThemeProviderDecorator: Decorator = (Story) => {
   );
 };
 
+export const CurrencyProviderDecorator: Decorator = (Story) => {
+  return (
+    <CurrencyProvider>
+      <Story />
+    </CurrencyProvider>
+  );
+};
+
 export const MirageServerDecorator: Decorator = (Story) => {
   const serverRef = useRef<ReturnType<typeof createMirageStorybookServer> | null>(null);
 
@@ -67,5 +75,6 @@ export const globalStoryDecorators: Decorator[] = [
   MemoryRouterDecorator,
   QueryClientDecorator,
   AppThemeProviderDecorator,
+  CurrencyProviderDecorator,
   MirageServerDecorator, // force formatting
 ];

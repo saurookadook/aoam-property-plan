@@ -1,19 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import type { MarketWithFinancialReportEntity } from '@/types';
-import { CurrencyProvider } from '@/providers';
 import { MarketCard } from './index';
 
 const meta = {
   title: 'pages/markets/MarketsList/components/MarketCard',
   component: MarketCard,
-  decorators: [
-    (Story) => (
-      <CurrencyProvider>
-        <Story />
-      </CurrencyProvider>
-    ),
-  ],
 } as Meta<typeof MarketCard>;
 
 export default meta;
