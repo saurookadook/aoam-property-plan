@@ -126,14 +126,19 @@ export function depthScore(listingCount: number): number {
  */
 export const MIN_PRICED_PROPERTIES = 3;
 
+/** A usable price: not null, finite, and positive. Shared with `BudgetIndicator`'s count. */
+export function filterPricedValues(
+  prices: readonly (number | null | undefined)[],
+): number[] {
+  return prices.filter(
+    (price): price is number => price != null && Number.isFinite(price) && price > 0,
+  );
+}
+
 export function medianPurchasePriceCop(
   purchasePrices: readonly (number | null | undefined)[],
 ): number | null {
-  const priced = purchasePrices
-    .filter(
-      (price): price is number => price != null && Number.isFinite(price) && price > 0,
-    )
-    .sort((a, b) => a - b);
+  const priced = filterPricedValues(purchasePrices).sort((a, b) => a - b);
 
   if (priced.length < MIN_PRICED_PROPERTIES) {
     return null;

@@ -146,6 +146,26 @@ initTestDatabase() {
     fi
 }
 
+seedListings() {
+  docker compose run --build --rm --remove-orphans backend-scripts scripts/db/seeding/seed_listings.py
+}
+
+seedProperties() {
+  docker compose run --build --rm --remove-orphans backend-scripts scripts/db/seeding/seed_properties.py
+}
+
+seedMarkets() {
+  docker compose run --build --rm --remove-orphans backend-scripts scripts/db/seeding/seed_markets.py
+}
+
+seedDatabase() {
+  docker compose build backend-scripts
+  docker compose run --rm --remove-orphans backend-scripts scripts/db/seeding/seed_markets.py
+  docker compose run --rm --remove-orphans backend-scripts scripts/db/seeding/seed_listings.py
+  docker compose run --rm --remove-orphans backend-scripts scripts/db/seeding/seed_properties.py
+
+}
+
 backendPublishBase() {
     docker buildx build \
         -f backend/Dockerfile.release \
@@ -289,13 +309,27 @@ scriptController() {
             echo ""
             createTestDatabase
         elif [ "$2" == "seed" ]; then
-            if [ "$3" == "stocks" ]; then
+            if [ "$3" == "listings" ]; then
                 echo ""
                 echo "======================================================================================"
-                echo "Seeding stocks data..."
+                echo "Seeding listings data..."
                 echo "======================================================================================"
                 echo ""
-                seedStocks
+                seedListings
+            elif [ "$3" == "markets" ]; then
+                echo ""
+                echo "======================================================================================"
+                echo "Seeding markets data..."
+                echo "======================================================================================"
+                echo ""
+                seedMarkets
+            elif [ "$3" == "properties" ]; then
+                echo ""
+                echo "======================================================================================"
+                echo "Seeding properties data..."
+                echo "======================================================================================"
+                echo ""
+                seedProperties
             else
                 echo ""
                 echo "======================================================================================"
