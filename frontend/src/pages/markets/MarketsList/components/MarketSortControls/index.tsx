@@ -12,24 +12,30 @@ export function MarketSortControls({
   onSortKeyChange: (sortKey: MarketSortKey) => void;
 }) {
   return (
-    <ToggleButtonGroup
-      aria-label="Sort markets by"
-      className="market-sort-controls"
-      color="primary"
-      exclusive
-      size="small"
-      value={sortKey}
-      onChange={(_event, nextSortKey: MarketSortKey | null) => {
-        if (nextSortKey != null) {
-          onSortKeyChange(nextSortKey);
-        }
-      }}
-    >
-      {MARKET_SORT_OPTIONS.map((option) => (
-        <ToggleButton key={option.key} value={option.key}>
-          {option.label}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
+    <form id="market-sort-controls">
+      <fieldset form="market-sort-controls">
+        <legend>Sort markets by:</legend>
+
+        <ToggleButtonGroup
+          // aria-label="Sort markets by"
+          className="market-sort-controls-btn-group"
+          color="primary"
+          exclusive
+          size="small"
+          value={sortKey}
+          onChange={(_event, nextSortKey: MarketSortKey | null) => {
+            if (nextSortKey != null) {
+              onSortKeyChange(nextSortKey);
+            }
+          }}
+        >
+          {MARKET_SORT_OPTIONS.map((option) => (
+            <ToggleButton key={option.key} value={option.key}>
+              {option.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </fieldset>
+    </form>
   );
 }

@@ -1,3 +1,5 @@
-.market-sort-controls {
-  align-self: flex-start;
+#market-sort-controls {
+  & fieldset {
+    border-radius: 0.25rem;
+  }
 }
