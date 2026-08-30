@@ -14,13 +14,12 @@ export function MarketSortControls({
   return (
     <form id="market-sort-controls">
       <fieldset form="market-sort-controls">
-        <legend>Sort markets by:</legend>
+        <legend id="market-sort-controls-label">Sort markets by:</legend>
 
         <ToggleButtonGroup
-          // aria-label="Sort markets by"
+          aria-labelledby="market-sort-controls-label"
           className="market-sort-controls-btn-group"
           color="primary"
-          exclusive
           size="small"
           value={sortKey}
           onChange={(_event, nextSortKey: MarketSortKey | null) => {
