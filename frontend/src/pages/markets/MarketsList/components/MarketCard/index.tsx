@@ -1,14 +1,15 @@
+import { useCallback } from 'react';
 import classNames from 'classnames';
 import { Link as RouterLink } from 'react-router';
-import { Card, CardContent, Chip, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 
 import type { MarketWithFinancialReportEntity } from '@/types';
 import { investmentFit } from '@/common/utils/investmentFit';
 import { formatCop, type CurrencyRate } from '@/common/utils/currency';
 import { useCurrency } from '@/providers';
-import { FlexColumn, FlexRow } from '@/layouts';
-import { BudgetIndicator } from './BudgetIndicator';
+import { FlexRow } from '@/layouts';
 import { FitScoreBadge } from '../FitScoreBadge';
+import { MarketCardMetrics } from './MarketCardMetrics';
 
 import './styles.scss';
 
@@ -34,8 +35,16 @@ export function MarketCard({
   const report = market.financial_report;
   const fit = investmentFit(market);
 
-  const formatMoney = (amountCop: number) =>
-    rate != null ? formatFromCop(amountCop, rate).text : formatCop(amountCop);
+  const formatMoney = useCallback(
+    (amountCop: number) => {
+      if (rate != null) {
+        return formatFromCop(amountCop, rate).text;
+      }
+
+      return formatCop(amountCop);
+    },
+    [formatFromCop, rate],
+  );
 
   return (
     <Card
@@ -66,35 +75,12 @@ export function MarketCard({
             No financial report yet - this market has not been summarised.
           </Typography>
         ) : (
-          <FlexColumn className="market-card__metrics">
-            <Typography component="span">ADR: {formatMoney(report.adr_cop)}</Typography>
-            <Typography component="span">
-              Occupancy: {(report.occupancy_rate * 100).toFixed(0)}%
-            </Typography>
-            <Typography component="span">
-              Annual revenue: {formatMoney(report.annual_revenue_cop)}
-            </Typography>
-            <Typography component="span">
-              {Math.round(report.listing_count)} avg. active listings (12 mo)
-            </Typography>
-
-            <FlexRow className="market-card__peak-months">
-              {report.peak_months == null ? (
-                <Typography component="span" variant="body2">
-                  Peak months not yet available
-                </Typography>
-              ) : (
-                report.peak_months.map((month) => (
-                  <Chip key={month} label={month} size="small" />
-                ))
-              )}
-            </FlexRow>
-
-            <BudgetIndicator
-              budgetCop={budgetCop}
-              purchasePricesCop={purchasePricesCop}
-            />
-          </FlexColumn>
+          <MarketCardMetrics
+            budgetCop={budgetCop}
+            formatMoneyFn={formatMoney}
+            purchasePricesCop={purchasePricesCop}
+            report={report}
+          />
         )}
       </CardContent>
     </Card>
