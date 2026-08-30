@@ -1,4 +1,5 @@
 #markets-list-data {
+  align-items: flex-start;
   gap: 1.5rem;
 
   &.markets-list-data {
@@ -6,7 +7,8 @@
       display: grid;
       flex-wrap: wrap;
       gap: 2rem;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0.5rem;
       width: auto;
 
       & .MuiCard-root {

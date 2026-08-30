@@ -4,6 +4,19 @@
   padding: 1rem;
   scroll-margin: 2rem;
 
+  & .MuiCardContent {
+    &-root {
+      display: flex;
+      flex-direction: column;
+      /* row-gap: 1rem; */
+
+      & hr {
+        border-color: var(--mui-palette-grey-700);
+        width: 100%;
+      }
+    }
+  }
+
   &--selected {
     outline: 2px solid var(--mui-palette-primary-main, #1976d2);
     outline-offset: 2px;
@@ -12,6 +25,10 @@
   &__header {
     align-items: center;
     justify-content: space-between;
+
+    & &-text {
+      font-size: 2rem;
+    }
   }
 
   &__metrics {

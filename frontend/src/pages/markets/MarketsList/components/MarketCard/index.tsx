@@ -44,12 +44,16 @@ export function MarketCard({
     >
       <CardContent>
         <FlexRow className="market-card__header">
-          <Typography variant="h3">
+          <Typography variant="h3" className="market-card__header-text">
             <RouterLink to={`/markets/${market.id}`}>{market.locality}</RouterLink>
           </Typography>
-
-          <FitScoreBadge fit={fit} />
         </FlexRow>
+
+        <hr />
+
+        <FitScoreBadge fit={fit} />
+
+        <hr />
 
         {market.locality === 'Cali' && (
           <Typography className="market-card__note" variant="caption">

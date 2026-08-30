@@ -48,23 +48,25 @@ export function MarketsListData({
   }, [selectedMarketId]);
 
   return (
-    <FlexColumn id="markets-list-data" className="markets-list-data">
-      <MarketSortControls onSortKeyChange={setSortKey} sortKey={sortKey} />
+    <FlexRow id="markets-list-data" className="markets-list-data">
+      <FlexColumn style={{ maxWidth: '50%' }}>
+        <MarketSortControls onSortKeyChange={setSortKey} sortKey={sortKey} />
+
+        <FlexRow className="markets-list-data__grid">
+          {sortedMarkets.map((market) => (
+            <MarketCard
+              key={market.id}
+              budgetCop={BUDGET_COP}
+              isSelected={market.id === selectedMarketId}
+              market={market}
+              purchasePricesCop={pricesByMarketId.get(market.id) ?? []}
+              rate={rate}
+            />
+          ))}
+        </FlexRow>
+      </FlexColumn>
 
       <ColombiaMap markets={marketsListData} onSelectMarket={setSelectedMarketId} />
-
-      <FlexRow className="markets-list-data__grid">
-        {sortedMarkets.map((market) => (
-          <MarketCard
-            key={market.id}
-            budgetCop={BUDGET_COP}
-            isSelected={market.id === selectedMarketId}
-            market={market}
-            purchasePricesCop={pricesByMarketId.get(market.id) ?? []}
-            rate={rate}
-          />
-        ))}
-      </FlexRow>
-    </FlexColumn>
+    </FlexRow>
   );
 }
