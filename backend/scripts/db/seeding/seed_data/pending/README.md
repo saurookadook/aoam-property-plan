@@ -2,7 +2,7 @@
 
 The four markets on the Phase 4 roster that have no `/markets/summary` capture yet:
 **Cali, Cartagena, Medellín, Santa Marta**. Only Salento, Calima, Pance and Bogota are seeded
-(finding 1 in `planning/PHASE_4_REACT_DASHBOARD.md`).
+(finding 1 in `doc/planning/PHASE_4_REACT_DASHBOARD.md`).
 
 Each file here is a summary capture with the market tuple filled in and **every figure `null`**.
 They live in this subdirectory rather than in `seed_data/` because `seed_markets.py` globs
@@ -35,6 +35,6 @@ rather than writing a market that reads as real.
 
 ## Note on Cali
 
-Cali is on the roster because AirROI has no *Granada* and no *El Peñón* — both search terms
+Cali is on the roster because AirROI has no _Granada_ and no _El Peñón_ — both search terms
 resolve to Cali (4,690 listings). It carries the Granada / El Peñón thesis, and the market
 overview is meant to show a display note saying so.
