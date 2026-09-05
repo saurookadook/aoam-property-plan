@@ -845,6 +845,66 @@ They _will_ disagree. Make that visible rather than reconcilable: "converted at 
 `useCurrency()` requiring `{rate, rateAsOf, rateSource}` makes silent mixing impossible. The fit
 score is COP-anchored on purpose, so no sort order depends on any of this.
 
+### Chunk 6 — status
+
+**Done.** All three routes render against the real 5-property fixture set; `pnpm build:types`,
+`pnpm build:types:strict`, `pnpm lint` and `pnpm test` are all clean (129 passed, 1 pre-existing
+skip, 22 files); `pnpm build` succeeds.
+
+| Deliverable | Landed as |
+| --- | --- |
+| Shared property queries | `src/pages/properties/queries.ts` — `propertiesListQuery`, `propertyQuery`, `propertyReportQuery`, `propertyCachedCompsQuery`, plus `useCreatePropertyMutation`, `useAnalyzePropertyMutation`, `useRefreshCompsMutation`. `MarketsList` now imports `propertiesListQuery` from here instead of defining its own copy |
+| Shared exchange-rate hook | `src/common/hooks/useExchangeRateQuery.ts`, extracted from `MarketsList` (unchanged behaviour) so the property pages don't duplicate it |
+| `/properties` | `PropertiesList` + `propertiesListLoader`; `PropertyRow` presentational component; empty state and an "Add property" link |
+| `/properties/new` | `PropertyCreate` — one Finca Raiz URL field with a primary submit, an `Accordion` disclosure ("This isn't a Finca Raiz listing") expanding `ManualEntryPanel`'s nine `MANUAL_FIELDS` plus optional/override fields, `PropertyLocationPicker` (click-to-set lat/lng on a react-leaflet map) for the two fields nothing else can fill in. `useCreatePropertyMutation`, `retry: false`, submit disabled while pending |
+| `/properties/:propertyId` | `PropertyOverview` + `propertyOverviewLoader` — property, report and cached comps `ensureQueryData`d in parallel, never `POST /analyze`. Branches on `report == null`: an `AssumptionsPanel` seeded from `DEFAULT_SCENARIO_OVERRIDES` (Part 6 / `constants/colombia.py` defaults) for a first analysis, or the full metric set plus an `AssumptionsPanel` seeded from `reportToScenarioOverrides(report)` for a re-analysis |
+| Deep-dive components | `DataConfidenceBanner`, `MetricGrid` (9 tiles; CoC/payback toned via `cocReturnTone`/`paybackTone`, `'unrated'` whenever confidence is low), `RevenueComparisonRow` (AirROI vs comp-derived plus a plain-SVG p25–p90 spread bar with the chosen figure marked), `ExpenseBreakdownCard`, `SensitivityTable` (the real 3-cell sweep), `SeasonalityChart` (plain SVG via `barGeometry`/`referenceLineY`, mean and +15% reference lines), `PropertyCompsTable` (`@tanstack/react-table` with `getSortedRowModel`, default revenue desc, "Refresh comps") |
+| Currency plumbing | `PropertyOverview/utils.ts` — `reportCurrencyRate` and `formatReportAmount`, the one place that decides "report rate wins absolutely, live rate only when there is no report yet" for every card on the page |
+| Nav | `PROPERTIES: '🏠 Properties'` in `navItemsLabels`; `/properties/new` and `/properties/:propertyId` stay unlabelled so `NavDrawer` hides them, per the existing convention |
+| Fixture gap closed | `properties/comps/cached/2e8a5f13-…__data.json.gz` added (`{"data": []}`) — the never-analysed property in the list had a report fixture but no comps fixture, so its deep-dive page 500'd in both the app and its own test until this was added |
+| `d3` kept | Still zero-import after this chunk's own SVG chart (`SeasonalityChart` uses `barGeometry`/`referenceLineY`, not `d3`), so the plan's own flag ("Either this chunk uses it or it should be removed") is still open - kept deliberately, per the user, for planned future chart work rather than removed |
+| CI | `tsconfig.strict.json`'s `include` grew by every new file above (types, components, tests) |
+
+#### Three bugs found only by driving the app in a real browser
+
+Unit tests (jsdom + Mirage) passed cleanly on all three of these; none of them showed up until the
+app was actually loaded in Chrome against the mock server. Recorded here because they would have
+shipped otherwise.
+
+1. **A collapsed `Accordion` still blocks native form submission.** MUI's `AccordionDetails`
+   content stays mounted (not unmounted) while collapsed - so `ManualEntryPanel`'s `required`
+   fields, though invisible, still failed the browser's constraint validation on click on the
+   *primary* "Add property" button outside the accordion, and no `submit` event ever fired.
+   `required` was removed from every field; validation is now `isManualEntryComplete`/`canSubmit`
+   alone, which was already gating the submit buttons' `disabled` state.
+2. **`getByTitle` only matches a `<title>` that is a direct child of `<svg>`.** Twelve per-bar
+   `<title>`s nested inside `<rect>` (the standard SVG accessibility pattern, and what
+   `SeasonalityChart` keeps) are invisible to it - confirmed by reading
+   `@testing-library/dom`'s own `queryAllByTitle` source (`[title], svg > title`). The page test
+   queries `.seasonality-chart__bar > title` directly instead.
+3. **`PropertyLocationPicker`'s map rendered at zero width.** `#property-location-picker-map`
+   had an explicit height but no width rule on its own wrapper, and `ColombiaMap`'s
+   `min-width: 46rem` was the thing actually responsible for that map not collapsing - a rule this
+   component didn't have a flex-row layout to inherit the same escape from. Fixed by giving
+   `.property-location-picker__map` `width: 100%` alongside the existing `.MuiCardContent-root` /
+   `.leaflet-container` height cascade.
+
+#### Acceptance evidence
+
+- `pnpm test` — 129 passed, 1 skipped (the pre-existing `fetchy` skip), 22 files.
+- `pnpm build:types`, `pnpm build:types:strict`, `pnpm lint` (0 errors, 47 pre-existing-class
+  warnings), `pnpm build` — all clean.
+- Driven manually against the mock data server and a local `pnpm dev`: `/properties` lists all 5
+  seeded properties and links out; `/properties/new` scrapes via URL, and the manual path's map
+  picker sets `latitude`/`longitude` on click; `/properties/8f2d6b04-…` (Calima) shows the low-
+  confidence banner with CoC and payback rendered neutral (not green/red), the 3-cell sensitivity
+  table, the 12-bar seasonality chart with reference lines, the assumptions sliders pre-filled from
+  the stored report, and the one comp with a working Airbnb link; `/properties/2e8a5f13-…` (no
+  report) shows the "not analysed yet" panel with Colombia-default sliders and an empty purchase
+  price field, matching its `null` `purchase_price_cop`.
+- `git diff` on `frontend/src/mock-data-server/mockDataServer.ts` is empty - its CORS origin list
+  was widened only for this manual smoke test and reverted before finishing.
+
 ---
 
 ## Chunk 7 — Step 14, deploy gaps
