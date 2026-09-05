@@ -1,0 +1,20 @@
+.expense-breakdown-card {
+  min-width: 20rem;
+
+  &__lines {
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  &__line {
+    justify-content: space-between;
+    width: 100%;
+
+    &--total {
+      border-top: 1px solid var(--mui-palette-divider, #ccc);
+      font-weight: 600;
+      margin-top: 0.25rem;
+      padding-top: 0.25rem;
+    }
+  }
+}

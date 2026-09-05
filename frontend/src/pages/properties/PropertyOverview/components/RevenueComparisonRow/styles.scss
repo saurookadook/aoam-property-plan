@@ -1,0 +1,17 @@
+.revenue-comparison-row {
+  gap: 0.5rem;
+
+  &__figures {
+    gap: 2rem;
+  }
+}
+
+.revenue-spread-bar {
+  height: 1.5rem;
+  width: 100%;
+  max-width: 20rem;
+
+  &__chosen {
+    fill: var(--mui-palette-primary-main, #1976d2);
+  }
+}

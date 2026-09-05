@@ -1,0 +1,25 @@
+.property-header-card {
+  min-width: 20rem;
+
+  &__top {
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__title-block {
+    align-items: flex-start;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &__status {
+    flex-shrink: 0;
+  }
+
+  &__facts {
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.5rem 0;
+  }
+}

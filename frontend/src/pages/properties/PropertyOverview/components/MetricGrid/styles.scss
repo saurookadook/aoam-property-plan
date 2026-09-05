@@ -1,0 +1,28 @@
+.metric-grid {
+  &__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  &__tile {
+    border: 1px solid var(--mui-palette-divider, #ccc);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+
+    &--good {
+      border-color: var(--mui-palette-success-main, #2e7d32);
+      color: var(--mui-palette-success-main, #2e7d32);
+    }
+
+    &--fair {
+      border-color: var(--mui-palette-warning-main, #ed6c02);
+      color: var(--mui-palette-warning-main, #ed6c02);
+    }
+
+    &--poor {
+      border-color: var(--mui-palette-error-main, #d32f2f);
+      color: var(--mui-palette-error-main, #d32f2f);
+    }
+  }
+}
