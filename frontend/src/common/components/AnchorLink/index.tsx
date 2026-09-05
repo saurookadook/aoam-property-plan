@@ -2,7 +2,7 @@ import React from 'react';
 
 import type { ReactAnchorProps } from '@/types';
 
-type AnchorLinkProps = ReactAnchorProps & { href?: string };
+export type AnchorLinkProps = ReactAnchorProps & { href?: string };
 
 export const AnchorLink = React.forwardRef<HTMLAnchorElement, AnchorLinkProps>(
   function AnchorLink({ children, href, ...props }, ref) {
