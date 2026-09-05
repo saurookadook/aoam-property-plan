@@ -1,0 +1,30 @@
+.property-row {
+  min-width: 20rem;
+  width: 100%;
+
+  &__inner {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__details {
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &__name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    align-items: center;
+    flex-shrink: 0;
+    gap: 1rem;
+  }
+}
