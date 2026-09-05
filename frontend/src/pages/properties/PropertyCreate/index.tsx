@@ -53,9 +53,10 @@ export function PropertyCreate() {
       return;
     }
 
+    const trimmedSourceUrl = sourceUrl.trim();
     const body = isManualEntry
-      ? buildManualCreateRequest(sourceUrl, manualValues)
-      : { source_url: sourceUrl };
+      ? buildManualCreateRequest(trimmedSourceUrl, manualValues)
+      : { source_url: trimmedSourceUrl };
 
     const property = await createMutation.mutateAsync(body);
     void navigate(`/properties/${property.id}`);
