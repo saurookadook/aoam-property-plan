@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { MarketWithFinancialReportEntity, PropertyEntity } from '@/types';
 import { BUDGET_COP } from '@/constants';
@@ -26,6 +26,7 @@ export function MarketsListData({
 }) {
   const [sortKey, setSortKey] = useState<MarketSortKey>('fit');
   const [selectedMarketId, setSelectedMarketId] = useState<string | null>(null);
+  const marketsListDataRef = useRef<HTMLDivElement | null>(null);
 
   const sortedMarkets = useMemo(
     () => sortMarkets(marketsListData, sortKey),
@@ -38,17 +39,21 @@ export function MarketsListData({
   );
 
   useEffect(() => {
-    if (selectedMarketId == null) {
+    if (selectedMarketId == null || marketsListDataRef.current == null) {
       return;
     }
 
-    document
-      .getElementById(marketCardElementId(selectedMarketId))
+    marketsListDataRef.current
+      .querySelector(`#${marketCardElementId(selectedMarketId)}`)
       ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [selectedMarketId]);
 
   return (
-    <FlexRow id="markets-list-data" className="markets-list-data">
+    <FlexRow
+      id="markets-list-data"
+      className="markets-list-data"
+      ref={marketsListDataRef}
+    >
       <FlexColumn style={{ maxWidth: '50%' }}>
         <MarketSortControls onSortKeyChange={setSortKey} sortKey={sortKey} />
 

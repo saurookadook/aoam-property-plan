@@ -20,6 +20,7 @@ export function MarketSortControls({
           aria-labelledby="market-sort-controls-label"
           className="market-sort-controls-btn-group"
           color="primary"
+          exclusive
           size="small"
           value={sortKey}
           onChange={(_event, nextSortKey: MarketSortKey | null) => {
