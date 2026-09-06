@@ -238,6 +238,13 @@ frontendPublishApp() {
 #         # --platform linux/amd64,linux/arm64 \
 # }
 
+postgresPublish() {
+    docker buildx build \
+        -f postgres/Dockerfile \
+        -t "${DOCKER_USERNAME}/aoam-postgres:latest" \
+        --push .
+}
+
 scriptController() {
     if [ "$1" == "dcr-alembic" ]; then
         # echo "before: $@"
@@ -390,6 +397,7 @@ scriptController() {
                 backendPublishScripts
                 frontendPublishBase
                 frontendPublishApp
+                postgresPublish
 
             elif [ "$3" == "backend" ]; then
                 if [ "$4" == "all" ]; then
@@ -422,10 +430,7 @@ scriptController() {
               #   frontendPublishTest
               fi
             elif [ "$3" == "pg" ]; then
-                docker buildx build \
-                    -f postgres/Dockerfile \
-                    -t "${DOCKER_USERNAME}/aoam-postgres:latest" \
-                    --push postgres
+                postgresPublish
             fi
         fi
     elif [ "$1" == "reset-backend" ]; then

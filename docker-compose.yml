@@ -41,7 +41,7 @@ services:
   pg_database:
     # image: postgres:16.2-trixie # higher than this?
     build:
-      context: postgres
+      context: .
       dockerfile: Dockerfile
     env_file: .env
     environment:
