@@ -9,11 +9,12 @@ import {
 import { Button, Tooltip, Typography } from '@mui/material';
 
 import type { PropertyCompWithListingEntity } from '@/types';
-import { useCurrency } from '@/providers';
+import { ExternalLink } from '@/common/components';
 import type { CurrencyRate } from '@/common/utils/currency';
 import { FlexColumn, FlexRow } from '@/layouts';
-import { formatReportAmount } from '../../utils';
-import { useRefreshCompsMutation } from '../../../queries';
+import { formatReportAmount } from '@/pages/properties/PropertyOverview/utils';
+import { useRefreshCompsMutation } from '@/pages/properties/queries';
+import { useCurrency } from '@/providers';
 
 import './styles.scss';
 
@@ -47,9 +48,7 @@ export function PropertyCompsTable({
           return sourceUrl == null ? (
             info.getValue()
           ) : (
-            <a href={sourceUrl} rel="noreferrer" target="_blank">
-              {info.getValue()}
-            </a>
+            <ExternalLink href={sourceUrl}>{info.getValue()}</ExternalLink>
           );
         },
       }),

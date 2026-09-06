@@ -1,4 +1,5 @@
 import type { PropertyCreateRequest } from '@/types';
+import { isNonEmptyString } from '@/common/utils';
 
 /**
  * Everything the manual-entry panel collects, as strings so every field is a
@@ -10,17 +11,17 @@ export type ManualEntryValues = {
   bedrooms: string;
   city: string;
   country: string;
+  description: string;
   latitude: number | null;
   longitude: number | null;
-  neighborhood: string;
-  property_type: string;
-  state: string;
-  postal_code: string;
-  purchase_price_cop: string;
-  status: string;
   name: string;
-  description: string;
+  neighborhood: string;
   notes: string;
+  postal_code: string;
+  property_type: string;
+  purchase_price_cop: string;
+  state: string;
+  status: string;
 };
 
 export const EMPTY_MANUAL_ENTRY_VALUES: ManualEntryValues = {
@@ -28,17 +29,17 @@ export const EMPTY_MANUAL_ENTRY_VALUES: ManualEntryValues = {
   bedrooms: '',
   city: '',
   country: 'Colombia',
+  description: '',
   latitude: null,
   longitude: null,
-  neighborhood: '',
-  property_type: '',
-  state: '',
-  postal_code: '',
-  purchase_price_cop: '',
-  status: '',
   name: '',
-  description: '',
+  neighborhood: '',
   notes: '',
+  postal_code: '',
+  property_type: '',
+  purchase_price_cop: '',
+  state: '',
+  status: '',
 };
 
 /**
@@ -48,16 +49,16 @@ export const EMPTY_MANUAL_ENTRY_VALUES: ManualEntryValues = {
  */
 export function isManualEntryComplete(values: ManualEntryValues): boolean {
   return (
-    values.address.trim() !== '' &&
-    values.bedrooms.trim() !== '' &&
+    isNonEmptyString(values.address.trim()) &&
+    isNonEmptyString(values.bedrooms.trim()) &&
     Number.isFinite(Number(values.bedrooms)) &&
-    values.city.trim() !== '' &&
-    values.country.trim() !== '' &&
+    isNonEmptyString(values.city.trim()) &&
+    isNonEmptyString(values.country.trim()) &&
     values.latitude != null &&
     values.longitude != null &&
-    values.neighborhood.trim() !== '' &&
-    values.property_type.trim() !== '' &&
-    values.state.trim() !== ''
+    isNonEmptyString(values.neighborhood.trim()) &&
+    isNonEmptyString(values.property_type.trim()) &&
+    isNonEmptyString(values.state.trim())
   );
 }
 
@@ -71,19 +72,22 @@ export function buildManualCreateRequest(
     bedrooms: Number(values.bedrooms),
     city: values.city,
     country: values.country,
+    description: isNonEmptyString(values.description.trim())
+      ? values.description
+      : null,
     latitude: values.latitude,
     longitude: values.longitude,
+    name: isNonEmptyString(values.name.trim()) ? values.name : null,
     neighborhood: values.neighborhood,
+    notes: isNonEmptyString(values.notes.trim()) ? values.notes : null,
+    postal_code: isNonEmptyString(values.postal_code.trim())
+      ? values.postal_code
+      : null,
     property_type: values.property_type,
+    purchase_price_cop: isNonEmptyString(values.purchase_price_cop.trim())
+      ? Number(values.purchase_price_cop)
+      : null,
     state: values.state,
-    postal_code: values.postal_code.trim() === '' ? null : values.postal_code,
-    purchase_price_cop:
-      values.purchase_price_cop.trim() === ''
-        ? null
-        : Number(values.purchase_price_cop),
-    status: values.status.trim() === '' ? null : values.status,
-    name: values.name.trim() === '' ? null : values.name,
-    description: values.description.trim() === '' ? null : values.description,
-    notes: values.notes.trim() === '' ? null : values.notes,
+    status: isNonEmptyString(values.status.trim()) ? values.status : null,
   };
 }

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 import { QueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Typography } from '@mui/material';
@@ -8,7 +9,11 @@ import { dataConfidence } from '@/common/utils/dataConfidence';
 import { reportToScenarioOverrides } from '@/common/utils/propertyAnalysis';
 import type { CurrencyRate } from '@/common/utils/currency';
 import { FlexColumn } from '@/layouts';
-import { propertyCachedCompsQuery, propertyQuery, propertyReportQuery } from '../queries';
+import {
+  propertyCachedCompsQuery,
+  propertyQuery,
+  propertyReportQuery,
+} from '../queries';
 import {
   AssumptionsPanel,
   DataConfidenceBanner,
@@ -62,24 +67,35 @@ export function PropertyOverview() {
   const analysis = reportData?.report ?? null;
   const comps = compsData?.comps ?? [];
 
-  const liveRate: CurrencyRate | null =
-    exchangeRateData?.exchangeRate == null
+  const liveRate: CurrencyRate | null = useMemo(() => {
+    return exchangeRateData?.exchangeRate == null
       ? null
       : {
           rate: exchangeRateData.exchangeRate.cop_per_usd,
           rateAsOf: exchangeRateData.exchangeRate.record_date,
           rateSource: 'live',
         };
+  }, [exchangeRateData]);
 
   // "The rate that produced a number is the rate that converts it": a report's
   // own rate wins absolutely once one exists; only a never-analysed property
   // falls back to today's live rate.
-  const reportRate = analysis == null ? null : reportCurrencyRate(analysis.report);
-  const displayRate = reportRate ?? liveRate;
+  const { confidence, displayRate, reportRate } = useMemo(() => {
+    if (analysis == null) {
+      return {
+        confidence: dataConfidence(null, null).level,
+        displayRate: liveRate,
+        reportRate: null,
+      };
+    }
 
-  const confidence = analysis == null
-    ? dataConfidence(null, null).level
-    : dataConfidence(analysis.report.annual_revenue_source, analysis.report.comp_count).level;
+    const reportRate = reportCurrencyRate(analysis.report);
+    const confidenceLevel = dataConfidence(
+      analysis.report.annual_revenue_source,
+      analysis.report.comp_count,
+    ).level;
+    return { confidence: confidenceLevel, displayRate: reportRate, reportRate };
+  }, [analysis, liveRate]);
 
   return (
     <FlexColumn id="property-overview" className="property-overview">
@@ -123,7 +139,9 @@ export function PropertyOverview() {
 
               <SensitivityTable cells={analysis.sensitivity} rate={reportRate} />
 
-              <SeasonalityChart distribution={analysis.report.monthly_revenue_distribution} />
+              <SeasonalityChart
+                distribution={analysis.report.monthly_revenue_distribution}
+              />
 
               <AssumptionsPanel
                 initialOverrides={reportToScenarioOverrides(analysis.report)}
@@ -131,7 +149,11 @@ export function PropertyOverview() {
                 submitLabel="Re-analyse"
               />
 
-              <PropertyCompsTable comps={comps} propertyId={propertyId} rate={displayRate} />
+              <PropertyCompsTable
+                comps={comps}
+                propertyId={propertyId}
+                rate={displayRate}
+              />
             </FlexColumn>
           )}
         </FlexColumn>

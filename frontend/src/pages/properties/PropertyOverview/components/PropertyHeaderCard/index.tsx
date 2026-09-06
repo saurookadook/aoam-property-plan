@@ -1,9 +1,10 @@
 import { Card, CardContent, Chip, Typography } from '@mui/material';
 
 import type { PropertyEntity } from '@/types';
+import { ExternalLink } from '@/common/components';
 import { formatCop, type CurrencyRate } from '@/common/utils/currency';
-import { useCurrency } from '@/providers';
 import { FlexColumn, FlexRow } from '@/layouts';
+import { useCurrency } from '@/providers';
 
 import './styles.scss';
 
@@ -47,9 +48,7 @@ export function PropertyHeaderCard({
           <Typography component="span">{priceText}</Typography>
         </FlexRow>
 
-        <a href={property.source_url} rel="noreferrer" target="_blank">
-          View original listing
-        </a>
+        <ExternalLink href={property.source_url}>View original listing</ExternalLink>
       </CardContent>
     </Card>
   );

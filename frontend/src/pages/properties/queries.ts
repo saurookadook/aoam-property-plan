@@ -77,6 +77,8 @@ export const propertyCachedCompsQuery = (propertyId: string) =>
  * row, not an idempotent no-op.
  */
 export function useCreatePropertyMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['createProperty'],
     mutationFn: async (body: PropertyCreateRequest) =>
@@ -84,6 +86,12 @@ export function useCreatePropertyMutation() {
         .post(`${API_SERVER_DOMAIN}/api/properties`, { bodyJson: body })
         .then(unwrapEnvelope<PropertyEntity>),
     retry: false,
+    onSuccess: (property) => {
+      queryClient.setQueryData(propertyQuery(property.id).queryKey, {
+        property,
+      });
+      void queryClient.invalidateQueries({ queryKey: propertiesListQuery.queryKey });
+    },
   });
 }
 

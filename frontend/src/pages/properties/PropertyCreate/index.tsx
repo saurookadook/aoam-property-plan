@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronDown } from 'lucide-react';
 import {
@@ -43,10 +43,9 @@ export function PropertyCreate() {
   const canSubmitScrape = sourceUrl.trim() !== '' && !isManualEntry;
   const canSubmitManual =
     isManualEntry && sourceUrl.trim() !== '' && isManualEntryComplete(manualValues);
-  const canSubmit =
-    (canSubmitScrape || canSubmitManual) && !createMutation.isPending;
+  const canSubmit = (canSubmitScrape || canSubmitManual) && !createMutation.isPending;
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!canSubmit) {
@@ -102,8 +101,8 @@ export function PropertyCreate() {
 
           <AccordionDetails>
             <Typography className="property-create__manual-note" variant="body2">
-              Re-submitting a URL already on file updates that property rather
-              than creating a second one.
+              Re-submitting a URL already on file updates that property rather than
+              creating a second one.
             </Typography>
 
             <ManualEntryPanel values={manualValues} onChange={setManualValues} />

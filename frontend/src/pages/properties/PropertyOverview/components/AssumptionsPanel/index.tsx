@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Button, Slider, TextField, Typography } from '@mui/material';
 
 import type { PropertyAnalyzeRequest } from '@/types';
@@ -98,11 +98,11 @@ export function AssumptionsPanel({
   const [overrides, setOverrides] = useState<PropertyAnalyzeRequest>(initialOverrides);
   const analyzeMutation = useAnalyzePropertyMutation(propertyId);
 
-  function setField(field: keyof PropertyAnalyzeRequest, value: number) {
+  function setField(field: keyof PropertyAnalyzeRequest, value?: number) {
     setOverrides((previous) => ({ ...previous, [field]: value }));
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (analyzeMutation.isPending) {
@@ -146,17 +146,25 @@ export function AssumptionsPanel({
               label="Purchase price (COP)"
               type="number"
               value={overrides.purchase_price_cop ?? ''}
-              onChange={(event) =>
-                setField('purchase_price_cop', Number(event.target.value))
-              }
+              onChange={(event) => {
+                const raw = event.target.value;
+                setField(
+                  'purchase_price_cop',
+                  raw.trim() === '' ? undefined : Number(raw),
+                );
+              }}
             />
             <TextField
               label="Assessed value (COP)"
               type="number"
               value={overrides.assessed_value_cop ?? ''}
-              onChange={(event) =>
-                setField('assessed_value_cop', Number(event.target.value))
-              }
+              onChange={(event) => {
+                const raw = event.target.value;
+                setField(
+                  'assessed_value_cop',
+                  raw.trim() === '' ? undefined : Number(raw),
+                );
+              }}
             />
             <TextField
               label="HOA, monthly (COP)"
