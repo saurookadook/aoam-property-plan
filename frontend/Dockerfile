@@ -1,4 +1,4 @@
-FROM node:22-bullseye AS frontend-dev-base
+FROM node:22-trixie AS frontend-dev-base
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 ENV PNPM_VERSION=11.9.0

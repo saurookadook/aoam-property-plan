@@ -87,8 +87,13 @@ def handle_markets_summaries():
             local_db_session.rollback()
             continue
     local_db_session.commit()
+    # ``close()`` and nothing more. ``scoped_session.remove()`` used to follow it
+    # here, and that reaches into the registry for *the calling thread* rather
+    # than at the session this handler is holding - which is already closed on
+    # the line above. Anything else sharing that thread's registry entry (a
+    # ``BaseFacade`` built without an explicit session, say) would have had its
+    # session closed underneath it.
     local_db_session.close()
-    DBSessionManager().scoped_session.remove()
 
 
 def handle_listings_by_market():
@@ -219,7 +224,6 @@ def handle_listings_by_market():
         local_db_session.commit()
     local_db_session.commit()
     local_db_session.close()
-    DBSessionManager().scoped_session.remove()
 
 
 def handle_markets_peak_months():
@@ -319,7 +323,6 @@ def handle_markets_peak_months():
 
     local_db_session.commit()
     local_db_session.close()
-    DBSessionManager().scoped_session.remove()
 
 
 def _market_centroid(
@@ -428,7 +431,6 @@ def handle_exchange_rate(
             exc_info=sys.exc_info(),
         )
         local_db_session.close()
-        DBSessionManager().scoped_session.remove()
         return
 
     for rate_record in result:
@@ -466,4 +468,3 @@ def handle_exchange_rate(
 
     local_db_session.commit()
     local_db_session.close()
-    DBSessionManager().scoped_session.remove()

@@ -1,0 +1,12 @@
+.properties-list {
+  &__header {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__rows {
+    gap: 0.75rem;
+    width: 100%;
+  }
+}

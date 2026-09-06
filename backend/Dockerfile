@@ -1,4 +1,4 @@
-FROM python:3.12-bullseye AS install-base
+FROM python:3.12-trixie AS install-base
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y libssl-dev build-essential vim nano
 COPY --from=ghcr.io/astral-sh/uv:0.11.4 /uv /uvx /bin/

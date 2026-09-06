@@ -1,0 +1,19 @@
+.sensitivity-table {
+  gap: 0.5rem;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid var(--mui-palette-divider, #ccc);
+    padding: 0.4rem 0.75rem;
+    text-align: center;
+  }
+
+  th[scope='row'] {
+    text-align: left;
+  }
+}

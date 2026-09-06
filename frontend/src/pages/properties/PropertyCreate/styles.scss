@@ -1,0 +1,20 @@
+.property-create {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 48rem;
+  }
+
+  &__source-url {
+    width: 100%;
+  }
+
+  &__submit {
+    align-self: flex-start;
+  }
+
+  &__manual-note {
+    margin-bottom: 1rem;
+  }
+}

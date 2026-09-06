@@ -149,29 +149,27 @@ def read_property_report(property_id: str, api_db_session: API_DB_SessionDepende
 
     ``{"data": null}`` with a 200 for a property that has never been analysed -
     the same answer shape ``/comps/cached`` gives, for the same reason.
+
+    Routed through ``run_analysis`` for the same reason ``POST /analyze`` is: a
+    stored report that cannot be rebuilt into a scenario raises ``ValueError``,
+    and that is a 422 about the row's contents, not a 500 about the server.
     """
-    try:
+
+    def read() -> Optional[dict[str, Any]]:
         PropertyFacade(db_session=api_db_session).get_one_by_id(property_id)
         report = PropertyFinancialReportFacade(
             db_session=api_db_session
         ).get_latest_by_property_id(property_id)
 
-        if report is not None:
-            report = build_analysis_data(report)
-    except PropertyFacade.NoResultFound as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Property not found",
-        ) from e
-    except Exception as e:
-        error_detail = "Error fetching property report"
-        logger.error(f"{error_detail}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error_detail,
-        ) from e
+        return build_analysis_data(report) if report is not None else None
 
-    return {"data": report}
+    return {
+        "data": run_analysis(
+            read,
+            error_detail="Error fetching property report",
+            logger=logger,
+        )
+    }
 
 
 @properties_router.post(

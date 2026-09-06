@@ -12,9 +12,14 @@ import {
   ListingOverview,
   MarketOverview,
   MarketsList,
+  PropertiesList,
+  PropertyCreate,
+  PropertyOverview,
   listingOverviewLoader,
   marketOverviewLoader,
   marketsListLoader,
+  propertiesListLoader,
+  propertyOverviewLoader,
 } from '@/pages';
 
 export const queryClient = new QueryClient({
@@ -28,6 +33,7 @@ export const queryClient = new QueryClient({
 export const navItemsLabels = {
   HOME: '🏡 Home',
   MARKETS: '💰 Markets',
+  PROPERTIES: '🏠 Properties',
   LISTINGS: 'Listings',
   LISTINGS_FINANCIAL_REPORTS: '📈 Listings Financial Reports 📈',
   // ACCOUNT: 'Account',
@@ -82,6 +88,21 @@ export const routerConfig: AOAMRouteObject[] = [
         path: 'listings/:listingId',
         element: <ListingOverview />,
         loader: listingOverviewLoader(queryClient),
+      },
+      {
+        path: 'properties',
+        label: navItemsLabels.PROPERTIES,
+        element: <PropertiesList />,
+        loader: propertiesListLoader(queryClient),
+      },
+      {
+        path: 'properties/new',
+        element: <PropertyCreate />,
+      },
+      {
+        path: 'properties/:propertyId',
+        element: <PropertyOverview />,
+        loader: propertyOverviewLoader(queryClient),
       },
     ],
   },

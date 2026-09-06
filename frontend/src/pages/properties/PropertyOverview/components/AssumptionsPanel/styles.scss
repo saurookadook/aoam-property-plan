@@ -1,0 +1,27 @@
+.assumptions-panel {
+  gap: 0.5rem;
+
+  &__analyse-form {
+    border: 1px solid var(--mui-palette-secondary-main);
+    border-radius: 0.25rem;
+    min-width: 30vw;
+    padding: 1rem;
+  }
+
+  &__knobs-and-amounts {
+    column-gap: 2rem;
+    padding: 1rem 0;
+    width: 100%;
+  }
+
+  &__knob {
+    max-width: 24rem;
+  }
+
+  &__amounts {
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem 0;
+  }
+}

@@ -1,0 +1,21 @@
+.property-location-picker {
+  gap: 0.5rem;
+
+  &__map {
+    --map-height: 20rem;
+
+    min-height: var(--map-height);
+    position: relative;
+    width: 100%;
+
+    & .MuiCardContent-root,
+    & .leaflet-container {
+      height: 100%;
+      width: 100%;
+    }
+
+    & #property-location-picker-map {
+      height: var(--map-height);
+    }
+  }
+}
