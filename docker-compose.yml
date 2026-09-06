@@ -39,7 +39,7 @@ services:
       - ./frontend/index.html/:/etc/nginx/html/index.html
 
   pg_database:
-    # image: postgres:16.2-bullseye # higher than this?
+    # image: postgres:16.2-trixie # higher than this?
     build:
       context: postgres
       dockerfile: Dockerfile
