@@ -9,8 +9,12 @@
     "editor.formatOnSave": true, // optional
     "editor.formatOnSaveMode": "file", // required to format on save
     // "files.autoSave": "onFocusChange", // optional but recommended
-    "vs-code-prettier-eslint.prettierLast": true, // set as "true" to run 'prettier' last not first
     "editor.tabSize": 2,
+    // ------ Linting (oxlint via the Oxc extension; config is ./frontend/.oxlintrc.json)
+    "eslint.enable": false,
+    "oxc.enable.oxlint": true,
+    "oxc.enable.oxfmt": false, // Prettier is still the formatter
+    "oxc.requireConfig": true,
     "path-autocomplete.pathMappings": {
         // "__mocks__": "app/src/__mocks__",
         // "client": "app/src/client",
