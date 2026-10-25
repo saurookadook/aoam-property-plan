@@ -47,7 +47,8 @@ export function SensitivityTable({
             <th scope="col" />
             {sorted.map((cell) => (
               <th key={cell.revenue_factor} scope="col">
-                {COLUMN_LABEL[cell.revenue_factor] ?? `${Math.round(cell.revenue_factor * 100)}%`}
+                {COLUMN_LABEL[cell.revenue_factor] ??
+                  `${Math.round(cell.revenue_factor * 100)}%`}
               </th>
             ))}
           </tr>
@@ -66,7 +67,9 @@ export function SensitivityTable({
           <tr>
             <th scope="row">Cash-on-cash return</th>
             {sorted.map((cell) => (
-              <td key={cell.revenue_factor}>{cell.coc_return_percentage.toFixed(1)}%</td>
+              <td key={cell.revenue_factor}>
+                {cell.coc_return_percentage.toFixed(1)}%
+              </td>
             ))}
           </tr>
 
@@ -74,7 +77,9 @@ export function SensitivityTable({
             <th scope="row">Payback period</th>
             {sorted.map((cell) => (
               <td key={cell.revenue_factor}>
-                {cell.payback_years == null ? '—' : `${cell.payback_years.toFixed(1)} yr`}
+                {cell.payback_years == null
+                  ? '—'
+                  : `${cell.payback_years.toFixed(1)} yr`}
               </td>
             ))}
           </tr>

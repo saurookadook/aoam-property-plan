@@ -2,14 +2,8 @@
     "extends": "./tsconfig.common.json",
     "compilerOptions": {
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-        "lib": [
-            "ES2023"
-        ],
-        "types": [
-            "node"
-        ],
+        "lib": ["ES2023"],
+        "types": ["node"]
     },
-    "include": [
-        "vite.config.ts"
-    ]
+    "include": ["vite.config.ts"]
 }

@@ -62,7 +62,12 @@ function RevenueSpreadBar({
       )}
 
       {chosenCop != null && (
-        <circle cx={toX(chosenCop)} cy={12} r={5} className="revenue-spread-bar__chosen">
+        <circle
+          cx={toX(chosenCop)}
+          cy={12}
+          r={5}
+          className="revenue-spread-bar__chosen"
+        >
           <title>{`Chosen figure: ${chosenCop.toLocaleString()}`}</title>
         </circle>
       )}
@@ -77,7 +82,8 @@ export function RevenueComparisonRow({
 }) {
   const currency = useCurrency();
   const rate = reportCurrencyRate(report);
-  const money = (amountCop: number | null) => formatReportAmount(currency, rate, amountCop).text;
+  const money = (amountCop: number | null) =>
+    formatReportAmount(currency, rate, amountCop).text;
 
   return (
     <FlexColumn className="revenue-comparison-row">
@@ -95,7 +101,9 @@ export function RevenueComparisonRow({
           <Typography component="span" variant="caption">
             Comp-derived
           </Typography>
-          <Typography component="span">{money(report.comp_derived_revenue_cop)}</Typography>
+          <Typography component="span">
+            {money(report.comp_derived_revenue_cop)}
+          </Typography>
         </FlexColumn>
 
         <FlexColumn>
@@ -105,7 +113,8 @@ export function RevenueComparisonRow({
           <Typography component="span">
             {report.annual_revenue_source == null
               ? '—'
-              : (WINNER_LABEL[report.annual_revenue_source] ?? report.annual_revenue_source)}
+              : (WINNER_LABEL[report.annual_revenue_source] ??
+                report.annual_revenue_source)}
           </Typography>
         </FlexColumn>
       </FlexRow>

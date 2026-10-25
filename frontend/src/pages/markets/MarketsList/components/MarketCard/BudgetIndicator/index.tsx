@@ -1,6 +1,9 @@
 import { Typography } from '@mui/material';
 
-import { filterPricedValues, medianPurchasePriceCop } from '@/common/utils/investmentFit';
+import {
+  filterPricedValues,
+  medianPurchasePriceCop,
+} from '@/common/utils/investmentFit';
 import { formatCop } from '@/common/utils/currency';
 
 import './styles.scss';
@@ -24,7 +27,10 @@ export function BudgetIndicator({
 
   if (medianCop == null) {
     return (
-      <Typography className="budget-indicator budget-indicator--insufficient" variant="body2">
+      <Typography
+        className="budget-indicator budget-indicator--insufficient"
+        variant="body2"
+      >
         {`Not enough price data (${pricedCount})`}
       </Typography>
     );

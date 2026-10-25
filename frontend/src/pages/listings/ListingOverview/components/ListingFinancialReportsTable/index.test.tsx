@@ -61,9 +61,7 @@ describe('ListingFinancialReportsTable', () => {
 
   it('should render a row for each financial report with the correct values', () => {
     const { container } = render(
-      <ListingFinancialReportsTable
-        financialReports={[baseReport, secondReport]}
-      />,
+      <ListingFinancialReportsTable financialReports={[baseReport, secondReport]} />,
     );
 
     const bodyRows = container.querySelectorAll('tbody tr');

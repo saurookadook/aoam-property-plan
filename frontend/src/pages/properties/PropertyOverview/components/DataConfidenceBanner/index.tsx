@@ -1,7 +1,10 @@
 import { Alert, type AlertColor } from '@mui/material';
 
 import type { AnnualRevenueSource } from '@/types';
-import { dataConfidence, type DataConfidenceLevel } from '@/common/utils/dataConfidence';
+import {
+  dataConfidence,
+  type DataConfidenceLevel,
+} from '@/common/utils/dataConfidence';
 
 const SEVERITY_BY_LEVEL: Record<DataConfidenceLevel, AlertColor> = {
   good: 'success',

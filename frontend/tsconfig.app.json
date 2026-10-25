@@ -3,21 +3,9 @@
     "compilerOptions": {
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "jsx": "react-jsx",
-        "lib": [
-            "ES2023",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "types": [
-            "vite/client"
-        ]
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "types": ["vite/client"]
     },
-    "include": [
-        "src",
-        "vite.config.ts"
-    ],
-    "exclude": [
-        "**/*.test.{ts,tsx}",
-        "**/testing/**"
-    ]
+    "include": ["src", "vite.config.ts"],
+    "exclude": ["**/*.test.{ts,tsx}", "**/testing/**"]
 }

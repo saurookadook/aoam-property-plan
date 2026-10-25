@@ -5,7 +5,10 @@ import { formatReportAmount, reportCurrencyRate } from '../utils';
 describe('reportCurrencyRate', () => {
   it('is null when the report has no exchange rate', () => {
     expect(
-      reportCurrencyRate({ exchange_rate: null, calculated_at: '2026-08-20T00:00:00Z' }),
+      reportCurrencyRate({
+        exchange_rate: null,
+        calculated_at: '2026-08-20T00:00:00Z',
+      }),
     ).toBeNull();
   });
 

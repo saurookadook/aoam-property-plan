@@ -18,17 +18,10 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         "paths": {
-            "@/*": [
-                "./src/*"
-            ],
+            "@/*": ["./src/*"],
             /* Fixes for module resolutions */
-            "#saurookkadookk/*": [
-                "./node_modules/@saurookkadookk/*"
-            ]
+            "#saurookkadookk/*": ["./node_modules/@saurookkadookk/*"]
         },
-        "types": [
-            "vitest",
-            "@testing-library/jest-dom"
-        ]
+        "types": ["vitest", "@testing-library/jest-dom"]
     }
 }

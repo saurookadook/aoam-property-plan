@@ -2,7 +2,11 @@ import classNames from 'classnames';
 import { Tooltip, Typography } from '@mui/material';
 
 import type { PropertyAnalysisData } from '@/types';
-import { cocReturnTone, paybackTone, type MetricTone } from '@/common/utils/metricThresholds';
+import {
+  cocReturnTone,
+  paybackTone,
+  type MetricTone,
+} from '@/common/utils/metricThresholds';
 import type { DataConfidenceLevel } from '@/common/utils/dataConfidence';
 import { useCurrency } from '@/providers';
 import { FlexColumn } from '@/layouts';
@@ -21,7 +25,10 @@ function MetricTile({
 }) {
   return (
     <FlexColumn
-      className={classNames('metric-grid__tile', tone != null && `metric-grid__tile--${tone}`)}
+      className={classNames(
+        'metric-grid__tile',
+        tone != null && `metric-grid__tile--${tone}`,
+      )}
     >
       <Typography component="span" variant="caption">
         {label}
@@ -73,7 +80,10 @@ export function MetricGrid({
           value={money(report.cash_invested_cop, report.cash_invested_usd)}
         />
         <MetricTile label="Monthly expenses" value={money(expenses.total_cop)} />
-        <MetricTile label="Monthly mortgage" value={money(report.monthly_mortgage_cop)} />
+        <MetricTile
+          label="Monthly mortgage"
+          value={money(report.monthly_mortgage_cop)}
+        />
 
         <Tooltip
           title={
@@ -106,7 +116,11 @@ export function MetricGrid({
             <MetricTile
               label="Payback period"
               tone={paybackToneValue}
-              value={report.payback_years == null ? '—' : `${report.payback_years.toFixed(1)} yr`}
+              value={
+                report.payback_years == null
+                  ? '—'
+                  : `${report.payback_years.toFixed(1)} yr`
+              }
             />
           </div>
         </Tooltip>

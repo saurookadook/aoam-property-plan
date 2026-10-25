@@ -77,9 +77,7 @@ describe('PropertyCreate', () => {
     await user.click(screen.getByRole('button', { name: 'Add property' }));
 
     await waitFor(() => {
-      expect(
-        container.querySelector('#property-overview'),
-      ).toBeVisible();
+      expect(container.querySelector('#property-overview')).toBeVisible();
     });
 
     expect(container.textContent).toContain('Finca Cocora');

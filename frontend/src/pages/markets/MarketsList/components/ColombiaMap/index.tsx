@@ -18,7 +18,9 @@ export function ColombiaMap({
   onSelectMarket: (marketId: string) => void;
 }) {
   const markersWithCentroid = markets.filter(
-    (market): market is MarketWithFinancialReportEntity & {
+    (
+      market,
+    ): market is MarketWithFinancialReportEntity & {
       latitude: number;
       longitude: number;
     } => market.latitude != null && market.longitude != null,

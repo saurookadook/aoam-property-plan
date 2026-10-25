@@ -15,18 +15,9 @@
     "compilerOptions": {
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.strict.tsbuildinfo",
         "jsx": "react-jsx",
-        "lib": [
-            "ES2023",
-            "DOM",
-            "DOM.Iterable"
-        ],
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
         "strict": true,
-        "types": [
-            "node",
-            "vitest",
-            "@testing-library/jest-dom",
-            "vite/client"
-        ]
+        "types": ["node", "vitest", "@testing-library/jest-dom", "vite/client"]
     },
     "include": [
         "src/types/*.d.ts",

@@ -3,7 +3,10 @@ import { QueryClient, queryOptions, useSuspenseQuery } from '@tanstack/react-que
 import type { MarketWithFinancialReportEntity } from '@/types';
 import { LoadingState, Toast } from '@/common/components';
 import { API_SERVER_DOMAIN } from '@/constants';
-import { HOUR_STALE_TIME, useExchangeRateQuery } from '@/common/hooks/useExchangeRateQuery';
+import {
+  HOUR_STALE_TIME,
+  useExchangeRateQuery,
+} from '@/common/hooks/useExchangeRateQuery';
 import { FlexColumn } from '@/layouts';
 import { fetchy, unwrapEnvelope } from '@/utils';
 import { propertiesListQuery } from '@/pages/properties/queries';

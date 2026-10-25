@@ -67,9 +67,7 @@ describe('PropertyOverview', () => {
     const { wrapperEl } = await renderPropertyOverview(CALIMA_ID);
 
     expect(
-      screen.getByText(
-        "Low confidence — AirROI's model only, 1 comparable listing.",
-      ),
+      screen.getByText("Low confidence — AirROI's model only, 1 comparable listing."),
     ).toBeVisible();
 
     expect(wrapperEl.querySelectorAll('.metric-grid__tile--unrated').length).toBe(2);
@@ -124,9 +122,7 @@ describe('PropertyOverview', () => {
   it('shows an Analyse panel, not the metric grid, for a never-analysed property', async () => {
     const { wrapperEl } = await renderPropertyOverview(NEVER_ANALYSED_ID);
 
-    expect(
-      screen.getByText('This property has not been analysed yet.'),
-    ).toBeVisible();
+    expect(screen.getByText('This property has not been analysed yet.')).toBeVisible();
     expect(wrapperEl.querySelector('.metric-grid')).toBeNull();
     expect(screen.getByRole('button', { name: 'Analyse' })).toBeInTheDocument();
   });

@@ -23,9 +23,7 @@ export const Picked: Story = {
 
 export const Interactive: Story = {
   render: function Render() {
-    const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
-      null,
-    );
+    const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
 
     return (
       <PropertyLocationPicker
