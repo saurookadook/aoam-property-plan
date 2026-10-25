@@ -17,7 +17,9 @@
         "vite.config.ts"
     ],
     "exclude": [
-        "**/*.test.{ts,tsx}",
+        "**/*.stories.tsx",
+        "**/*.test.ts",
+        "**/*.test.tsx",
         "**/testing/**"
     ]
 }
